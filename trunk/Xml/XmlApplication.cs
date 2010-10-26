@@ -100,7 +100,7 @@ namespace AzAlternative.Xml
 
 		public void DeleteGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+            XmlApplicationGroup.RemoveApplicationGroup(Node, group.Guid);
 		}
 
 		public Role CreateRole(string name, string description)
@@ -115,12 +115,15 @@ namespace AzAlternative.Xml
 
 		public Operation CreateOperation(string name, string description, int operationId)
 		{
-			throw new NotImplementedException();
+            XmlOperation o = XmlOperation.CreateOperation(Factory, name, description, operationId);
+            o.Update(Node);
+
+            return new Operation(o);
 		}
 
 		public void DeleteOperation(Operation operation)
 		{
-			throw new NotImplementedException();
+            XmlOperation.RemoveOperation(Node, operation.Guid);
 		}
 
 		public Task CreateTask(string name, string description)

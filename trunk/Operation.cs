@@ -31,5 +31,10 @@ namespace AzAlternative
 			get { return _Operation.OperationId; }
 			set { _Operation.OperationId = value; }
 		}
+
+        internal Operation(Interfaces.IOperation operation)
+        {
+            _Operation = operation;
+        }
 	}
 }
