@@ -9,45 +9,69 @@ namespace AzAlternative
 	{
 		private readonly Interfaces.IApplication _Application;
 
-		public Guid Guid
+        /// <summary>
+        /// Gets the application identifier
+        /// </summary>
+        public Guid Guid
 		{
 			get { return _Application.Guid; }
 		}
 
-		public string Name
+        /// <summary>
+        /// Gets or sets the application name
+        /// </summary>
+        public string Name
 		{
 			get { return _Application.Name; }
 			set { _Application.Name = value; }
 		}
 
-		public string Description
+        /// <summary>
+        /// Gets or sets the description
+        /// </summary>
+        public string Description
 		{
 			get { return _Application.Description; }
 			set { _Application.Description = value; }
 		}
 
-		public string ApplicationVersion
+        /// <summary>
+        /// Gets or sets the application version
+        /// </summary>
+        public string ApplicationVersion
 		{
 			get { return _Application.ApplicationVersion; }
 			set { _Application.ApplicationVersion = value; }
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles
+        /// <summary>
+        /// Gets the collection of roles defined in the application
+        /// </summary>
+        public System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles
 		{
 			get { return _Application.Roles; }
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+        /// <summary>
+        /// Gets the collection of groups defined in the application
+        /// </summary>
+        public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
 		{
 			get { return _Application.Groups; }
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
+        /// <summary>
+        /// Gets the collection of operations defined in the application
+        /// </summary>
+        public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
 		{
 			get { return _Application.Operations; }
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
+        /// <summary>
+        /// Gets the collection of tasks defined in the application
+        /// </summary>
+        public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
 		{
 			get { return _Application.Tasks; }
 		}

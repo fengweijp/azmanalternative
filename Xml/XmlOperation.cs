@@ -58,11 +58,20 @@ namespace AzAlternative.Xml
 		{
 			get
 			{
-				throw new NotImplementedException();
+                if (Node[OPERATIONID] == null)
+                    return 0;
+
+                return int.Parse(Node[OPERATIONID].InnerText);
 			}
 			set
 			{
-				throw new NotImplementedException();
+                XmlElement e = Node[OPERATIONID];
+                if (e == null)
+                {
+                    e = Factory.CreateNew(OPERATIONID);
+                    Node.AppendChild(e);
+                }
+                e.InnerText = value.ToString();
 			}
 		}
 
@@ -70,5 +79,29 @@ namespace AzAlternative.Xml
 			: base(node, factory)
 		{ }
 
+        public static XmlNodeList GetOperations(XmlElement parent)
+        {
+            return parent.SelectNodes(ELEMENTNAME);
+        }
+
+        public static XmlOperation CreateOperation(XmlFactory factory, string name, string description, int operationId)
+        {
+            XmlOperation o = new XmlOperation(factory.CreateNew(ELEMENTNAME), factory);
+            o.Guid = Guid.NewGuid();
+            o.Name = name;
+            o.Description = description;
+            o.OperationId = operationId;
+
+            return o;
+        }
+
+        public static void RemoveOperation(XmlElement parent, Guid guid)
+        {
+            XmlNode n = parent.SelectSingleNode(string.Format("{0}[@{1}={2}]", ELEMENTNAME, GUID, guid));
+            if (n == null)
+                return;
+
+            parent.RemoveChild(n);
+        }
 	}
 }
