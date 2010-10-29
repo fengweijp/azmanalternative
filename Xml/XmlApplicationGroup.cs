@@ -87,6 +87,11 @@ namespace AzAlternative.Xml
 			}
 		}
 
+        public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+        {
+            get { throw new NotImplementedException(); }
+        }
+
 		public XmlApplicationGroup(XmlElement node, XmlFactory factory)
 			: base(node, factory)
 		{ }
@@ -131,5 +136,15 @@ namespace AzAlternative.Xml
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public void AddGroup(ApplicationGroup group)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveGroup(ApplicationGroup group)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

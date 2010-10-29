@@ -23,7 +23,12 @@ namespace AzAlternative
         public string Name
 		{
 			get { return _Application.Name; }
-			set { _Application.Name = value; }
+			set 
+            {
+                if (string.IsNullOrEmpty(value))
+                    throw new ArgumentNullException("Name");
+                _Application.Name = value; 
+            }
 		}
 
         /// <summary>
@@ -76,49 +81,135 @@ namespace AzAlternative
 			get { return _Application.Tasks; }
 		}
 
+        public AdminManager Store
+        {
+            get;
+            internal set;
+        }
+
 		internal Application(Interfaces.IApplication application)
 		{
 			_Application = application;
 		}
 
+        /// <summary>
+        /// Create a new group in the application
+        /// </summary>
+        /// <param name="name">name of the group</param>
+        /// <param name="description">description of the group</param>
+        /// <param name="groupType">type of group</param>
+        /// <returns>group in the current application</returns>
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
-			throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+
+            ApplicationGroup g = _Application.CreateGroup(name, description, groupType);
+            g.Application = this;
+
+            return g;
 		}
 
+        /// <summary>
+        /// Delete a group defined in the application
+        /// </summary>
+        /// <param name="group">group to delete</param>
 		public void DeleteGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+            if (group.Application == null || group.Application.Guid != this.Guid)
+                throw new AzException("The group is not part of this application. Only application groups can be removed here.");
+
+            _Application.DeleteGroup(group);
 		}
 
+        /// <summary>
+        /// Create a new role in the application
+        /// </summary>
+        /// <param name="name">Required name of the role</param>
+        /// <param name="description">Description of the role</param>
+        /// <returns>new role</returns>
 		public Role CreateRole(string name, string description)
 		{
-			throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+
+            Role r = _Application.CreateRole(name, description);
+            r.Application = this;
+
+            return r;
 		}
 
+        /// <summary>
+        /// Deletes a role from the application
+        /// </summary>
+        /// <param name="role"></param>
 		public void DeleteRole(Role role)
 		{
-			throw new NotImplementedException();
+            if (role.Application.Guid != this.Guid)
+                throw new AzException("Role is part of the application.");
+
+            _Application.DeleteRole(role);
 		}
 
+        /// <summary>
+        /// Create a new operation in the application
+        /// </summary>
+        /// <param name="name">Required operation name</param>
+        /// <param name="description">Operaton description</param>
+        /// <param name="operationId">Required operaton ID</param>
+        /// <returns>new operation</returns>
 		public Operation CreateOperation(string name, string description, int operationId)
 		{
-			throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+
+            if (operationId < 0)
+                throw new ArgumentOutOfRangeException("operationId");
+
+            Operation o = _Application.CreateOperation(name, description, operationId);
+            o.Application = this;
+
+            return o;
 		}
 
+        /// <summary>
+        /// Deletes the operation from the application
+        /// </summary>
+        /// <param name="operation">Operaton to delete</param>
 		public void DeleteOperation(Operation operation)
 		{
-			throw new NotImplementedException();
+            if (operation.Application.Guid != this.Guid)
+                throw new AzException("The operation is not part of this application.");
+
+            _Application.DeleteOperation(operation);
 		}
 
+        /// <summary>
+        /// Creates a new task in the application
+        /// </summary>
+        /// <param name="name">Required name of the task</param>
+        /// <param name="description">Description of the task</param>
+        /// <returns>new task</returns>
 		public Task CreateTask(string name, string description)
 		{
-			throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+
+            Task t = _Application.CreateTask(name, description);
+            t.Application = this;
+            return t;
 		}
 
+        /// <summary>
+        /// Deletes a task from the application
+        /// </summary>
+        /// <param name="task">task to delete</param>
 		public void DeleteTask(Task task)
 		{
-			throw new NotImplementedException();
+            if (task.Application.Guid != this.Guid)
+                throw new AzException("The task is not part of this application.");
+
+            _Application.DeleteTask(task);
 		}
 	}
 }

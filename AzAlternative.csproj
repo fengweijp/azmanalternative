@@ -44,6 +44,7 @@
     <Compile Include="ApplicationGroup.cs" />
     <Compile Include="AzException.cs" />
     <Compile Include="AzMan.cs" />
+    <Compile Include="BaseObject.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="FactoryBase.cs" />
     <Compile Include="Interfaces\IAdminManager.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Xml\XmlBaseObject.cs" />
     <Compile Include="Xml\XmlFactory.cs" />
     <Compile Include="Xml\XmlOperation.cs" />
+    <Compile Include="Xml\XmlTask.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
