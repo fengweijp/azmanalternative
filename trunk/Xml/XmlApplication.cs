@@ -128,7 +128,10 @@ namespace AzAlternative.Xml
 
 		public Task CreateTask(string name, string description)
 		{
-			throw new NotImplementedException();
+            XmlTask t = XmlTask.CreateTask(Factory, name, description);
+            t.Update(Node);
+
+            return new Task(t);
 		}
 
 		public void DeleteTask(Task task)

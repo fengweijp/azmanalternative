@@ -75,8 +75,8 @@ namespace AzAlternative
         /// <param name="group">The group to remove</param>
         public void DeleteGroup(ApplicationGroup group)
 		{
-			if (group.Guid == Guid.Empty)
-				throw new AzException("The group has not been added to the store.");
+            if (group.Store == null || group.Store.Guid != this.Guid)
+                throw new AzException("The group is not defined in the store, or is not a global group.");
 
 			_AdminManager.DeleteGroup(group);
 		}
@@ -92,7 +92,10 @@ namespace AzAlternative
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
 
-			return _AdminManager.CreateGroup(name, description, groupType);
+			ApplicationGroup g = _AdminManager.CreateGroup(name, description, groupType);
+            g.Store = this;
+
+            return g;
 		}
 
         /// <summary>
@@ -106,7 +109,10 @@ namespace AzAlternative
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "A name must be specified when adding an application");
 
-			return _AdminManager.CreateApplication(name, description, versionInformation);
+			Application a = _AdminManager.CreateApplication(name, description, versionInformation);
+            a.Store = this;
+
+            return a;
 		}
 
         /// <summary>
@@ -115,8 +121,8 @@ namespace AzAlternative
         /// <param name="application">The application to remove</param>
         public void DeleteApplication(Application application)
 		{
-			if (application.Guid == Guid.Empty)
-				throw new AzException("The application has not been added to the store.");
+			if (application.Store.Guid != this.Guid)
+				throw new AzException("The application is not part of this store.");
 
 			_AdminManager.DeleteApplication(application);
 		}

@@ -25,7 +25,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the collection of groups assigned to the role
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> ApplicationGroups { get; }
+		System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups { get; }
 		/// <summary>
 		/// Gets the collection of users assigned to the role
 		/// </summary>
