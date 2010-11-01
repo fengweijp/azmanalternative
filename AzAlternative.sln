@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAlternative", "AzAlternative.csproj", "{39BD25A7-06B4-4763-AEDD-F0B8A6EC6739}"
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "AzModelingProject", "..\AzModelingProject\AzModelingProject.modelproj", "{E0D3B85A-8047-4C7A-99C8-04D4F1AB743F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{39BD25A7-06B4-4763-AEDD-F0B8A6EC6739}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39BD25A7-06B4-4763-AEDD-F0B8A6EC6739}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39BD25A7-06B4-4763-AEDD-F0B8A6EC6739}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0D3B85A-8047-4C7A-99C8-04D4F1AB743F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0D3B85A-8047-4C7A-99C8-04D4F1AB743F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0D3B85A-8047-4C7A-99C8-04D4F1AB743F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0D3B85A-8047-4C7A-99C8-04D4F1AB743F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

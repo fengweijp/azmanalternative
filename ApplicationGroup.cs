@@ -8,35 +8,35 @@ namespace AzAlternative
     /// <summary>
     /// A group of users in the application or store
     /// </summary>
-	public class ApplicationGroup : BaseObject, Interfaces.IApplicationGroup
+	public class ApplicationGroup : ContainerBase, Interfaces.IApplicationGroup
 	{
 		private readonly Interfaces.IApplicationGroup _ApplicationGroup;
 
-        /// <summary>
-        /// Gets the group identifier
-        /// </summary>
+		/// <summary>
+		/// Gets the group identifier
+		/// </summary>
 		public Guid Guid
 		{
 			get { return _ApplicationGroup.Guid; }
 		}
 
-        /// <summary>
-        /// Gets or sets the name of the group
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the name of the group
+		/// </summary>
 		public string Name
 		{
 			get { return _ApplicationGroup.Name; }
-			set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentNullException("Name");
-                _ApplicationGroup.Name = value; 
-            }
+			set
+			{
+				if (string.IsNullOrEmpty(value))
+					throw new ArgumentNullException("Name");
+				_ApplicationGroup.Name = value;
+			}
 		}
 
-        /// <summary>
-        /// Gets or sets the group description
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the group description
+		/// </summary>
 		public string Description
 		{
 			get { return _ApplicationGroup.Description; }
@@ -120,7 +120,7 @@ namespace AzAlternative
         /// <param name="group">Group to add</param>
         public void AddGroup(ApplicationGroup group)
         {
-            CheckGroupIsValid(group);
+			//CheckGroupIsValid(group);
             _ApplicationGroup.AddGroup(group);
         }
 
@@ -130,23 +130,23 @@ namespace AzAlternative
         /// <param name="group">Group to remove</param>
         public void RemoveGroup(ApplicationGroup group)
         {
-            CheckGroupIsValid(group);
+			//CheckGroupIsValid(group);
             _ApplicationGroup.RemoveGroup(group);
         }
 
-        private void CheckGroupIsValid(ApplicationGroup group)
-        {
-            if (this.Store != null)
-            {
-                if (group.Store == null || group.Store.Guid != this.Store.Guid)
-                    throw new AzException("The group to add is not defined in this store or is not a global group");
-            }
-            if (this.Application != null)
-            {
-                CheckObjectIsValid(group);
-                if (group.Store != null && group.Store.Guid != this.Application.Store.Guid)
-                    throw new AzException("The group to add is not defined in this store.");
-            }
-        }
+		//private void CheckGroupIsValid(ApplicationGroup group)
+		//{
+		//    if (this.Store != null)
+		//    {
+		//        if (group.Store == null || group.Store.Guid != this.Store.Guid)
+		//            throw new AzException("The group to add is not defined in this store or is not a global group");
+		//    }
+		//    if (this.Application != null)
+		//    {
+		//        CheckObjectIsValid(group);
+		//        if (group.Store != null && group.Store.Guid != this.Application.Store.Guid)
+		//            throw new AzException("The group to add is not defined in this store.");
+		//    }
+		//}
     }
 }

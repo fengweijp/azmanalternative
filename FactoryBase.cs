@@ -8,7 +8,7 @@ namespace AzAlternative
 	/// <summary>
 	/// Base class for loading store objects. Wraps up the store provider
 	/// </summary>
-	internal abstract class FactoryBase
+	internal abstract class ServiceBase
 	{
         /// <summary>
         /// Gets the connectionstring used by this factory object
@@ -19,20 +19,6 @@ namespace AzAlternative
 			protected set;
 		}
 
-        /// <summary>
-        /// Loads the underlying data used by the factory
-        /// </summary>
-		public abstract void Load();
-
-        /// <summary>
-        /// Loads the underlying data used by the factory
-        /// </summary>
-        /// <param name="connectionString">Connection string to initialise the factory</param>
-		public virtual void Load(string connectionString)
-		{
-			ConnectionString = connectionString;
-			Load();
-		}
-
+		public abstract AdminManager GetAdminManager();
 	}
 }

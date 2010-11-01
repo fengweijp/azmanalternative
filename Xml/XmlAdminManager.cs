@@ -16,109 +16,94 @@ namespace AzAlternative.Xml
 
 		public int MajorVersion
 		{
-			get
-			{
-				string s = GetAttribute(MAJORVERSION);
-				if (s == null)
-					return 0;
-
-				return int.Parse(s);
-			}
-			set
-			{
-				SetAttribute(MAJORVERSION, value.ToString());
-				Factory.SaveChanges();
-			}
+			get;
+			set;
 		}
 
 		public int MinorVersion
 		{
-			get
-			{
-				string s = GetAttribute(MINORVERSION);
-				if (s == null)
-					return 0;
-
-				return int.Parse(s);
-			}
-			set
-			{
-				SetAttribute(MINORVERSION, value.ToString());
-				Factory.SaveChanges();
-			}
+			get;
+			set;
 		}
 
 		public string Description
 		{
-			get
-			{
-				return GetAttribute(DESCRIPTION);
-			}
-			set
-			{
-				SetAttribute(DESCRIPTION, value.ToString());
-				Factory.SaveChanges();
-			}
+			get;
+			set;
 		}
 
-		public Guid Guid
-		{
-			get
-			{
-				string s = GetAttribute(GUID);
-				if (s == null)
-					return Guid.Empty;
-
-				return new Guid(s);
-			}
-			set
-			{
-				SetAttribute(GUID, value.ToString());
-			}
-		}
+		//public Guid Guid
+		//{
+		//    get;
+		//    set;
+		//}
 
 		public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
 		{
-			get { return GetCollection<ApplicationGroup>(XmlApplicationGroup.GetApplicationGroups(Node), typeof(XmlApplicationGroup)); }
+			get { throw new NotImplementedException(); }
+			//get { return GetCollection<ApplicationGroup>(XmlApplicationGroup.GetApplicationGroups(Node), typeof(XmlApplicationGroup)); }
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications
+		//public System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications
+		//{
+		//    get { return GetCollection<Application>(XmlApplication.GetApplications(Node), typeof(XmlApplication)); }
+		//}
+
+		public XmlAdminManager(XmlService factory)
+			: base(factory)
 		{
-			get { return GetCollection<Application>(XmlApplication.GetApplications(Node), typeof(XmlApplication)); }
-		}
-
-		public XmlAdminManager(XmlElement node, XmlFactory factory)
-			: base(node, factory)
-		{ 
-
+			XmlElement e = factory.LoadRoot();
+			MajorVersion = int.Parse(e.Attributes[MAJORVERSION].Value);
+			MinorVersion = int.Parse(e.Attributes[MINORVERSION].Value);
+			Description = e.Attributes[DESCRIPTION].Value;
+			Guid = new Guid(e.Attributes[GUID].Value);
 		}
 
 		public void DeleteGroup(ApplicationGroup group)
 		{
-			XmlApplicationGroup.RemoveApplicationGroup(Node, group.Guid);
-			Factory.SaveChanges();
+			//XmlApplicationGroup.RemoveApplicationGroup(Node, group.Guid);
+			//Factory.SaveChanges();
 		}
 
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
-			XmlApplicationGroup ag = XmlApplicationGroup.NewApplicationGroup(Factory, name, description, groupType);
-			ag.Update(Node);
+			throw new NotImplementedException();
+			//XmlApplicationGroup ag = XmlApplicationGroup.NewApplicationGroup(Factory, name, description, groupType);
+			//ag.Update(Node);
 
-			return new ApplicationGroup(ag);
+			//return new ApplicationGroup(ag);
 		}
 
-		public Application CreateApplication(string name, string description, string versionInformation)
+		public void UpdateGroup(ApplicationGroup group)
 		{
-			XmlApplication a = XmlApplication.CreateApplication(Factory, name, description, versionInformation);
-			a.Update(Node);
-
-			return new Application(a);
+			throw new NotImplementedException();
 		}
 
-		public void DeleteApplication(Application application)
+		//public Application CreateApplication(string name, string description, string versionInformation)
+		//{
+		//    XmlApplication a = XmlApplication.CreateApplication(Factory, name, description, versionInformation);
+		//    a.Update(Node);
+
+		//    return new Application(a);
+		//}
+
+		//public void DeleteApplication(Application application)
+		//{
+		//    XmlApplication.RemoveApplication(Node, application.Guid);
+		//    Factory.SaveChanges();
+		//}
+
+		public void Update()
 		{
-			XmlApplication.RemoveApplication(Node, application.Guid);
-			Factory.SaveChanges();
+			Factory.Save(this);
+		}
+
+		public override XmlElement ToXml()
+		{
+			XmlElement e = base.ToXml();
+			e.Attributes[DESCRIPTION].Value = Description;
+
+			return e;
 		}
 	}
 }

@@ -40,33 +40,41 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminManager.cs" />
-    <Compile Include="Application.cs" />
-    <Compile Include="ApplicationGroup.cs" />
+    <Compile Include="Application.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ApplicationGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="AzException.cs" />
     <Compile Include="AzMan.cs" />
-    <Compile Include="BaseObject.cs" />
+    <Compile Include="ContainerBase.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="FactoryBase.cs" />
-    <Compile Include="Interfaces\IAdminManager.cs" />
-    <Compile Include="Interfaces\IApplication.cs" />
-    <Compile Include="Interfaces\IApplicationGroup.cs" />
-    <Compile Include="Interfaces\IMember.cs" />
-    <Compile Include="Interfaces\IOperation.cs" />
-    <Compile Include="Interfaces\IRole.cs" />
-    <Compile Include="Interfaces\IScope.cs" />
-    <Compile Include="Interfaces\ITask.cs" />
-    <Compile Include="Operation.cs" />
+    <Compile Include="Interfaces\IAdminManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interfaces\IApplication.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interfaces\IApplicationGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interfaces\IMember.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Role.cs" />
-    <Compile Include="Task.cs" />
-    <Compile Include="Xml\XmlAdminManager.cs" />
-    <Compile Include="Xml\XmlApplication.cs" />
-    <Compile Include="Xml\XmlApplicationGroup.cs" />
-    <Compile Include="Xml\XmlBaseObject.cs" />
-    <Compile Include="Xml\XmlFactory.cs" />
-    <Compile Include="Xml\XmlOperation.cs" />
-    <Compile Include="Xml\XmlTask.cs" />
+    <Compile Include="Xml\XmlAdminManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Xml\XmlBaseObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Xml\XmlService.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
