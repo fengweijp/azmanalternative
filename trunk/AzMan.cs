@@ -41,15 +41,14 @@ namespace AzAlternative
 		/// <param name="connectionString">connection string for connecting to a store. Should start with either msxml or msldap</param>
 		public void Open(string connectionString)
 		{
+
 			ConnectionString = connectionString;
 
 			if (connectionString.StartsWith("msxml"))
 			{
-				Xml.XmlFactory f = new Xml.XmlFactory();
-				f.Load(connectionString);
+				Xml.XmlService f = new Xml.XmlService(connectionString);
 
-				Xml.XmlAdminManager am = new Xml.XmlAdminManager(f.GetRoot(), f);
-				AdminManager = new AdminManager(am);
+				AdminManager = f.GetAdminManager();
 			}
 		}
 	}

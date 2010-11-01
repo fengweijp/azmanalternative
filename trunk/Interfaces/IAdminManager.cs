@@ -33,7 +33,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets a collection of applications
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications { get; }
+		//System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications { get; }
 
 		/// <summary>
 		/// Add an application group to the store
@@ -47,6 +47,7 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		/// <param name="group">The group to remove</param>
 		void DeleteGroup(ApplicationGroup group);
+		void UpdateGroup(ApplicationGroup group);
 
 		/// <summary>
 		/// Add an application to the store
@@ -54,11 +55,13 @@ namespace AzAlternative.Interfaces
 		/// <param name="name">The application name. Must not be null or empty</param>
 		/// <param name="description">Application description</param>
 		/// <param name="versionInformation">Version information</param>
-		Application CreateApplication(string name, string description, string versionInformation);
+		//Application CreateApplication(string name, string description, string versionInformation);
 		/// <summary>
 		/// Removes an application from the store
 		/// </summary>
 		/// <param name="application">The application to remove</param>
-		void DeleteApplication(Application application);
+		//void DeleteApplication(Application application);
+
+		void Update();
 	}
 }
