@@ -1,3 +1,51 @@
+<<<<<<< .mine
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+
+namespace AzAlternative.Xml
+{
+	/// <summary>
+	/// Wraps up access to the underlying store & provides helper method to access it
+	/// </summary>
+	internal class XmlService : ServiceBase
+	{
+		public XmlService(string connectionString)
+		{
+			ConnectionString = connectionString;
+		}
+
+		public override AdminManager GetAdminManager()
+		{
+			return new AdminManager(new XmlAdminManager(this));
+		}
+
+		public XmlElement LoadRoot()
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.Load(ConnectionString);
+
+			return doc.DocumentElement;
+		}
+
+		public XmlElement Load(Guid guid)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.Load(ConnectionString);
+
+			return (XmlElement)doc.SelectSingleNode(string.Format("*[Guid={0}]", guid));
+		}
+
+		public void Save(XmlBaseObject o)
+		{
+			XmlElement e = o.ToXml();
+			e.OwnerDocument.Save(ConnectionString);
+		}
+	}
+}
+=======
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,3 +98,4 @@ namespace AzAlternative.Xml
 		}
 	}
 }
+>>>>>>> .r8
