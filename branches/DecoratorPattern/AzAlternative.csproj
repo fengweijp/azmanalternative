@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{39BD25A7-06B4-4763-AEDD-F0B8A6EC6739}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AzAlternative</RootNamespace>
+    <AssemblyName>AzAlternative</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminManager.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="ApplicationGroup.cs" />
+    <Compile Include="AzException.cs" />
+    <Compile Include="AzMan.cs" />
+    <Compile Include="BaseObject.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="FactoryBase.cs" />
+    <Compile Include="Interfaces\IAdminManager.cs" />
+    <Compile Include="Interfaces\IApplication.cs" />
+    <Compile Include="Interfaces\IApplicationGroup.cs" />
+    <Compile Include="Interfaces\IMember.cs" />
+    <Compile Include="Interfaces\IOperation.cs" />
+    <Compile Include="Interfaces\IRole.cs" />
+    <Compile Include="Interfaces\IScope.cs" />
+    <Compile Include="Interfaces\ITask.cs" />
+    <Compile Include="Operation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Role.cs" />
+    <Compile Include="Task.cs" />
+    <Compile Include="Xml\XmlAdminManager.cs" />
+    <Compile Include="Xml\XmlApplication.cs" />
+    <Compile Include="Xml\XmlApplicationGroup.cs" />
+    <Compile Include="Xml\XmlBaseObject.cs" />
+    <Compile Include="Xml\XmlFactory.cs" />
+    <Compile Include="Xml\XmlOperation.cs" />
+    <Compile Include="Xml\XmlTask.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
