@@ -52,6 +52,17 @@ namespace AzAlternative
 			set { _Task.BizRuleImportedPath = value; }
 		}
 
+        public BizRuleLanguage BizRuleLanguage
+        {
+            get { return _Task.BizRuleLanguage; }
+            set { _Task.BizRuleLanguage = value; }
+        }
+
+        public string BizRule
+        {
+            get { return _Task.BizRule; }
+        }
+
         /// <summary>
         /// Gets a collection of tasks directly added to this task
         /// </summary>
@@ -112,5 +123,7 @@ namespace AzAlternative
             CheckObjectIsValid(operation);
             _Task.RemoveOperation(operation);
 		}
-	}
+
+
+     }
 }
