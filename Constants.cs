@@ -11,6 +11,12 @@ namespace AzAlternative
 		LdapQuery
 	}
 
+    public enum BizRuleLanguage
+    {
+        VBScript,
+        JScript
+    }
+
 	public static class Constants
 	{
 	}
