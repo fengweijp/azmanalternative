@@ -130,34 +130,42 @@ namespace AzAlternative
 			Instance.UpdateGroup(group);
 		}
 
-		///// <summary>
-		///// Create a new role in the application
-		///// </summary>
-		///// <param name="name">Required name of the role</param>
-		///// <param name="description">Description of the role</param>
-		///// <returns>new role</returns>
-		//public Role CreateRole(string name, string description)
-		//{
-		//    if (string.IsNullOrEmpty(name))
-		//        throw new ArgumentNullException("name");
+		/// <summary>
+		/// Create a new role in the application
+		/// </summary>
+		/// <param name="name">Required name of the role</param>
+		/// <param name="description">Description of the role</param>
+		/// <returns>new role</returns>
+		public RoleDefinition CreateRole(string name, string description)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
 
-		//    Role r = _Application.CreateRole(name, description);
-		//    r.Application = this;
+			RoleDefinition r = Instance.CreateRole(name, description);
+			r.Application = this;
 
-		//    return r;
-		//}
+			return r;
+		}
 
-		///// <summary>
-		///// Deletes a role from the application
-		///// </summary>
-		///// <param name="role"></param>
-		//public void DeleteRole(Role role)
-		//{
-		//    if (role.Application.Guid != this.Guid)
-		//        throw new AzException("Role is part of the application.");
+		/// <summary>
+		/// Deletes a role from the application
+		/// </summary>
+		/// <param name="role"></param>
+		public void DeleteRole(RoleDefinition role)
+		{
+			if (!CheckObjectIsValid(role))
+				throw new AzException("Role is part of the application.");
 
-		//    _Application.DeleteRole(role);
-		//}
+			Instance.DeleteRole(role);
+		}
+
+		public void UpdateRole(RoleDefinition role)
+		{
+			if (!CheckObjectIsValid(role))
+				throw new AzException("Role is part of the application.");
+
+			Instance.UpdateRole(role);
+		}
 
 		/// <summary>
 		/// Create a new operation in the application

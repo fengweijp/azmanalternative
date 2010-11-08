@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AzAlternative
 {
-    public abstract class CollectionBase<T> : ICollection<T>, IList<T>, IEnumerable<T> where T : BaseObject
+    public abstract class CollectionBase<T> : ICollection<T>, IList<T>, IEnumerable<T> where T : ContainerBase
     {
         private Guid[] _Guids;
         private T[] _Objects;
@@ -41,8 +41,7 @@ namespace AzAlternative
 
         public bool Contains(T value)
         {
-            throw new NotImplementedException();
-            //return _Guids.Contains(value.Guid);
+			return _Guids.Contains(value.Guid);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -50,11 +49,16 @@ namespace AzAlternative
             return (IEnumerator<T>)_Objects.GetEnumerator();
         }
 
+		public int IndexOf(T item)
+		{
+			return Array.IndexOf(_Guids, item.Guid);
+		}
+
         #region Interfaces
 
         bool ICollection<T>.Contains(T item)
         {
-            throw new NotImplementedException();
+			return Contains(item);
         }
 
         void ICollection<T>.CopyTo(T[] array, int arrayIndex)
@@ -74,17 +78,17 @@ namespace AzAlternative
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            throw new NotImplementedException();
+			return this.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+			return this.GetEnumerator();
         }
 
         int IList<T>.IndexOf(T item)
         {
-            throw new NotImplementedException();
+			return IndexOf(item);
         }
 
         T IList<T>.this[int index]

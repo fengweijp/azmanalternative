@@ -8,7 +8,7 @@ namespace AzAlternative.Interfaces
 	/// <summary>
 	/// A role
 	/// </summary>
-	public interface IRole
+	public interface IRoleAssignment
 	{
 		/// <summary>
 		/// Gets the role identifier
@@ -22,6 +22,7 @@ namespace AzAlternative.Interfaces
 		/// Gets or sets the role description
 		/// </summary>
 		string Description { get; set; }
+		IRoleDefinition Definition { get; }
 		/// <summary>
 		/// Gets the collection of groups assigned to the role
 		/// </summary>
@@ -31,19 +32,8 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		System.Collections.ObjectModel.ReadOnlyCollection<IMember> Members { get; }
 		//System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles { get; }
-		System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations { get; }
-		System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks { get; }
 
 		void AddGroup(ApplicationGroup group);
 		void RemoveGroup(ApplicationGroup group);
-
-		//void AddRole(Role role);
-		//void RemoveRole(Role role);
-
-		void AddOperation(Operation operation);
-		void RemoveOperation(Operation operation);
-
-		void AddTask(Task task);
-		void RemoveTask(Task task);
 	}
 }

@@ -8,19 +8,7 @@ namespace AzAlternative.Interfaces
 	/// <summary>
 	/// A scope
 	/// </summary>
-	public interface IScope
+	public interface IScope : IApplication
 	{
-		/// <summary>
-		/// Gets the scope identifier
-		/// </summary>
-		Guid Guid { get; }
-		/// <summary>
-		/// Gets or sets the scope name
-		/// </summary>
-		string Name { get; set; }
-		/// <summary>
-		/// Gets or sets the scope description
-		/// </summary>
-		string Description { get; set; }
 	}
 }

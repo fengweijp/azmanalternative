@@ -47,8 +47,9 @@ namespace AzAlternative.Interfaces
 		void DeleteGroup(ApplicationGroup group);
 		void UpdateGroup(ApplicationGroup group);
 
-		//Role CreateRole(string name, string description);
-		//void DeleteRole(Role role);
+		RoleDefinition CreateRole(string name, string description);
+		void DeleteRole(RoleDefinition role);
+		void UpdateRole(RoleDefinition role);
 
 		Operation CreateOperation(string name, string description, int operationId);
 		void DeleteOperation(Operation operation);

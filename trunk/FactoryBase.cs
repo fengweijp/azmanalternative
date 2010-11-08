@@ -20,5 +20,7 @@ namespace AzAlternative
 		}
 
 		public abstract AdminManager GetAdminManager();
+
+		public abstract Interfaces.IApplication GetApplication(Guid guid);
 	}
 }
