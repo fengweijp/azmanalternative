@@ -11,8 +11,6 @@ namespace AzAlternative.Xml
 		private const string ELEMENTNAME = "AzAdminManager";
 		private const string MAJORVERSION = "MajorVersion";
 		private const string MINORVERSION = "MinorVersion";
-		private const string DESCRIPTION = "Description";
-		private const string GUID = "Guid";
 
 		public int MajorVersion
 		{
@@ -21,12 +19,6 @@ namespace AzAlternative.Xml
 		}
 
 		public int MinorVersion
-		{
-			get;
-			set;
-		}
-
-		public string Description
 		{
 			get;
 			set;
@@ -53,57 +45,79 @@ namespace AzAlternative.Xml
 			: base(factory)
 		{
 			XmlElement e = factory.LoadRoot();
-			MajorVersion = int.Parse(e.Attributes[MAJORVERSION].Value);
-			MinorVersion = int.Parse(e.Attributes[MINORVERSION].Value);
-			Description = e.Attributes[DESCRIPTION].Value;
+			MajorVersion = int.Parse(GetAttribute(e, MAJORVERSION));
+			MinorVersion = int.Parse(GetAttribute(e, MINORVERSION));
+			Description = GetAttribute(e, DESCRIPTION);
 			Guid = new Guid(e.Attributes[GUID].Value);
 		}
 
 		public void DeleteGroup(ApplicationGroup group)
 		{
-			//XmlApplicationGroup.RemoveApplicationGroup(Node, group.Guid);
-			//Factory.SaveChanges();
+			Service.RemoveElement((XmlApplicationGroup)group.Instance);
 		}
 
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
-			throw new NotImplementedException();
-			//XmlApplicationGroup ag = XmlApplicationGroup.NewApplicationGroup(Factory, name, description, groupType);
-			//ag.Update(Node);
+			XmlApplicationGroup ag = new XmlApplicationGroup(Service);
+			ag.Guid = System.Guid.NewGuid();
+			ag.Name = name;
+			ag.Description = description;
+			ag.GroupType = groupType;
+			//ag.Parent = this;
 
-			//return new ApplicationGroup(ag);
+			XmlElement root = Service.LoadRoot();
+			Service.Save(ag.ToXml(root));
+
+			return new ApplicationGroup(ag);
 		}
 
 		public void UpdateGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+			XmlApplicationGroup ag = (XmlApplicationGroup)group.Instance;
+			Service.Save(ag);
 		}
 
-		//public Application CreateApplication(string name, string description, string versionInformation)
-		//{
-		//    XmlApplication a = XmlApplication.CreateApplication(Factory, name, description, versionInformation);
-		//    a.Update(Node);
+		public Application CreateApplication(string name, string description, string versionInformation)
+		{
+			XmlApplication a = new XmlApplication(Service);
+			a.Guid = System.Guid.NewGuid();
+			a.Name = name;
+			a.Description = description;
+			a.ApplicationVersion = versionInformation;
 
-		//    return new Application(a);
-		//}
+			XmlElement root = Service.LoadRoot();
+			Service.Save(a.ToXml(root));
 
-		//public void DeleteApplication(Application application)
-		//{
-		//    XmlApplication.RemoveApplication(Node, application.Guid);
-		//    Factory.SaveChanges();
-		//}
+			return new Application(a);
+		}
+
+		public void DeleteApplication(Application application)
+		{
+			Service.RemoveElement((XmlApplication)application.Instance);
+		}
+
+		public void UpdateApplication(Application application)
+		{
+			XmlApplication a = (XmlApplication)application.Instance;
+			Service.Save(a);
+		}
 
 		public void Update()
 		{
-			Factory.Save(this);
+			Service.Save(this);
 		}
 
 		public override XmlElement ToXml()
 		{
 			XmlElement e = base.ToXml();
-			e.Attributes[DESCRIPTION].Value = Description;
+			SetAttribute(e, DESCRIPTION, Description);
 
 			return e;
+		}
+
+		public override XmlElement ToXml(XmlElement parent)
+		{
+			throw new NotSupportedException();
 		}
 	}
 }

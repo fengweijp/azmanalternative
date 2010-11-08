@@ -104,39 +104,51 @@ namespace AzAlternative
 			_AdminManager.UpdateGroup(group);
 		}
 
-		///// <summary>
-		///// Add an application to the store
-		///// </summary>
-		///// <param name="name">The application name. Must not be null or empty</param>
-		///// <param name="description">Application description</param>
-		///// <param name="versionInformation">Version information</param>
-		//public Application CreateApplication(string name, string description, string versionInformation)
-		//{
-		//    if (string.IsNullOrEmpty(name))
-		//        throw new ArgumentNullException("name", "A name must be specified when adding an application");
+		/// <summary>
+		/// Add an application to the store
+		/// </summary>
+		/// <param name="name">The application name. Must not be null or empty</param>
+		/// <param name="description">Application description</param>
+		/// <param name="versionInformation">Version information</param>
+		public Application CreateApplication(string name, string description, string versionInformation)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name", "A name must be specified when adding an application");
 
-		//    Application a = _AdminManager.CreateApplication(name, description, versionInformation);
-		//    a.Store = this;
+			Application a = _AdminManager.CreateApplication(name, description, versionInformation);
+			a.Store = this;
 
-		//    return a;
-		//}
+			return a;
+		}
 
-		///// <summary>
-		///// Removes an application from the store
-		///// </summary>
-		///// <param name="application">The application to remove</param>
-		//public void DeleteApplication(Application application)
-		//{
-		//    if (application.Store.Guid != this.Guid)
-		//        throw new AzException("The application is not part of this store.");
+		/// <summary>
+		/// Removes an application from the store
+		/// </summary>
+		/// <param name="application">The application to remove</param>
+		public void DeleteApplication(Application application)
+		{
+			if (CheckApplicationIsValid(application))
+				_AdminManager.DeleteApplication(application);
+		}
 
-		//    _AdminManager.DeleteApplication(application);
-		//}
+		public void UpdateApplication(Application application)
+		{
+			if (CheckApplicationIsValid(application))
+				_AdminManager.UpdateApplication(application);
+		}
 
 		private bool CheckGroupIsValid(ApplicationGroup group)
 		{
 			if (group.Store == null || group.Store.Guid != this.Guid)
 				throw new AzException("The group is not defined in the store, or is not a global group.");
+
+			return true;
+		}
+
+		private bool CheckApplicationIsValid(Application application)
+		{
+			if (application.Store == null || application.Store.Guid != this.Guid)
+				throw new AzException("The application is not defined in the store.");
 
 			return true;
 		}

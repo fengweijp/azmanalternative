@@ -10,6 +10,11 @@ namespace AzAlternative
     /// </summary>
     public abstract class ContainerBase
     {
+		public abstract Guid Guid
+		{
+			get;
+		}
+
         /// <summary>
         /// Gets the application this object belongs to
         /// </summary>
@@ -34,5 +39,11 @@ namespace AzAlternative
 
 		//    return true;
 		//}
+
+		protected bool CheckObjectIsValid(ContainerBase o)
+		{
+			return (o.Application != null && o.Application.Guid == this.Guid);
+		}
+
     }
 }

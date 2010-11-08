@@ -8,16 +8,16 @@ namespace AzAlternative
     /// <summary>
     /// A task
     /// </summary>
-	public class Task : BaseObject, Interfaces.ITask
+	public class Task : ContainerBase, Interfaces.ITask
 	{
-		private readonly Interfaces.ITask _Task;
+		internal readonly Interfaces.ITask Instance;
 
         /// <summary>
         /// Gets the task identifier
         /// </summary>
-		public Guid Guid
+		public override Guid Guid
 		{
-			get { return _Task.Guid; }
+			get { return Instance.Guid; }
 		}
 
         /// <summary>
@@ -25,12 +25,12 @@ namespace AzAlternative
         /// </summary>
 		public string Name
 		{
-			get { return _Task.Name; }
+			get { return Instance.Name; }
 			set 
             {
                 if (string.IsNullOrEmpty(value))
                     throw new ArgumentNullException("Name");
-                _Task.Name = value;
+                Instance.Name = value;
             }
 		}
 
@@ -39,8 +39,8 @@ namespace AzAlternative
         /// </summary>
 		public string Description
 		{
-			get { return _Task.Description; }
-			set { _Task.Description = value; }
+			get { return Instance.Description; }
+			set { Instance.Description = value; }
 		}
 
         /// <summary>
@@ -48,40 +48,38 @@ namespace AzAlternative
         /// </summary>
 		public string BizRuleImportedPath
 		{
-			get { return _Task.BizRuleImportedPath; }
-			set { _Task.BizRuleImportedPath = value; }
+			get { return Instance.BizRuleImportedPath; }
 		}
 
-        public BizRuleLanguage BizRuleLanguage
-        {
-            get { return _Task.BizRuleLanguage; }
-            set { _Task.BizRuleLanguage = value; }
-        }
+		public BizRuleLanguage BizRuleLanguage
+		{
+			get { return Instance.BizRuleLanguage; }
+		}
 
-        public string BizRule
-        {
-            get { return _Task.BizRule; }
-        }
+		public string BizRule
+		{
+			get { return Instance.BizRule; }
+		}
 
         /// <summary>
         /// Gets a collection of tasks directly added to this task
         /// </summary>
-		public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
-		{
-			get { return _Task.Tasks; }
-		}
+		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
+		//{
+		//    get { return Instance.Tasks; }
+		//}
 
         /// <summary>
         /// Gets a collection of operations directly added to this task
         /// </summary>
 		public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
 		{
-			get { return _Task.Operations; }
+			get { return Instance.Operations; }
 		}
 
         internal Task(Interfaces.ITask task)
         {
-            _Task = task;
+            Instance = task;
         }
 
         /// <summary>
@@ -90,8 +88,9 @@ namespace AzAlternative
         /// <param name="task">Task to add</param>
 		public void AddTask(Task task)
 		{
-            CheckObjectIsValid(task);
-            _Task.AddTask(task);
+			CheckObjectIsValid(task);
+			//TODO: Check task isn't already in Task
+			Instance.AddTask(task);
 		}
 
         /// <summary>
@@ -100,8 +99,8 @@ namespace AzAlternative
         /// <param name="task">Task to remove</param>
 		public void RemoveTask(Task task)
 		{
-            CheckObjectIsValid(task);
-            _Task.RemoveTask(task);
+			CheckObjectIsValid(task);
+			Instance.RemoveTask(task);
 		}
 
         /// <summary>
@@ -110,8 +109,9 @@ namespace AzAlternative
         /// <param name="operation">Operation to add</param>
 		public void AddOperation(Operation operation)
 		{
-            CheckObjectIsValid(operation);
-            _Task.AddOperation(operation);
+			CheckObjectIsValid(operation);
+			//TODO: Check op isn't in already
+			Instance.AddOperation(operation);
 		}
 
         /// <summary>
@@ -120,10 +120,21 @@ namespace AzAlternative
         /// <param name="operation">Operation to remove</param>
 		public void RemoveOperation(Operation operation)
 		{
-            CheckObjectIsValid(operation);
-            _Task.RemoveOperation(operation);
+			CheckObjectIsValid(operation);
+			Instance.RemoveOperation(operation);
 		}
 
+		public void LoadBizRuleScript(string path, BizRuleLanguage language)
+		{
+			if (language == AzAlternative.BizRuleLanguage.Undefined)
+				throw new AzException("Undefined cannot be set for the script language.");
 
-     }
+			Instance.LoadBizRuleScript(path, language);
+		}
+
+		public void ClearBizRuleScript()
+		{
+			Instance.ClearBizRuleScript();
+		}
+	}
 }

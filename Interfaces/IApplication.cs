@@ -43,14 +43,16 @@ namespace AzAlternative.Interfaces
 		///// </summary>
 		//System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks { get; }
 
-		//ApplicationGroup CreateGroup(string name, string description, GroupType groupType);
-		//void DeleteGroup(ApplicationGroup group);
+		ApplicationGroup CreateGroup(string name, string description, GroupType groupType);
+		void DeleteGroup(ApplicationGroup group);
+		void UpdateGroup(ApplicationGroup group);
 
 		//Role CreateRole(string name, string description);
 		//void DeleteRole(Role role);
 
-		//Operation CreateOperation(string name, string description, int operationId);
-		//void DeleteOperation(Operation operation);
+		Operation CreateOperation(string name, string description, int operationId);
+		void DeleteOperation(Operation operation);
+		void UpdateOperation(Operation operation);
 
 		//Task CreateTask(string name, string description);
 		//void DeleteTask(Task task);
