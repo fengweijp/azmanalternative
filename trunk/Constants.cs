@@ -13,6 +13,7 @@ namespace AzAlternative
 
     public enum BizRuleLanguage
     {
+		Undefined,
         VBScript,
         JScript
     }

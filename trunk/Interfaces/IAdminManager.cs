@@ -55,12 +55,13 @@ namespace AzAlternative.Interfaces
 		/// <param name="name">The application name. Must not be null or empty</param>
 		/// <param name="description">Application description</param>
 		/// <param name="versionInformation">Version information</param>
-		//Application CreateApplication(string name, string description, string versionInformation);
+		Application CreateApplication(string name, string description, string versionInformation);
 		/// <summary>
 		/// Removes an application from the store
 		/// </summary>
 		/// <param name="application">The application to remove</param>
-		//void DeleteApplication(Application application);
+		void DeleteApplication(Application application);
+		void UpdateApplication(Application application);
 
 		void Update();
 	}

@@ -11,6 +11,10 @@ namespace AzAlternative.Xml
 	/// </summary>
 	internal abstract class XmlBaseObject
 	{
+		protected const string GUID = "Guid";
+		protected const string NAME = "Name";
+		protected const string DESCRIPTION = "Description";
+
 		///// <summary>
 		///// Gets the XML element for the current object
 		///// </summary>
@@ -18,45 +22,57 @@ namespace AzAlternative.Xml
 		///// <summary>
 		///// Gets the factory object that talks to the store.
 		///// </summary>
-		protected readonly XmlService Factory;
+		protected readonly XmlService Service;
 
 		public Guid Guid
 		{
 			get;
 			set;
 		}
-		
-		///// <summary>
-		///// Gets an attribute, returning null if the attribute is not defined
-		///// </summary>
-		///// <param name="name">name of the attribute to get</param>
-		///// <returns>string value, null if not defined</returns>
-		//protected string GetAttribute(string name)
-		//{
-		//    if (!Node.HasAttribute(name))
-		//        return null;
 
-		//    return Node.Attributes[name].Value;
-		//}
+		public string Name
+		{
+			get;
+			set;
+		}
 
-		///// <summary>
-		///// Sets an attribute, creating it if the attribute does not exist
-		///// </summary>
-		///// <param name="name">name of the attribute</param>
-		///// <param name="value">value of the attribute</param>
-		//protected void SetAttribute(string name, string value)
-		//{
-		//    if (!Node.HasAttribute(name))
-		//    {
-		//        Node.Attributes.Append(Node.OwnerDocument.CreateAttribute(name));
-		//    }
-		//    Node.Attributes[name].Value = value;
-		//}
+		public string Description
+		{
+			get;
+			set;
+		}
 
-		public XmlBaseObject(XmlService factory)
+		/// <summary>
+		/// Gets an attribute, returning null if the attribute is not defined
+		/// </summary>
+		/// <param name="name">name of the attribute to get</param>
+		/// <returns>string value, null if not defined</returns>
+		protected string GetAttribute(XmlElement node, string name)
+		{
+			if (!node.HasAttribute(name))
+				return null;
+
+			return node.Attributes[name].Value;
+		}
+
+		/// <summary>
+		/// Sets an attribute, creating it if the attribute does not exist
+		/// </summary>
+		/// <param name="name">name of the attribute</param>
+		/// <param name="value">value of the attribute</param>
+		protected void SetAttribute(XmlElement node, string name, string value)
+		{
+			if (!node.HasAttribute(name))
+			{
+				node.Attributes.Append(node.OwnerDocument.CreateAttribute(name));
+			}
+			node.Attributes[name].Value = value;
+		}
+
+		public XmlBaseObject(XmlService service)
 		{
 			//Node = node;
-			Factory = factory;
+			Service = service;
 		}
 
 		///// <summary>
@@ -79,9 +95,24 @@ namespace AzAlternative.Xml
 		//    return new System.Collections.ObjectModel.ReadOnlyCollection<T>(result);
 		//}
 
+		public void Load(Guid guid)
+		{
+			XmlElement e = Service.Load(guid);
+			Guid = new System.Guid(GetAttribute(e, GUID));
+			Name = GetAttribute(e, NAME);
+			Description = GetAttribute(e, DESCRIPTION);
+
+			LoadInternal(e);
+		}
+
+		protected virtual void LoadInternal(XmlElement element)
+		{ }
+
 		public virtual XmlElement ToXml()
 		{
-			return Factory.Load(Guid);
+			return Service.Load(Guid);
 		}
+
+		public abstract XmlElement ToXml(XmlElement parent);
 	}
 }

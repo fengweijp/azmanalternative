@@ -8,16 +8,16 @@ namespace AzAlternative
     /// <summary>
     /// An operation
     /// </summary>
-	public class Operation : BaseObject, Interfaces.IOperation
+	public class Operation : ContainerBase, Interfaces.IOperation
 	{
-		private readonly Interfaces.IOperation _Operation;
+		internal readonly Interfaces.IOperation Instance;
 
         /// <summary>
         /// Gets the operation identifier
         /// </summary>
-		public Guid Guid
+		public override Guid Guid
 		{
-			get { return _Operation.Guid; }
+			get { return Instance.Guid; }
 		}
 
         /// <summary>
@@ -25,13 +25,13 @@ namespace AzAlternative
         /// </summary>
 		public string Name
 		{
-			get { return _Operation.Name; }
+			get { return Instance.Name; }
 			set 
             {
                 if (string.IsNullOrEmpty(value))
                     throw new ArgumentNullException("Name");
 
-                _Operation.Name = value; 
+                Instance.Name = value; 
             }
 		}
 
@@ -40,8 +40,8 @@ namespace AzAlternative
         /// </summary>
 		public string Description
 		{
-			get { return _Operation.Description; }
-			set { _Operation.Description = value; }
+			get { return Instance.Description; }
+			set { Instance.Description = value; }
 		}
 
         /// <summary>
@@ -49,18 +49,18 @@ namespace AzAlternative
         /// </summary>
 		public int OperationId
 		{
-			get { return _Operation.OperationId; }
+			get { return Instance.OperationId; }
 			set
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException("OperationId");
-                _Operation.OperationId = value; 
+                Instance.OperationId = value; 
             }
 		}
 
         internal Operation(Interfaces.IOperation operation)
         {
-            _Operation = operation;
+            Instance = operation;
         }
 	}
 }

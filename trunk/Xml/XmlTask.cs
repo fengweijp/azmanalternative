@@ -9,109 +9,157 @@ namespace AzAlternative.Xml
     internal class XmlTask : XmlBaseObject, Interfaces.ITask
     {
         private const string ELEMENTNAME = "AzApplication";
-        private const string GUID = "Guid";
-        private const string NAME = "Name";
-        private const string DESCRIPTION = "Description";
-        private const string BIZRULEPATH = "";
+		private const string BIZRULEPATH = "BizRuleImportedPath";
+		private const string BIZRULELANGUAGE = "BizRuleLanguage";
+		private const string BIZRULE = "BizRule";
+		private const string OPERATION = "OperationLink";
+		private const string TASK = "TaskLink";
 
-        public Guid Guid
-        {
-            get
-            {
-                string s = GetAttribute(GUID);
-                if (s == null)
-                    return Guid.Empty;
+		public string BizRuleImportedPath
+		{
+			get;
+			set;
+		}
 
-                return new Guid(s);
-            }
-            set
-            {
-                SetAttribute(GUID, value.ToString());
-            }
-        }
+		public BizRuleLanguage BizRuleLanguage
+		{
+			get;
+			set;
+		}
 
-        public string Name
-        {
-            get
-            {
-                return GetAttribute(NAME);
-            }
-            set
-            {
-                SetAttribute(NAME, value);
-            }
-        }
+		public string BizRule
+		{
+			get;
+			set;
+		}
 
-        public string Description
-        {
-            get
-            {
-                return GetAttribute(DESCRIPTION);
-            }
-            set
-            {
-                SetAttribute(DESCRIPTION, value);
-            }
-        }
+		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
+		//{
+		//    get { throw new NotImplementedException(); }
+		//}
 
-        public string BizRuleImportedPath
-        {
-            get
-            {
-                return GetAttribute(BIZRULEPATH);
-            }
-            set
-            {
-                SetAttribute(BIZRULEPATH, value);
-            }
-        }
+		public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
+		{
+			get { throw new NotImplementedException(); }
+		}
 
-        public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public XmlTask(XmlElement node, XmlFactory factory)
-            : base(node, factory)
+        public XmlTask(XmlService service)
+            : base(service)
         { }
 
-        public void AddTask(Task task)
-        {
-            throw new NotImplementedException();
-        }
+		public void AddTask(Task task)
+		{
+			Service.CreateLink(this, TASK, task.Guid);
+		}
 
-        public void RemoveTask(Task task)
-        {
-            throw new NotImplementedException();
-        }
+		public void RemoveTask(Task task)
+		{
+			Service.RemoveLink(this, TASK, task.Guid);
+		}
 
         public void AddOperation(Operation operation)
         {
-            throw new NotImplementedException();
+			Service.CreateLink(this, OPERATION, operation.Guid);
         }
 
         public void RemoveOperation(Operation operation)
         {
-            throw new NotImplementedException();
+			Service.RemoveLink(this, OPERATION, operation.Guid);
         }
 
-        public static XmlNodeList GetTasks(XmlElement parent)
-        {
-            return parent.SelectNodes(ELEMENTNAME);
-        }
+		public override XmlElement ToXml(XmlElement parent)
+		{
+			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
+			SetAttribute(e, GUID, Guid.ToString());
+			SetAttribute(e, NAME, Name);
+			SetAttribute(e, DESCRIPTION, Description);
+			
+			SetAttribute(e, BIZRULEPATH, BizRuleImportedPath);
+			SetElement(e, BIZRULELANGUAGE, BizRuleLanguage == AzAlternative.BizRuleLanguage.Undefined ? null : BizRuleLanguage.ToString());
+			SetElement(e, BIZRULE, BizRule);
 
-        public static XmlTask CreateTask(XmlFactory factory, string name, string description)
-        {
-            XmlTask t = new XmlTask(factory.CreateNew(ELEMENTNAME), factory);
-            t.Name = name;
-            t.Description = description;
+			return e;
+		}
 
-            return t;
-        }
-    }
+		public override XmlElement ToXml()
+		{
+			XmlElement e = base.ToXml();
+			SetAttribute(e, NAME, Name);
+			SetAttribute(e, DESCRIPTION, Description);
+
+			SetAttribute(e, BIZRULEPATH, BizRuleImportedPath);
+
+			SetElement(e, BIZRULELANGUAGE, BizRuleLanguage == AzAlternative.BizRuleLanguage.Undefined ? null : BizRuleLanguage.ToString());
+			SetElement(e, BIZRULE, BizRule);
+
+			return e;
+		}
+
+		protected override void LoadInternal(XmlElement element)
+		{
+			base.LoadInternal(element);
+
+			BizRuleImportedPath = GetAttribute(element, BIZRULEPATH);
+			BizRule = GetElement(element, BIZRULE);
+			switch (GetElement(element, BIZRULELANGUAGE))
+			{
+				case null:
+					BizRuleLanguage = AzAlternative.BizRuleLanguage.Undefined;
+					break;
+				case "VBScript":
+					BizRuleLanguage = AzAlternative.BizRuleLanguage.VBScript;
+					break;
+				case "JScript":
+					BizRuleLanguage = AzAlternative.BizRuleLanguage.JScript;
+					break;
+				default:
+					throw new AzException("Unknown Biz Rule language.");
+			}
+			
+		}
+
+		private void SetElement(XmlElement parent, string elementName, string value)
+		{
+			XmlElement e = parent[elementName];
+			if (e == null && value == null)
+				return;
+			else if (e == null)
+			{
+				e = parent.OwnerDocument.CreateElement(elementName);
+				e.InnerText = value;
+				parent.AppendChild(e);
+			}
+			else if (value == null)
+			{
+				parent.RemoveChild(e);
+			}
+			else
+			{
+				e.InnerText = value;
+			}
+		}
+
+		private string GetElement(XmlElement parent, string elementName)
+		{
+			XmlElement e = parent[elementName];
+			if (e == null)
+				return null;
+
+			return e.InnerXml;
+		}
+
+		public void LoadBizRuleScript(string path, BizRuleLanguage language)
+		{
+			BizRule = BizRuleLoader.LoadScript(path);
+			BizRuleImportedPath = path;
+			BizRuleLanguage = language;
+		}
+
+		public void ClearBizRuleScript()
+		{
+			BizRule = null;
+			BizRuleImportedPath = null;
+			BizRuleLanguage = AzAlternative.BizRuleLanguage.Undefined;
+		}
+	}
 }

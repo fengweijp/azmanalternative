@@ -25,11 +25,11 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets or sets the rule script path
 		/// </summary>
-		string BizRuleImportedPath { get; set; }
+		string BizRuleImportedPath { get; }
         /// <summary>
         /// Gets or sets the rule script language
         /// </summary>
-        BizRuleLanguage BizRuleLanguage { get; set; }
+        BizRuleLanguage BizRuleLanguage { get; }
         /// <summary>
         /// Gets the rule script
         /// </summary>
@@ -37,7 +37,7 @@ namespace AzAlternative.Interfaces
         /// <summary>
 		/// Gets a collection of tasks assigned to the task
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks { get; }
+		//System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks { get; }
 		/// <summary>
 		/// Gets a collection of operations assigned to the task
 		/// </summary>
@@ -64,5 +64,8 @@ namespace AzAlternative.Interfaces
         /// </summary>
         /// <param name="operation">Operation to remove</param>
 		void RemoveOperation(Operation operation);
+
+		void LoadBizRuleScript(string path, BizRuleLanguage language);
+		void ClearBizRuleScript();
 	}
 }

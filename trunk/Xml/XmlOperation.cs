@@ -9,99 +9,47 @@ namespace AzAlternative.Xml
 	internal class XmlOperation: XmlBaseObject, Interfaces.IOperation
 	{
 		private const string ELEMENTNAME = "AzOperation";
-		private const string GUID = "Guid";
-		private const string NAME = "Name";
-		private const string DESCRIPTION = "Description";
 		private const string OPERATIONID = "OperationID";
-
-		public Guid Guid
-		{
-			get
-			{
-				string s = GetAttribute(GUID);
-				if (s == null)
-					return Guid.Empty;
-
-				return new Guid(s);
-			}
-			set
-			{
-				SetAttribute(GUID, value.ToString());
-			}
-		}
-
-		public string Name
-		{
-			get
-			{
-				return GetAttribute(NAME);
-			}
-			set
-			{
-				SetAttribute(NAME, value);
-			}
-		}
-
-		public string Description
-		{
-			get
-			{
-				return GetAttribute(DESCRIPTION);
-			}
-			set
-			{
-				SetAttribute(DESCRIPTION, value);
-			}
-		}
 
 		public int OperationId
 		{
-			get
-			{
-                if (Node[OPERATIONID] == null)
-                    return 0;
-
-                return int.Parse(Node[OPERATIONID].InnerText);
-			}
-			set
-			{
-                XmlElement e = Node[OPERATIONID];
-                if (e == null)
-                {
-                    e = Factory.CreateNew(OPERATIONID);
-                    Node.AppendChild(e);
-                }
-                e.InnerText = value.ToString();
-			}
+			get;
+			set;
 		}
 
-		public XmlOperation(XmlElement node, XmlFactory factory)
-			: base(node, factory)
+		public XmlOperation(XmlService service)
+			: base(service)
 		{ }
 
-        public static XmlNodeList GetOperations(XmlElement parent)
-        {
-            return parent.SelectNodes(ELEMENTNAME);
-        }
+		public override XmlElement ToXml(XmlElement parent)
+		{
+			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
+			SetAttribute(e, GUID, Guid.ToString());
+			SetAttribute(e, NAME, Name);
+			SetAttribute(e, DESCRIPTION, Description);
+			XmlElement op = e.OwnerDocument.CreateElement(OPERATIONID);
+			op.InnerText = OperationId.ToString();
+			e.AppendChild(op);
 
-        public static XmlOperation CreateOperation(XmlFactory factory, string name, string description, int operationId)
-        {
-            XmlOperation o = new XmlOperation(factory.CreateNew(ELEMENTNAME), factory);
-            o.Guid = Guid.NewGuid();
-            o.Name = name;
-            o.Description = description;
-            o.OperationId = operationId;
+			return e;
+		}
 
-            return o;
-        }
+		public override XmlElement ToXml()
+		{
+			XmlElement e = base.ToXml();
+			SetAttribute(e, NAME, Name);
+			SetAttribute(e, DESCRIPTION, Description);
 
-        public static void RemoveOperation(XmlElement parent, Guid guid)
-        {
-            XmlNode n = parent.SelectSingleNode(string.Format("{0}[@{1}={2}]", ELEMENTNAME, GUID, guid));
-            if (n == null)
-                return;
+			e[OPERATIONID].InnerText= OperationId.ToString();
 
-            parent.RemoveChild(n);
-        }
+			return e;
+		}
+
+		protected override void LoadInternal(XmlElement element)
+		{
+			base.LoadInternal(element);
+
+			OperationId = int.Parse(element[OPERATIONID].InnerText);
+		}
 	}
 }

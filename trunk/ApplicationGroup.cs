@@ -10,14 +10,14 @@ namespace AzAlternative
     /// </summary>
 	public class ApplicationGroup : ContainerBase, Interfaces.IApplicationGroup
 	{
-		private readonly Interfaces.IApplicationGroup _ApplicationGroup;
+		internal readonly Interfaces.IApplicationGroup Instance;
 
 		/// <summary>
 		/// Gets the group identifier
 		/// </summary>
-		public Guid Guid
+		public override Guid Guid
 		{
-			get { return _ApplicationGroup.Guid; }
+			get { return Instance.Guid; }
 		}
 
 		/// <summary>
@@ -25,12 +25,12 @@ namespace AzAlternative
 		/// </summary>
 		public string Name
 		{
-			get { return _ApplicationGroup.Name; }
+			get { return Instance.Name; }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
 					throw new ArgumentNullException("Name");
-				_ApplicationGroup.Name = value;
+				Instance.Name = value;
 			}
 		}
 
@@ -39,8 +39,8 @@ namespace AzAlternative
 		/// </summary>
 		public string Description
 		{
-			get { return _ApplicationGroup.Description; }
-			set { _ApplicationGroup.Description = value; }
+			get { return Instance.Description; }
+			set { Instance.Description = value; }
 		}
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace AzAlternative
         /// </summary>
 		public GroupType GroupType
 		{
-			get { return _ApplicationGroup.GroupType; }
+			get { return Instance.GroupType; }
 		}
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace AzAlternative
         /// </summary>
         public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
         {
-            get { return _ApplicationGroup.Groups; }
+            get { return Instance.Groups; }
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace AzAlternative
 
 		internal ApplicationGroup(Interfaces.IApplicationGroup applicationGroup)
 		{
-			_ApplicationGroup = applicationGroup;
+			Instance = applicationGroup;
 		}
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace AzAlternative
         public void AddGroup(ApplicationGroup group)
         {
 			//CheckGroupIsValid(group);
-            _ApplicationGroup.AddGroup(group);
+            Instance.AddGroup(group);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace AzAlternative
         public void RemoveGroup(ApplicationGroup group)
         {
 			//CheckGroupIsValid(group);
-            _ApplicationGroup.RemoveGroup(group);
+            Instance.RemoveGroup(group);
         }
 
 		//private void CheckGroupIsValid(ApplicationGroup group)

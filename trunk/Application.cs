@@ -5,16 +5,16 @@ using System.Text;
 
 namespace AzAlternative
 {
-	public class Application : Interfaces.IApplication
+	public class Application : ContainerBase, Interfaces.IApplication
 	{
-		private readonly Interfaces.IApplication _Application;
+		internal readonly Interfaces.IApplication Instance;
 
         /// <summary>
         /// Gets the application identifier
         /// </summary>
-        public Guid Guid
+        public override Guid Guid
 		{
-			get { return _Application.Guid; }
+			get { return Instance.Guid; }
 		}
 
         /// <summary>
@@ -22,12 +22,12 @@ namespace AzAlternative
         /// </summary>
         public string Name
 		{
-			get { return _Application.Name; }
+			get { return Instance.Name; }
 			set 
             {
                 if (string.IsNullOrEmpty(value))
                     throw new ArgumentNullException("Name");
-                _Application.Name = value; 
+                Instance.Name = value; 
             }
 		}
 
@@ -36,8 +36,8 @@ namespace AzAlternative
         /// </summary>
         public string Description
 		{
-			get { return _Application.Description; }
-			set { _Application.Description = value; }
+			get { return Instance.Description; }
+			set { Instance.Description = value; }
 		}
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace AzAlternative
         /// </summary>
         public string ApplicationVersion
 		{
-			get { return _Application.ApplicationVersion; }
-			set { _Application.ApplicationVersion = value; }
+			get { return Instance.ApplicationVersion; }
+			set { Instance.ApplicationVersion = value; }
 		}
 
 		///// <summary>
@@ -89,38 +89,46 @@ namespace AzAlternative
 
 		internal Application(Interfaces.IApplication application)
 		{
-			_Application = application;
+			Instance = application;
 		}
 
-		///// <summary>
-		///// Create a new group in the application
-		///// </summary>
-		///// <param name="name">name of the group</param>
-		///// <param name="description">description of the group</param>
-		///// <param name="groupType">type of group</param>
-		///// <returns>group in the current application</returns>
-		//public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
-		//{
-		//    if (string.IsNullOrEmpty(name))
-		//        throw new ArgumentNullException("name");
+		/// <summary>
+		/// Create a new group in the application
+		/// </summary>
+		/// <param name="name">name of the group</param>
+		/// <param name="description">description of the group</param>
+		/// <param name="groupType">type of group</param>
+		/// <returns>group in the current application</returns>
+		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
 
-		//    ApplicationGroup g = _Application.CreateGroup(name, description, groupType);
-		//    g.Application = this;
+			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
+			g.Application = this;
 
-		//    return g;
-		//}
+			return g;
+		}
 
-		///// <summary>
-		///// Delete a group defined in the application
-		///// </summary>
-		///// <param name="group">group to delete</param>
-		//public void DeleteGroup(ApplicationGroup group)
-		//{
-		//    if (group.Application == null || group.Application.Guid != this.Guid)
-		//        throw new AzException("The group is not part of this application. Only application groups can be removed here.");
+		/// <summary>
+		/// Delete a group defined in the application
+		/// </summary>
+		/// <param name="group">group to delete</param>
+		public void DeleteGroup(ApplicationGroup group)
+		{
+			if (!CheckObjectIsValid(group))
+				throw new AzException("The group is not part of this application. Only application groups can be removed here.");
 
-		//    _Application.DeleteGroup(group);
-		//}
+			Instance.DeleteGroup(group);
+		}
+
+		public void UpdateGroup(ApplicationGroup group)
+		{
+			if (!CheckObjectIsValid(group))
+				throw new AzException("The group is not part of this application. Only application groups can be updated here.");
+
+			Instance.UpdateGroup(group);
+		}
 
 		///// <summary>
 		///// Create a new role in the application
@@ -151,38 +159,40 @@ namespace AzAlternative
 		//    _Application.DeleteRole(role);
 		//}
 
-		///// <summary>
-		///// Create a new operation in the application
-		///// </summary>
-		///// <param name="name">Required operation name</param>
-		///// <param name="description">Operaton description</param>
-		///// <param name="operationId">Required operaton ID</param>
-		///// <returns>new operation</returns>
-		//public Operation CreateOperation(string name, string description, int operationId)
-		//{
-		//    if (string.IsNullOrEmpty(name))
-		//        throw new ArgumentNullException("name");
+		/// <summary>
+		/// Create a new operation in the application
+		/// </summary>
+		/// <param name="name">Required operation name</param>
+		/// <param name="description">Operaton description</param>
+		/// <param name="operationId">Required operaton ID</param>
+		/// <returns>new operation</returns>
+		public Operation CreateOperation(string name, string description, int operationId)
+		{
+			Operation o = Instance.CreateOperation(name, description, operationId);
+			o.Application = this;
 
-		//    if (operationId < 0)
-		//        throw new ArgumentOutOfRangeException("operationId");
+			return o;
+		}
 
-		//    Operation o = _Application.CreateOperation(name, description, operationId);
-		//    o.Application = this;
+		/// <summary>
+		/// Deletes the operation from the application
+		/// </summary>
+		/// <param name="operation">Operaton to delete</param>
+		public void DeleteOperation(Operation operation)
+		{
+			if (!CheckObjectIsValid(operation))
+				throw new AzException("The operation is not part of this application.");
 
-		//    return o;
-		//}
+			Instance.DeleteOperation(operation);
+		}
 
-		///// <summary>
-		///// Deletes the operation from the application
-		///// </summary>
-		///// <param name="operation">Operaton to delete</param>
-		//public void DeleteOperation(Operation operation)
-		//{
-		//    if (operation.Application.Guid != this.Guid)
-		//        throw new AzException("The operation is not part of this application.");
+		public void UpdateOperation(Operation operation)
+		{
+			if (!CheckObjectIsValid(operation))
+				throw new AzException("The operation is not part of this application.");
 
-		//    _Application.DeleteOperation(operation);
-		//}
+			Instance.UpdateOperation(operation);
+		}
 
 		///// <summary>
 		///// Creates a new task in the application
