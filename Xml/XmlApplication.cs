@@ -66,15 +66,27 @@ namespace AzAlternative.Xml
 			Service.Save(ag);
 		}
 
-		//public Role CreateRole(string name, string description)
-		//{
-		//    throw new NotImplementedException();
-		//}
+		public RoleDefinition CreateRole(string name, string description)
+		{
+			XmlRoleDefinition d = new XmlRoleDefinition(Service);
+			d.Guid = System.Guid.NewGuid();
+			d.Name = name;
+			d.Description = description;
 
-		//public void DeleteRole(Role role)
-		//{
-		//    throw new NotImplementedException();
-		//}
+			Service.Save(d.ToXml(Service.Load(this.Guid)));
+
+			return new RoleDefinition(d);
+		}
+
+		public void DeleteRole(RoleDefinition role)
+		{
+			Service.RemoveElement((XmlRoleDefinition)role.Instance);
+		}
+
+		public void UpdateRole(RoleDefinition role)
+		{
+			Service.Save((XmlRoleDefinition)role.Instance);
+		}
 
 		public Operation CreateOperation(string name, string description, int operationId)
 		{

@@ -82,5 +82,13 @@ namespace AzAlternative.Xml
 			parentNode.RemoveChild(e);
 			Save(parentNode);
 		}
+
+		public override Interfaces.IApplication GetApplication(Guid guid)
+		{
+			XmlApplication a = new XmlApplication(this);
+			a.Load(guid);
+
+			return a;
+		}
 	}
 }
