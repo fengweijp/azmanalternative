@@ -30,9 +30,10 @@ namespace AzAlternative.Xml
 			}
 		}
 
-        public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+        public Collections.ApplicationGroupCollection Groups
         {
-            get { throw new NotImplementedException(); }
+            get;
+            set;
         }
 
 		public XmlApplicationGroup(XmlService service)
@@ -119,5 +120,29 @@ namespace AzAlternative.Xml
 
 			return e;
 		}
-	}
+
+        public static IEnumerator<ApplicationGroup> GetGroups(XmlService service, Guid guid)
+        {
+            XmlElement parent = service.Load(guid);
+
+            foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
+            {
+                XmlApplicationGroup g = new XmlApplicationGroup(service);
+                g.Load((XmlElement)item);
+                yield return new ApplicationGroup(g);
+            }
+        }
+
+        public static Dictionary<string, Guid> GetChildren(XmlElement parent)
+        {
+            Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+
+            foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
+            {
+                result.Add(item.Attributes[NAME].Value, new Guid(item.Attributes[GUID].Value));
+            }
+
+            return result;
+        }
+    }
 }

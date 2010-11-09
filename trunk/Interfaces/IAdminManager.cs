@@ -29,11 +29,11 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets a collection of application groups
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups { get; }
+		Collections.ApplicationGroupCollection Groups { get; }
 		/// <summary>
 		/// Gets a collection of applications
 		/// </summary>
-		//System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications { get; }
+		Collections.ApplicationCollection Applications { get; }
 
 		/// <summary>
 		/// Add an application group to the store

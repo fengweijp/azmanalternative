@@ -161,5 +161,22 @@ namespace AzAlternative.Xml
 			base.LoadInternal(element);
 			ApplicationVersion = GetAttribute(element, APPLICATIONVERSION);
 		}
+
+        public static IEnumerator<Application> GetApplications(XmlService service, Guid guid)
+        {
+            XmlElement parent = service.Load(guid);
+
+            foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
+            {
+                XmlApplication a = new XmlApplication(service);
+                a.Load((XmlElement)item);
+                yield return new Application(a);
+            }
+        }
+
+        public static Dictionary<string, Guid> GetChildren(XmlElement parent)
+        {
+            return GetChildren(parent, ELEMENTNAME);
+        }
 	}
 }
