@@ -24,22 +24,17 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		//public Guid Guid
-		//{
-		//    get;
-		//    set;
-		//}
+        public Collections.ApplicationGroupCollection Groups
+        {
+            get;
+            set;
+        }
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
-		{
-			get { throw new NotImplementedException(); }
-			//get { return GetCollection<ApplicationGroup>(XmlApplicationGroup.GetApplicationGroups(Node), typeof(XmlApplicationGroup)); }
-		}
-
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications
-		//{
-		//    get { return GetCollection<Application>(XmlApplication.GetApplications(Node), typeof(XmlApplication)); }
-		//}
+        public Collections.ApplicationCollection Applications
+        {
+            get;
+            set;
+        }
 
 		public XmlAdminManager(XmlService factory)
 			: base(factory)
@@ -49,6 +44,8 @@ namespace AzAlternative.Xml
 			MinorVersion = int.Parse(GetAttribute(e, MINORVERSION));
 			Description = GetAttribute(e, DESCRIPTION);
 			Guid = new Guid(e.Attributes[GUID].Value);
+            Applications = new Collections.ApplicationCollection(factory, XmlApplication.GetChildren(e));
+            Groups = new Collections.ApplicationGroupCollection(factory, XmlApplicationGroup.GetChildren(e));
 		}
 
 		public void DeleteGroup(ApplicationGroup group)

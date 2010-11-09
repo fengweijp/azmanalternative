@@ -98,12 +98,17 @@ namespace AzAlternative.Xml
 		public void Load(Guid guid)
 		{
 			XmlElement e = Service.Load(guid);
-			Guid = new System.Guid(GetAttribute(e, GUID));
-			Name = GetAttribute(e, NAME);
-			Description = GetAttribute(e, DESCRIPTION);
-
-			LoadInternal(e);
+            Load(e);
 		}
+
+        public void Load(XmlElement element)
+        {
+            Guid = new System.Guid(GetAttribute(element, GUID));
+            Name = GetAttribute(element, NAME);
+            Description = GetAttribute(element, DESCRIPTION);
+
+            LoadInternal(element);
+        }
 
 		protected virtual void LoadInternal(XmlElement element)
 		{ }
@@ -114,5 +119,17 @@ namespace AzAlternative.Xml
 		}
 
 		public abstract XmlElement ToXml(XmlElement parent);
-	}
+
+        protected static Dictionary<string, Guid> GetChildren(XmlElement parent, string elementName)
+        {
+            Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+
+            foreach (XmlNode item in parent.SelectNodes(elementName))
+            {
+                result.Add(item.Attributes[NAME].Value, new Guid(item.Attributes[GUID].Value));
+            }
+
+            return result;
+        }
+    }
 }

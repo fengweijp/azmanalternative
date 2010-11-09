@@ -6,18 +6,30 @@ using System.Text;
 namespace AzAlternative.Collections
 {
 
-	public class ApplicationCollection
-	{
-		private ServiceBase _Service;
+    public class ApplicationCollection : CollectionBase<Application>
+    {
+        internal AdminManager AdminManager;
 
-		internal ApplicationCollection(ServiceBase service)
-		{
-			_Service = service;
-		}
+        public override Application this[string name]
+        {
+            get 
+            {
+                Application a = Service.GetApplication(Guids[name]);
+                a.Store = AdminManager;
 
-		public Application Load(Guid guid)
-		{
-			return new Application(_Service.GetApplication(guid));
-		}
-	}
+                return a;
+            }
+        }
+
+        internal ApplicationCollection(ServiceBase service, Dictionary<string, Guid> values)
+            : base(service, values)
+        {
+            Loader = Service.GetApplication;
+        }
+
+        public override IEnumerator<Application> GetEnumerator()
+        {
+            return Service.GetApplications(AdminManager.Guid);
+        }
+    }
 }

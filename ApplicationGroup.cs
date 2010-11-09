@@ -65,7 +65,7 @@ namespace AzAlternative
         /// <summary>
         /// Gets a collection of groups in this group
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+        public Collections.ApplicationGroupCollection Groups
         {
             get { return Instance.Groups; }
         }

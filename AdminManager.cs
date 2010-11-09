@@ -48,21 +48,30 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets a collection of application groups
 		/// </summary>
-		public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+		public Collections.ApplicationGroupCollection Groups
 		{
 			get
 			{
-				return _AdminManager.Groups;
+                Collections.ApplicationGroupCollection result = _AdminManager.Groups;
+                result.Store = this;
+
+                return result;
 			}
 		}
 
-		///// <summary>
-		///// Gets a collection of applications
-		///// </summary>
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Application> Applications
-		//{
-		//    get { return _AdminManager.Applications; }
-		//}
+        /// <summary>
+        /// Gets a collection of applications
+        /// </summary>
+        public Collections.ApplicationCollection Applications
+        {
+            get 
+            { 
+                Collections.ApplicationCollection result = _AdminManager.Applications;
+                result.AdminManager = this;
+
+                return result;
+            }
+        }
 
 		internal AdminManager(Interfaces.IAdminManager adminManager)
 		{

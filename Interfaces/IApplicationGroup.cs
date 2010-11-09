@@ -33,7 +33,7 @@ namespace AzAlternative.Interfaces
         /// <summary>
         /// Gets a collection of groups in this group
         /// </summary>
-        System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups { get; }
+        Collections.ApplicationGroupCollection Groups { get; }
 
         /// <summary>
         /// Adds a member to this group

@@ -83,12 +83,74 @@ namespace AzAlternative.Xml
 			Save(parentNode);
 		}
 
-		public override Interfaces.IApplication GetApplication(Guid guid)
+		public override Application GetApplication(Guid guid)
 		{
 			XmlApplication a = new XmlApplication(this);
 			a.Load(guid);
 
-			return a;
+            return new Application(a);
 		}
-	}
+
+        public override IEnumerator<Application> GetApplications(Guid guid)
+        {
+            return XmlApplication.GetApplications(this, guid);
+        }
+
+        public override ApplicationGroup GetGroup(Guid guid)
+        {
+            XmlApplicationGroup g = new XmlApplicationGroup(this);
+            g.Load(guid);
+
+            return new ApplicationGroup(g);
+        }
+
+        public override IEnumerator<ApplicationGroup> GetGroups(Guid guid)
+        {
+            return XmlApplicationGroup.GetGroups(this, guid);
+        }
+
+        public override Operation GetOperation(Guid guid)
+        {
+            XmlOperation o = new XmlOperation(this);
+            o.Load(guid);
+
+            return new Operation(o);
+        }
+
+        public override IEnumerator<Operation> GetOperations(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task GetTask(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerator<Task> GetTasks(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override RoleAssignments GetRoleAssignments(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override RoleDefinition GetRoleDefinition(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerator<RoleDefinition> GetRoleDefinitions(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
 }
