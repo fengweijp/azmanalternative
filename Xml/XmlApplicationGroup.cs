@@ -18,6 +18,12 @@ namespace AzAlternative.Xml
 			set;
 		}
 
+		public bool IsGlobalGroup
+		{
+			get;
+			internal set;
+		}
+
 		public List<Interfaces.IMember> Members
 		{
 			get
@@ -43,6 +49,8 @@ namespace AzAlternative.Xml
 		protected override void LoadInternal(XmlElement element)
 		{
 			base.LoadInternal(element);
+
+			IsGlobalGroup = (element.ParentNode.Name == "AzAdminManager");
 
 			switch (GetAttribute(element, GROUPTYPE))
 			{
@@ -121,17 +129,27 @@ namespace AzAlternative.Xml
 			return e;
 		}
 
-        public static IEnumerator<ApplicationGroup> GetGroups(XmlService service, Guid guid)
-        {
-            XmlElement parent = service.Load(guid);
+		//public static IEnumerator<ApplicationGroup> GetGroups(XmlService service, IEnumerable<Guid> guids, AdminManager store, Application app)
+		//{
+		//    if (guids.Count() == 0)
+		//        return null;
 
-            foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
-            {
-                XmlApplicationGroup g = new XmlApplicationGroup(service);
-                g.Load((XmlElement)item);
-                yield return new ApplicationGroup(g);
-            }
-        }
+		//    XmlElement parent = service.Load(guids[0]);
+
+		//    foreach (XmlNode item in parent.OwnerDocument.SelectNodes(string.Format( ELEMENTNAME))
+		//    {
+		//        XmlApplicationGroup g = new XmlApplicationGroup(service);
+		//        g.Load((XmlElement)item);
+
+		//        ApplicationGroup result = new ApplicationGroup(g);
+		//        if (g.IsGlobalGroup)
+		//            result.Store = store;
+		//        else
+		//            result.Application = app;
+
+		//        yield return result;
+		//    }
+		//}
 
         public static Dictionary<string, Guid> GetChildren(XmlElement parent)
         {
@@ -144,5 +162,7 @@ namespace AzAlternative.Xml
 
             return result;
         }
-    }
+
+		//public static Dictionary<string, Guid> GetLinks
+	}
 }

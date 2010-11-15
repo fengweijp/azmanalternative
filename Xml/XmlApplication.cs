@@ -27,10 +27,11 @@ namespace AzAlternative.Xml
 		//    get { return GetCollection<ApplicationGroup>(XmlApplicationGroup.GetApplicationGroups(Node), typeof(XmlApplicationGroup)); }
 		//}
 
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
-		//{
-		//    get { throw new NotImplementedException(); }
-		//}
+		public Collections.OperationCollection Operations
+		{
+			get;
+			set;
+		}
 
 		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
 		//{
@@ -160,19 +161,21 @@ namespace AzAlternative.Xml
 		{
 			base.LoadInternal(element);
 			ApplicationVersion = GetAttribute(element, APPLICATIONVERSION);
+
+			Operations = new Collections.OperationCollection(Service, XmlOperation.GetChildren(element));
 		}
 
-        public static IEnumerator<Application> GetApplications(XmlService service, Guid guid)
-        {
-            XmlElement parent = service.Load(guid);
+		//public static IEnumerator<Application> GetApplications(XmlService service, Guid guid)
+		//{
+		//    XmlElement parent = service.Load(guid);
 
-            foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
-            {
-                XmlApplication a = new XmlApplication(service);
-                a.Load((XmlElement)item);
-                yield return new Application(a);
-            }
-        }
+		//    foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
+		//    {
+		//        XmlApplication a = new XmlApplication(service);
+		//        a.Load((XmlElement)item);
+		//        yield return new Application(a);
+		//    }
+		//}
 
         public static Dictionary<string, Guid> GetChildren(XmlElement parent)
         {

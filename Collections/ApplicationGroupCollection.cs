@@ -14,9 +14,11 @@ namespace AzAlternative.Collections
             get
             {
                 ApplicationGroup result = base[name];
-                if (Store != null)
-                    result.Store = Store;
-                
+				if (result.IsGlobalGroup)
+				{
+					result.Store = Store;
+					result.Application = null;
+				}                
                 return result;
             }
         }
@@ -29,10 +31,7 @@ namespace AzAlternative.Collections
 
         public override IEnumerator<ApplicationGroup> GetEnumerator()
         {
-            if (Store == null)
-                return Service.GetGroups(Application.Guid);
-            else
-                return Service.GetGroups(Store.Guid);
+			return Service.GetGroups(Guids.Values, Store, Application);
         }
     }
 }

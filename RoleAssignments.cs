@@ -51,6 +51,12 @@ namespace AzAlternative
 			Instance = role;
 		}
 
+		internal RoleAssignments(Interfaces.IRoleAssignment role, Application parent)
+			: this(role)
+		{
+			Application = parent;
+		}
+
 		/// <summary>
 		/// Gets the collection of groups in the role
 		/// </summary>

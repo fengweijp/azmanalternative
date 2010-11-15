@@ -91,10 +91,16 @@ namespace AzAlternative.Xml
             return new Application(a);
 		}
 
-        public override IEnumerator<Application> GetApplications(Guid guid)
+        public override IEnumerator<Application> GetApplications(IEnumerable<Guid> guids, AdminManager store)
         {
-            return XmlApplication.GetApplications(this, guid);
-        }
+			foreach (var item in FindElements(guids))
+			{
+				XmlApplication a = new XmlApplication(this);
+				a.Load(item);
+
+				yield return new Application(a, store);
+			}
+		}
 
         public override ApplicationGroup GetGroup(Guid guid)
         {
@@ -104,10 +110,22 @@ namespace AzAlternative.Xml
             return new ApplicationGroup(g);
         }
 
-        public override IEnumerator<ApplicationGroup> GetGroups(Guid guid)
-        {
-            return XmlApplicationGroup.GetGroups(this, guid);
-        }
+		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<Guid> guids, AdminManager store, Application application)
+		{
+			foreach (var item in FindElements(guids))
+			{
+				XmlApplicationGroup g = new XmlApplicationGroup(this);
+				g.Load(item);
+
+				ApplicationGroup result = new ApplicationGroup(g);
+				if (g.IsGlobalGroup)
+					result.Store = store;
+				else
+					result.Application = application;
+
+				yield return result;
+			}
+		}
 
         public override Operation GetOperation(Guid guid)
         {
@@ -117,9 +135,15 @@ namespace AzAlternative.Xml
             return new Operation(o);
         }
 
-        public override IEnumerator<Operation> GetOperations(Guid guid)
+		public override IEnumerator<Operation> GetOperations(IEnumerable<Guid> guids, Application application)
         {
-            throw new NotImplementedException();
+			foreach (var item in FindElements(guids))
+			{
+				XmlOperation o = new XmlOperation(this);
+				o.Load(item);
+
+				yield return new Operation(o, application);
+			}
         }
 
         public override Task GetTask(Guid guid)
@@ -127,9 +151,15 @@ namespace AzAlternative.Xml
             throw new NotImplementedException();
         }
 
-        public override IEnumerator<Task> GetTasks(Guid guid)
+		public override IEnumerator<Task> GetTasks(IEnumerable<Guid> guids, Application application)
         {
-            throw new NotImplementedException();
+			foreach (var item in FindElements(guids))
+			{
+				XmlTask t = new XmlTask(this);
+				t.Load(item);
+
+				yield return new Task(t, application);
+			}
         }
 
         public override RoleAssignments GetRoleAssignments(Guid guid)
@@ -137,20 +167,42 @@ namespace AzAlternative.Xml
             throw new NotImplementedException();
         }
 
-        public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(Guid guid)
+		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<Guid> guids, Application application)
         {
-            throw new NotImplementedException();
-        }
+			foreach (var item in FindElements(guids))
+			{
+				XmlRoleAssignments r = new XmlRoleAssignments(this);
+				r.Load(item);
+
+				yield return new RoleAssignments(r, application);
+			}
+		}
 
         public override RoleDefinition GetRoleDefinition(Guid guid)
         {
             throw new NotImplementedException();
         }
 
-        public override IEnumerator<RoleDefinition> GetRoleDefinitions(Guid guid)
+		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<Guid> guids, Application application)
         {
-            throw new NotImplementedException();
+			foreach (var item in FindElements(guids))
+			{
+				XmlRoleDefinition r = new XmlRoleDefinition(this);
+				r.Load(item);
+
+				yield return new RoleDefinition(r, application);
+			}
+
         }
 
-    }
+		private IEnumerable<XmlElement> FindElements(IEnumerable<Guid> guids)
+		{
+			XmlElement root = LoadRoot();
+
+			foreach (var item in guids)
+			{
+				yield return (XmlElement)root.SelectSingleNode(string.Format("//*[Guid='{0}']", item));
+			}
+		}
+	}
 }

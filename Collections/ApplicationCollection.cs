@@ -29,7 +29,7 @@ namespace AzAlternative.Collections
 
         public override IEnumerator<Application> GetEnumerator()
         {
-            return Service.GetApplications(AdminManager.Guid);
+            return Service.GetApplications(Guids.Values, AdminManager);
         }
     }
 }

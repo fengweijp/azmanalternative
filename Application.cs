@@ -65,13 +65,13 @@ namespace AzAlternative
 		//    get { return _Application.Groups; }
 		//}
 
-		///// <summary>
-		///// Gets the collection of operations defined in the application
-		///// </summary>
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
-		//{
-		//    get { return _Application.Operations; }
-		//}
+		/// <summary>
+		/// Gets the collection of operations defined in the application
+		/// </summary>
+		public Collections.OperationCollection Operations
+		{
+			get { return Instance.Operations; }
+		}
 
 		///// <summary>
 		///// Gets the collection of tasks defined in the application
@@ -90,6 +90,12 @@ namespace AzAlternative
 		internal Application(Interfaces.IApplication application)
 		{
 			Instance = application;
+		}
+
+		internal Application(Interfaces.IApplication application, AdminManager parent)
+			: this(application)
+		{
+			Store = parent;
 		}
 
 		/// <summary>

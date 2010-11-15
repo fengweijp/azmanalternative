@@ -62,5 +62,11 @@ namespace AzAlternative
         {
             Instance = operation;
         }
+
+		internal Operation(Interfaces.IOperation operation, Application parent)
+			: this(operation)
+		{
+			Application = parent;
+		}
 	}
 }
