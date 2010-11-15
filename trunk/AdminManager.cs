@@ -10,14 +10,14 @@ namespace AzAlternative
     /// </summary>
     public class AdminManager : Interfaces.IAdminManager
 	{
-		private readonly Interfaces.IAdminManager _AdminManager;
+		private readonly Interfaces.IAdminManager Instance;
 
         /// <summary>
         /// Gets the schema major version
         /// </summary>
         public int MajorVersion
 		{
-			get { return _AdminManager.MajorVersion; }
+			get { return Instance.MajorVersion; }
 		}
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace AzAlternative
         /// </summary>
         public int MinorVersion
 		{
-			get { return _AdminManager.MinorVersion; }
+			get { return Instance.MinorVersion; }
 		}
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace AzAlternative
         /// </summary>
         public string Description
 		{
-			get { return _AdminManager.Description; }
-			set { _AdminManager.Description = value; }
+			get { return Instance.Description; }
+			set { Instance.Description = value; }
 		}
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace AzAlternative
         /// </summary>
         public Guid Guid
 		{
-			get { return _AdminManager.Guid; }
+			get { return Instance.Guid; }
 		}
 
 		/// <summary>
@@ -52,10 +52,7 @@ namespace AzAlternative
 		{
 			get
 			{
-                Collections.ApplicationGroupCollection result = _AdminManager.Groups;
-                result.Store = this;
-
-                return result;
+                return Instance.Groups;
 			}
 		}
 
@@ -66,16 +63,15 @@ namespace AzAlternative
         {
             get 
             { 
-                Collections.ApplicationCollection result = _AdminManager.Applications;
-                result.AdminManager = this;
-
-                return result;
+                return Instance.Applications;
             }
         }
 
 		internal AdminManager(Interfaces.IAdminManager adminManager)
 		{
-			_AdminManager = adminManager;
+			Instance = adminManager;
+			Instance.Groups.Store = this;
+			Instance.Applications.AdminManager = this;
 		}
 
 		/// <summary>
@@ -86,7 +82,7 @@ namespace AzAlternative
 		{
 			CheckGroupIsValid(group);
 
-			_AdminManager.DeleteGroup(group);
+			Instance.DeleteGroup(group);
 		}
 
 		/// <summary>
@@ -100,7 +96,7 @@ namespace AzAlternative
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
 
-			ApplicationGroup g = _AdminManager.CreateGroup(name, description, groupType);
+			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
 			g.Store = this;
 
 			return g;
@@ -110,7 +106,7 @@ namespace AzAlternative
 		{
 			CheckGroupIsValid(group);
 
-			_AdminManager.UpdateGroup(group);
+			Instance.UpdateGroup(group);
 		}
 
 		/// <summary>
@@ -124,7 +120,7 @@ namespace AzAlternative
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "A name must be specified when adding an application");
 
-			Application a = _AdminManager.CreateApplication(name, description, versionInformation);
+			Application a = Instance.CreateApplication(name, description, versionInformation);
 			a.Store = this;
 
 			return a;
@@ -137,13 +133,13 @@ namespace AzAlternative
 		public void DeleteApplication(Application application)
 		{
 			if (CheckApplicationIsValid(application))
-				_AdminManager.DeleteApplication(application);
+				Instance.DeleteApplication(application);
 		}
 
 		public void UpdateApplication(Application application)
 		{
 			if (CheckApplicationIsValid(application))
-				_AdminManager.UpdateApplication(application);
+				Instance.UpdateApplication(application);
 		}
 
 		private bool CheckGroupIsValid(ApplicationGroup group)
@@ -164,7 +160,7 @@ namespace AzAlternative
 
 		public void Update()
 		{
-			_AdminManager.Update();
+			Instance.Update();
 		}
 	}
 }

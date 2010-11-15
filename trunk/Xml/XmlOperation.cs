@@ -51,5 +51,10 @@ namespace AzAlternative.Xml
 
 			OperationId = int.Parse(element[OPERATIONID].InnerText);
 		}
+
+		public static Dictionary<string, Guid> GetChildren(XmlElement parent)
+		{
+			return GetChildren(parent, ELEMENTNAME);
+		}
 	}
 }

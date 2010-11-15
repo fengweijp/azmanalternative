@@ -51,6 +51,11 @@ namespace AzAlternative
 			get { return Instance.GroupType; }
 		}
 
+		public bool IsGlobalGroup
+		{
+			get { return Instance.IsGlobalGroup; }
+		}
+
         /// <summary>
         /// Gets the collection of members in the group
         /// </summary>
@@ -148,5 +153,6 @@ namespace AzAlternative
 		//            throw new AzException("The group to add is not defined in this store.");
 		//    }
 		//}
-    }
+
+	}
 }

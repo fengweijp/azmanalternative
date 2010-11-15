@@ -34,10 +34,10 @@ namespace AzAlternative.Interfaces
 		///// Gets the collection of groups defined in the application
 		///// </summary>
 		//System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups { get; }
-		///// <summary>
-		///// Gets the collection of operations defined in the application
-		///// </summary>
-		//System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations { get; }
+		/// <summary>
+		/// Gets the collection of operations defined in the application
+		/// </summary>
+		Collections.OperationCollection Operations { get; }
 		///// <summary>
 		///// Gets the collection of tasks defined in the application
 		///// </summary>

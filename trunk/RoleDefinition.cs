@@ -23,6 +23,10 @@ namespace AzAlternative
 		{
 		}
 
+		internal RoleDefinition(Interfaces.IRoleDefinition role, Application parent)
+			: base(role, parent)
+		{ }
+
         /// <summary>
         /// Adds a role to this role
         /// </summary>

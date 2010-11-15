@@ -82,6 +82,12 @@ namespace AzAlternative
             Instance = task;
         }
 
+		internal Task(Interfaces.ITask task, Application parent)
+			: this(task)
+		{
+			Application = parent;
+		}
+
         /// <summary>
         /// Adds a task to this task
         /// </summary>

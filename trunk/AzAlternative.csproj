@@ -53,6 +53,7 @@
     <Compile Include="Collections\ApplicationCollection.cs" />
     <Compile Include="Collections\ApplicationGroupCollection.cs" />
     <Compile Include="Collections\CollectionBase.cs" />
+    <Compile Include="Collections\OperationCollection.cs" />
     <Compile Include="ContainerBase.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="FactoryBase.cs" />

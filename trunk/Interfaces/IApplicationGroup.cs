@@ -27,6 +27,10 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		GroupType GroupType { get; }
 		/// <summary>
+		/// Gets whether the group is a global group or an application group
+		/// </summary>
+		bool IsGlobalGroup { get; }
+		/// <summary>
 		/// Gets the collection of members
 		/// </summary>
 		List<IMember> Members { get; }
