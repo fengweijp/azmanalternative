@@ -34,7 +34,7 @@ namespace AzAlternative.Xml
 			XmlDocument doc = new XmlDocument();
 			doc.Load(ConnectionString);
 
-			XmlElement e = (XmlElement)doc.SelectSingleNode(string.Format("*[Guid={0}]", guid));
+			XmlElement e = (XmlElement)doc.SelectSingleNode(string.Format("//*[@Guid='{0}']", guid));
 			if (e == null)
 				throw new AzException("The Guid was not found in the store.");
 
@@ -121,7 +121,7 @@ namespace AzAlternative.Xml
 				if (g.IsGlobalGroup)
 					result.Store = store;
 				else
-					result.Application = application;
+					result.Parent = application;
 
 				yield return result;
 			}
@@ -148,7 +148,10 @@ namespace AzAlternative.Xml
 
         public override Task GetTask(Guid guid)
         {
-            throw new NotImplementedException();
+			XmlTask t = new XmlTask(this);
+			t.Load(guid);
+
+			return new Task(t);
         }
 
 		public override IEnumerator<Task> GetTasks(IEnumerable<Guid> guids, Application application)
@@ -164,7 +167,10 @@ namespace AzAlternative.Xml
 
         public override RoleAssignments GetRoleAssignments(Guid guid)
         {
-            throw new NotImplementedException();
+			XmlRoleAssignments r = new XmlRoleAssignments(this);
+			r.Load(guid);
+
+			return new RoleAssignments(r);
         }
 
 		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<Guid> guids, Application application)
@@ -180,7 +186,10 @@ namespace AzAlternative.Xml
 
         public override RoleDefinition GetRoleDefinition(Guid guid)
         {
-            throw new NotImplementedException();
+			XmlRoleDefinition r = new XmlRoleDefinition(this);
+			r.Load(guid);
+
+			return new RoleDefinition(r);
         }
 
 		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<Guid> guids, Application application)

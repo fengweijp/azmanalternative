@@ -5,11 +5,26 @@ using System.Text;
 
 namespace AzAlternative
 {
+	/// <summary>
+	/// An application in the store
+	/// </summary>
 	public class Application : ContainerBase, Interfaces.IApplication
 	{
 		internal readonly Interfaces.IApplication Instance;
 
-        /// <summary>
+		public override Application Parent
+		{
+			get { return BaseApplication; }
+			internal set
+			{
+				BaseApplication = value;
+				Groups.Application = value;
+				Operations.Application = value;
+				Tasks.Application = value;
+			}
+		}
+
+		/// <summary>
         /// Gets the application identifier
         /// </summary>
         public override Guid Guid
@@ -49,21 +64,26 @@ namespace AzAlternative
 			set { Instance.ApplicationVersion = value; }
 		}
 
-		///// <summary>
-		///// Gets the collection of roles defined in the application
-		///// </summary>
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles
-		//{
-		//    get { return _Application.Roles; }
-		//}
+		/// <summary>
+		/// Gets the collection of roles defined in the application
+		/// </summary>
+		public Collections.RoleDefinitionCollection Roles
+		{
+			get { return Instance.Roles; }
+		}
 
-		///// <summary>
-		///// Gets the collection of groups defined in the application
-		///// </summary>
-		//public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
-		//{
-		//    get { return _Application.Groups; }
-		//}
+		public Collections.RoleAssignmentsCollection RoleAssignments
+		{
+			get { return Instance.RoleAssignments; }
+		}
+
+		/// <summary>
+		/// Gets the collection of groups defined in the application
+		/// </summary>
+		public Collections.ApplicationGroupCollection Groups
+		{
+			get { return Instance.Groups; }
+		}
 
 		/// <summary>
 		/// Gets the collection of operations defined in the application
@@ -73,13 +93,13 @@ namespace AzAlternative
 			get { return Instance.Operations; }
 		}
 
-		///// <summary>
-		///// Gets the collection of tasks defined in the application
-		///// </summary>
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
-		//{
-		//    get { return _Application.Tasks; }
-		//}
+		/// <summary>
+		/// Gets the collection of tasks defined in the application
+		/// </summary>
+		public Collections.TaskCollection Tasks
+		{
+			get { return Instance.Tasks; }
+		}
 
         public AdminManager Store
         {
@@ -111,7 +131,7 @@ namespace AzAlternative
 				throw new ArgumentNullException("name");
 
 			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
-			g.Application = this;
+			g.Parent = this;
 
 			return g;
 		}
@@ -148,7 +168,7 @@ namespace AzAlternative
 				throw new ArgumentNullException("name");
 
 			RoleDefinition r = Instance.CreateRole(name, description);
-			r.Application = this;
+			r.Parent = this;
 
 			return r;
 		}
@@ -160,7 +180,7 @@ namespace AzAlternative
 		public void DeleteRole(RoleDefinition role)
 		{
 			if (!CheckObjectIsValid(role))
-				throw new AzException("Role is part of the application.");
+				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRole(role);
 		}
@@ -168,9 +188,38 @@ namespace AzAlternative
 		public void UpdateRole(RoleDefinition role)
 		{
 			if (!CheckObjectIsValid(role))
-				throw new AzException("Role is part of the application.");
+				throw new AzException("The Role is not part of the application.");
 
 			Instance.UpdateRole(role);
+		}
+
+		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+			if (role == null)
+				throw new ArgumentNullException("role");
+
+			if (!CheckObjectIsValid(role))
+				throw new AzException("The role is not defined in this application");
+
+			return Instance.CreateRoleAssignments(name, description, role);
+		}
+
+		public void DeleteRoleAssignments(RoleAssignments role)
+		{
+			if (!CheckObjectIsValid(role))
+				throw new AzException("The Role is not part of the application.");
+
+			Instance.DeleteRoleAssignments(role);
+		}
+
+		public void UpdateRoleAssignments(RoleAssignments role)
+		{
+			if (!CheckObjectIsValid(role))
+				throw new AzException("The Role is not part of the application.");
+
+			Instance.UpdateRoleAssignments(role);
 		}
 
 		/// <summary>
@@ -182,8 +231,13 @@ namespace AzAlternative
 		/// <returns>new operation</returns>
 		public Operation CreateOperation(string name, string description, int operationId)
 		{
+			if (operationId == 0)
+				throw new ArgumentOutOfRangeException("operationId", "Operation ID must be non-zero");
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
 			Operation o = Instance.CreateOperation(name, description, operationId);
-			o.Application = this;
+			o.Parent = this;
 
 			return o;
 		}
@@ -208,32 +262,42 @@ namespace AzAlternative
 			Instance.UpdateOperation(operation);
 		}
 
-		///// <summary>
-		///// Creates a new task in the application
-		///// </summary>
-		///// <param name="name">Required name of the task</param>
-		///// <param name="description">Description of the task</param>
-		///// <returns>new task</returns>
-		//public Task CreateTask(string name, string description)
-		//{
-		//    if (string.IsNullOrEmpty(name))
-		//        throw new ArgumentNullException("name");
+		/// <summary>
+		/// Creates a new task in the application
+		/// </summary>
+		/// <param name="name">Required name of the task</param>
+		/// <param name="description">Description of the task</param>
+		/// <returns>new task</returns>
+		public Task CreateTask(string name, string description)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
 
-		//    Task t = _Application.CreateTask(name, description);
-		//    t.Application = this;
-		//    return t;
-		//}
+			Task t = Instance.CreateTask(name, description);
+			t.Parent = this;
+			return t;
+		}
 
-		///// <summary>
-		///// Deletes a task from the application
-		///// </summary>
-		///// <param name="task">task to delete</param>
-		//public void DeleteTask(Task task)
-		//{
-		//    if (task.Application.Guid != this.Guid)
-		//        throw new AzException("The task is not part of this application.");
+		/// <summary>
+		/// Deletes a task from the application
+		/// </summary>
+		/// <param name="task">task to delete</param>
+		public void DeleteTask(Task task)
+		{
+			if (!CheckObjectIsValid(task))
+				throw new AzException("The task is not part of this application.");
 
-		//    _Application.DeleteTask(task);
-		//}
+			Instance.DeleteTask(task);
+		}
+		
+		public void UpdateTask(Task task)
+		{
+			if (!CheckObjectIsValid(task))
+				throw new AzException("The task is not part of this application.");
+
+			Instance.UpdateTask(task);
+		}
+
+
 	}
 }

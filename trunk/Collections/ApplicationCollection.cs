@@ -24,8 +24,13 @@ namespace AzAlternative.Collections
         internal ApplicationCollection(ServiceBase service, Dictionary<string, Guid> values)
             : base(service, values)
         {
-            Loader = Service.GetApplication;
+            ItemLoader = Service.GetApplication;
         }
+
+		internal ApplicationCollection(ServiceBase service)
+			: this(service, new Dictionary<string, Guid>())
+		{ }
+		
 
         public override IEnumerator<Application> GetEnumerator()
         {

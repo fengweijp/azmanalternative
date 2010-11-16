@@ -8,14 +8,14 @@ namespace AzAlternative
     /// <summary>
     /// An application role. Used to define a role and check membership
     /// </summary>
-	public class RoleDefinition : Task
+	public class RoleDefinition : Task, Interfaces.IRoleDefinition
 	{
         /// <summary>
         /// Gets the collection of roles added to the role
         /// </summary>
-		public System.Collections.ObjectModel.ReadOnlyCollection<RoleDefinition> Roles
+		Collections.RoleDefinitionCollection Interfaces.IRoleDefinition.Roles
 		{
-            get { throw new NotImplementedException();}// return _Role.Roles; }
+			get { return ((Interfaces.IRoleDefinition)Instance).Roles; }
 		}
 
 		internal RoleDefinition(Interfaces.IRoleDefinition role)
@@ -47,6 +47,7 @@ namespace AzAlternative
 
 			((Interfaces.IRoleDefinition)Instance).RemoveRole(role);
 		}
+
 
 	}
 }

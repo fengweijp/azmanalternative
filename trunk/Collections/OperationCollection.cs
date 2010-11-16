@@ -11,8 +11,12 @@ namespace AzAlternative.Collections
 		internal OperationCollection(ServiceBase service, Dictionary<string, Guid> values)
 			: base(service, values)
 		{
-			Loader = service.GetOperation;
+			ItemLoader = service.GetOperation;
 		}
+
+		internal OperationCollection(ServiceBase service)
+			: this(service, new Dictionary<string, Guid>())
+		{ }
 
 		public override IEnumerator<Operation> GetEnumerator()
 		{

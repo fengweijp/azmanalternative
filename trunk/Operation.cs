@@ -12,6 +12,12 @@ namespace AzAlternative
 	{
 		internal readonly Interfaces.IOperation Instance;
 
+		public override Application Parent
+		{
+			get { return BaseApplication; }
+			internal set { BaseApplication = value; }
+		}
+
         /// <summary>
         /// Gets the operation identifier
         /// </summary>
@@ -66,7 +72,7 @@ namespace AzAlternative
 		internal Operation(Interfaces.IOperation operation, Application parent)
 			: this(operation)
 		{
-			Application = parent;
+			Parent = parent;
 		}
 	}
 }

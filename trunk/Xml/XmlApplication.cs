@@ -17,15 +17,23 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles
-		//{
-		//    get { throw new NotImplementedException(); }
-		//}
+		public Collections.RoleDefinitionCollection Roles
+		{
+			get;
+			set;
+		}
 
-		//public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
-		//{
-		//    get { return GetCollection<ApplicationGroup>(XmlApplicationGroup.GetApplicationGroups(Node), typeof(XmlApplicationGroup)); }
-		//}
+		public Collections.RoleAssignmentsCollection RoleAssignments
+		{
+			get;
+			set;
+		}
+
+		public Collections.ApplicationGroupCollection Groups
+		{
+			get;
+			set;
+		}
 
 		public Collections.OperationCollection Operations
 		{
@@ -33,10 +41,11 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
-		//{
-		//    get { throw new NotImplementedException(); }
-		//}
+		public Collections.TaskCollection Tasks
+		{
+			get;
+			set;
+		}
 
 		public XmlApplication(XmlService service)
 			: base(service)
@@ -49,6 +58,8 @@ namespace AzAlternative.Xml
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
+
+			ag.Groups = new Collections.ApplicationGroupCollection(Service);
 
 			XmlElement root = Service.LoadRoot();
 			Service.Save(ag.ToXml(root));
@@ -120,6 +131,9 @@ namespace AzAlternative.Xml
 			t.Name = name;
 			t.Description = description;
 
+			t.Operations = new Collections.OperationCollection(Service);
+			t.Tasks = new Collections.TaskCollection(Service);
+
 			XmlElement thisNode = Service.Load(this.Guid);
 			Service.Save(t.ToXml(thisNode));
 
@@ -134,6 +148,32 @@ namespace AzAlternative.Xml
 		public void UpdateTask(Task task)
 		{
 			Service.Save((XmlTask)task.Instance);
+		}
+
+		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)
+		{
+			XmlRoleAssignments r = new XmlRoleAssignments(Service);
+			r.Guid = System.Guid.NewGuid();
+			r.Name = name;
+			r.Description = description;
+			r.Definition = role;
+
+			r.Groups = new Collections.ApplicationGroupCollection(Service);
+
+			XmlElement thisNode = Service.Load(this.Guid);
+			Service.Save(r.ToXml(thisNode));
+
+			return new RoleAssignments(r);
+		}
+
+		public void DeleteRoleAssignments(RoleAssignments role)
+		{
+			Service.RemoveElement((XmlRoleAssignments)role.Instance);
+		}
+
+		public void UpdateRoleAssignments(RoleAssignments role)
+		{
+			Service.Save((XmlRoleAssignments)role.Instance);
 		}
 
 		public override XmlElement ToXml(XmlElement parent)
@@ -162,7 +202,9 @@ namespace AzAlternative.Xml
 			base.LoadInternal(element);
 			ApplicationVersion = GetAttribute(element, APPLICATIONVERSION);
 
+			Groups = new Collections.ApplicationGroupCollection(Service, XmlApplicationGroup.GetChildren(element));
 			Operations = new Collections.OperationCollection(Service, XmlOperation.GetChildren(element));
+			Tasks = new Collections.TaskCollection(Service, null);
 		}
 
 		//public static IEnumerator<Application> GetApplications(XmlService service, Guid guid)

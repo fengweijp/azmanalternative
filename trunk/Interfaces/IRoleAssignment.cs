@@ -22,11 +22,11 @@ namespace AzAlternative.Interfaces
 		/// Gets or sets the role description
 		/// </summary>
 		string Description { get; set; }
-		IRoleDefinition Definition { get; }
+		RoleDefinition Definition { get; }
 		/// <summary>
 		/// Gets the collection of groups assigned to the role
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups { get; }
+		Collections.ApplicationGroupCollection Groups { get; }
 		/// <summary>
 		/// Gets the collection of users assigned to the role
 		/// </summary>

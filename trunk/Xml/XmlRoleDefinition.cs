@@ -10,6 +10,12 @@ namespace AzAlternative.Xml
 	{
 		private const string ROLE = "TaskLink";
 
+		public Collections.RoleDefinitionCollection Roles
+		{
+			get;
+			set;
+		}
+
 		public XmlRoleDefinition(XmlService service)
 			: base(service)
 		{ }
@@ -22,6 +28,12 @@ namespace AzAlternative.Xml
 		public void RemoveRole(RoleDefinition role)
 		{
 			Service.RemoveLink(this, ROLE, role.Guid);
+		}
+
+		protected override void LoadInternal(XmlElement element)
+		{
+			base.LoadInternal(element);
+			Roles = new Collections.RoleDefinitionCollection(Service, GetLinks(element, ROLE));
 		}
 	}
 }

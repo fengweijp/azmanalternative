@@ -19,7 +19,7 @@ namespace AzAlternative.Interfaces
 		///// Gets or sets the role description
 		///// </summary>
 		//string Description { get; set; }
-		//System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles { get; }
+		Collections.RoleDefinitionCollection Roles { get; }
 		//System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations { get; }
 		//System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks { get; }
 

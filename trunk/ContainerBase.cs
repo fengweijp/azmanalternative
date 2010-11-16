@@ -10,6 +10,8 @@ namespace AzAlternative
     /// </summary>
     public abstract class ContainerBase
     {
+		protected Application BaseApplication;
+
 		public abstract Guid Guid
 		{
 			get;
@@ -18,7 +20,7 @@ namespace AzAlternative
         /// <summary>
         /// Gets the application this object belongs to
         /// </summary>
-		public Application Application
+		public abstract Application Parent
 		{
 			get;
 			internal set;
@@ -40,9 +42,9 @@ namespace AzAlternative
 		//    return true;
 		//}
 
-		protected bool CheckObjectIsValid(ContainerBase o)
+		protected virtual bool CheckObjectIsValid(ContainerBase o)
 		{
-			return (o.Application != null && o.Application.Guid == this.Guid);
+			return (o.Parent != null && o.Parent.Guid == this.Guid);
 		}
 
     }
