@@ -5,42 +5,59 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
-    public delegate ContainerBase LoadDelegate(Guid guid);
+	public delegate ContainerBase LoadDelegate(Guid guid);
 
-    public abstract class CollectionBase<T> : IEnumerable<T> where T : ContainerBase
-    {
-        protected Dictionary<string, Guid> Guids;
-        protected ServiceBase Service;
-        internal Application Application;
-        protected LoadDelegate Loader;
+	public abstract class CollectionBase<T> : IEnumerable<T> where T : ContainerBase
+	{
+		protected Dictionary<string, Guid> Guids;
+		private InternalCollection<T> InternalCollection;
+		protected ServiceBase Service;
+		internal Application Application;
+		protected LoadDelegate ItemLoader;
 
-        public virtual T this[string name]
-        {
-            get
-            {
-                ContainerBase Result = Loader(Guids[name]);
-                Result.Application = Application;
+		public virtual T this[string name]
+		{
+			get
+			{
+				if (!Guids.ContainsKey(name))
+					return null;
 
-                return (T)Result;
-            }
-        }
+				if (!InternalCollection.Contains(Guids[name]))
+				{
+					ContainerBase Result = ItemLoader(Guids[name]);
+					Result.Parent = Application;
 
-        public int Count
-        {
-            get { return Guids.Count; }
-        }
+					InternalCollection.Add((T)Result);
+				}
+				return InternalCollection[Guids[name]];
+			}
+		}
 
-        internal CollectionBase(ServiceBase service, Dictionary<string, Guid> children)
-        {
-            Service = service;
-            Guids = children;
-        }
+		public int Count
+		{
+			get { return Guids.Count; }
+		}
 
-        public abstract IEnumerator<T> GetEnumerator();
+		internal CollectionBase(ServiceBase service, Dictionary<string, Guid> children)
+		{
+			Service = service;
+			Guids = children;
+			InternalCollection = new InternalCollection<T>();
+		}
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
+		public abstract IEnumerator<T> GetEnumerator();
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+	}
+
+	internal class InternalCollection<T> : System.Collections.ObjectModel.KeyedCollection<Guid, T> where T : ContainerBase
+	{
+		protected override Guid GetKeyForItem(T item)
+		{
+			return item.Guid;
+		}
+	}
 }

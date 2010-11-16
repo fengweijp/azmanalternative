@@ -17,7 +17,7 @@ namespace AzAlternative.Collections
 				if (result.IsGlobalGroup)
 				{
 					result.Store = Store;
-					result.Application = null;
+					result.Parent = null;
 				}                
                 return result;
             }
@@ -26,8 +26,12 @@ namespace AzAlternative.Collections
         internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, Guid> values)
             : base(service, values)
         {
-            Loader = Service.GetGroup;
+            ItemLoader = Service.GetGroup;
         }
+
+		internal ApplicationGroupCollection(ServiceBase service)
+			: this(service, new Dictionary<string, Guid>())
+		{ }
 
         public override IEnumerator<ApplicationGroup> GetEnumerator()
         {

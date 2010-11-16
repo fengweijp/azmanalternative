@@ -46,10 +46,12 @@ namespace AzAlternative
 
 			if (connectionString.StartsWith("msxml"))
 			{
-				Xml.XmlService f = new Xml.XmlService(connectionString);
+				Xml.XmlService f = new Xml.XmlService(connectionString.Substring(8));
 
 				AdminManager = f.GetAdminManager();
 			}
+			else
+				throw new AzException("Unsupported connectionstring specified.");
 		}
 	}
 }

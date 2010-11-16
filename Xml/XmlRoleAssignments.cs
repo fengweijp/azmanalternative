@@ -14,15 +14,28 @@ namespace AzAlternative.Xml
 		private const string DEFINITION = "TaskLink";
 
 		private Guid _DefinitionGuid;
+		private RoleDefinition _Definition;
 
-		public Interfaces.IRoleDefinition Definition
+		public RoleDefinition Definition
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				if (_Definition == null)
+				{
+					XmlRoleDefinition d = new XmlRoleDefinition(Service);
+					d.Load(_DefinitionGuid);
+
+					_Definition = new RoleDefinition(d);
+				}
+				return _Definition;
+			}
+			set { _Definition = value; }
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+		public Collections.ApplicationGroupCollection Groups
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public System.Collections.ObjectModel.ReadOnlyCollection<Interfaces.IMember> Members
@@ -72,6 +85,8 @@ namespace AzAlternative.Xml
 			base.LoadInternal(element);
 
 			_DefinitionGuid = new Guid(element[DEFINITION].InnerXml);
+
+			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
 		}
 	}
 }

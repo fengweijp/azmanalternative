@@ -47,6 +47,10 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		/// <param name="group">The group to remove</param>
 		void DeleteGroup(ApplicationGroup group);
+		/// <summary>
+		/// Saves a group back to the store
+		/// </summary>
+		/// <param name="group"></param>
 		void UpdateGroup(ApplicationGroup group);
 
 		/// <summary>
@@ -61,8 +65,15 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		/// <param name="application">The application to remove</param>
 		void DeleteApplication(Application application);
+		/// <summary>
+		/// Saves an application back to the store
+		/// </summary>
+		/// <param name="application"></param>
 		void UpdateApplication(Application application);
 
+		/// <summary>
+		/// Saves changes to this class
+		/// </summary>
 		void Update();
 	}
 }

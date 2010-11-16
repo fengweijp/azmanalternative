@@ -63,31 +63,9 @@ namespace AzAlternative.Xml
 				default:
 					throw new AzException("Unknown group type during load.");
 			}
+
+			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
 		}
-
-		//public static XmlNodeList GetApplicationGroups(XmlElement parent)
-		//{
-		//    return parent.SelectNodes(ELEMENTNAME);
-		//}
-
-		//public static XmlApplicationGroup NewApplicationGroup(XmlFactory factory, string name, string description, GroupType groupType)
-		//{
-		//    XmlApplicationGroup ag = new XmlApplicationGroup(factory.CreateNew(ELEMENTNAME), factory);
-		//    ag.Name = name;
-		//    ag.Description = description;
-		//    ag.GroupType = groupType;
-
-		//    return ag;
-		//}
-
-		//public static void RemoveApplicationGroup(XmlElement parent, Guid guid)
-		//{
-		//    XmlNode node = parent.SelectSingleNode(string.Format("{0}[@{1}={2}]", ELEMENTNAME, GUID, guid));
-		//    if (node == null)
-		//        return;
-
-		//    parent.RemoveChild(node);
-		//}
 
 		public void AddMember(Interfaces.IMember member)
 		{
@@ -129,29 +107,7 @@ namespace AzAlternative.Xml
 			return e;
 		}
 
-		//public static IEnumerator<ApplicationGroup> GetGroups(XmlService service, IEnumerable<Guid> guids, AdminManager store, Application app)
-		//{
-		//    if (guids.Count() == 0)
-		//        return null;
-
-		//    XmlElement parent = service.Load(guids[0]);
-
-		//    foreach (XmlNode item in parent.OwnerDocument.SelectNodes(string.Format( ELEMENTNAME))
-		//    {
-		//        XmlApplicationGroup g = new XmlApplicationGroup(service);
-		//        g.Load((XmlElement)item);
-
-		//        ApplicationGroup result = new ApplicationGroup(g);
-		//        if (g.IsGlobalGroup)
-		//            result.Store = store;
-		//        else
-		//            result.Application = app;
-
-		//        yield return result;
-		//    }
-		//}
-
-        public static Dictionary<string, Guid> GetChildren(XmlElement parent)
+		public static Dictionary<string, Guid> GetChildren(XmlElement parent)
         {
             Dictionary<string, Guid> result = new Dictionary<string, Guid>();
 
@@ -163,6 +119,5 @@ namespace AzAlternative.Xml
             return result;
         }
 
-		//public static Dictionary<string, Guid> GetLinks
 	}
 }

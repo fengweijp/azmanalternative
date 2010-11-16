@@ -12,6 +12,17 @@ namespace AzAlternative
 	{
 		internal readonly Interfaces.ITask Instance;
 
+		public override Application Parent
+		{
+			get { return BaseApplication; }
+			internal set
+			{
+				BaseApplication = value;
+				Operations.Application = Parent;
+				Tasks.Application = Parent;
+			}
+		}
+
         /// <summary>
         /// Gets the task identifier
         /// </summary>
@@ -64,15 +75,15 @@ namespace AzAlternative
         /// <summary>
         /// Gets a collection of tasks directly added to this task
         /// </summary>
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
-		//{
-		//    get { return Instance.Tasks; }
-		//}
+		public Collections.TaskCollection Tasks
+		{
+			get { return Instance.Tasks; }
+		}
 
         /// <summary>
         /// Gets a collection of operations directly added to this task
         /// </summary>
-		public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
+		public Collections.OperationCollection Operations
 		{
 			get { return Instance.Operations; }
 		}
@@ -85,7 +96,7 @@ namespace AzAlternative
 		internal Task(Interfaces.ITask task, Application parent)
 			: this(task)
 		{
-			Application = parent;
+			Parent = parent;
 		}
 
         /// <summary>
@@ -142,5 +153,6 @@ namespace AzAlternative
 		{
 			Instance.ClearBizRuleScript();
 		}
+
 	}
 }

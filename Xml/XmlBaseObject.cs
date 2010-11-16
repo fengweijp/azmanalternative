@@ -131,5 +131,17 @@ namespace AzAlternative.Xml
 
             return result;
         }
+
+		protected static Dictionary<string, Guid> GetLinks(XmlElement parent, string elementName)
+		{
+			Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+
+			foreach (XmlNode item in parent.SelectNodes(elementName))
+			{
+				result.Add(parent.OwnerDocument.SelectSingleNode(string.Format("//*[@{0}='{1}']/@Name", GUID, item.InnerText)).Value, new Guid(item.InnerText));
+			}
+
+			return result;
+		}
     }
 }

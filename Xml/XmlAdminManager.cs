@@ -60,7 +60,8 @@ namespace AzAlternative.Xml
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
-			//ag.Parent = this;
+
+			ag.Groups = new Collections.ApplicationGroupCollection(Service);
 
 			XmlElement root = Service.LoadRoot();
 			Service.Save(ag.ToXml(root));
@@ -81,6 +82,10 @@ namespace AzAlternative.Xml
 			a.Name = name;
 			a.Description = description;
 			a.ApplicationVersion = versionInformation;
+			
+			a.Groups = new Collections.ApplicationGroupCollection(Service);
+			a.Operations = new Collections.OperationCollection(Service);
+			a.Tasks = new Collections.TaskCollection(Service);
 
 			XmlElement root = Service.LoadRoot();
 			Service.Save(a.ToXml(root));

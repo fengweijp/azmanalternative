@@ -11,6 +11,17 @@ namespace AzAlternative
 	public class ApplicationGroup : ContainerBase, Interfaces.IApplicationGroup
 	{
 		internal readonly Interfaces.IApplicationGroup Instance;
+		private AdminManager _Store;
+
+		public override Application Parent
+		{
+			get { return BaseApplication; }
+			internal set
+			{
+				BaseApplication = value;
+				Groups.Application = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets the group identifier
@@ -80,8 +91,12 @@ namespace AzAlternative
         /// </summary>
         public AdminManager Store
         {
-            get;
-            internal set;
+			get { return _Store; }
+			internal set
+			{
+				_Store = value;
+				Groups.Store = value;
+			}
         }
 
 		internal ApplicationGroup(Interfaces.IApplicationGroup applicationGroup)

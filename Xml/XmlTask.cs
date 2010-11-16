@@ -33,14 +33,16 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		//public System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks
-		//{
-		//    get { throw new NotImplementedException(); }
-		//}
-
-		public System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations
+		public Collections.TaskCollection Tasks
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
+		}
+
+		public Collections.OperationCollection Operations
+		{
+			get;
+			set;
 		}
 
         public XmlTask(XmlService service)
@@ -115,7 +117,9 @@ namespace AzAlternative.Xml
 				default:
 					throw new AzException("Unknown Biz Rule language.");
 			}
-			
+
+			Operations = new Collections.OperationCollection(Service, GetLinks(element, OPERATION));
+			Tasks = new Collections.TaskCollection(Service, GetLinks(element, TASK));
 		}
 
 		private void SetElement(XmlElement parent, string elementName, string value)

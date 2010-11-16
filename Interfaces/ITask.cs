@@ -37,11 +37,11 @@ namespace AzAlternative.Interfaces
         /// <summary>
 		/// Gets a collection of tasks assigned to the task
 		/// </summary>
-		//System.Collections.ObjectModel.ReadOnlyCollection<Task> Tasks { get; }
+		Collections.TaskCollection Tasks { get; }
 		/// <summary>
 		/// Gets a collection of operations assigned to the task
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<Operation> Operations { get; }
+		Collections.OperationCollection Operations { get; }
 
         /// <summary>
         /// Adds a task to this task
@@ -65,7 +65,15 @@ namespace AzAlternative.Interfaces
         /// <param name="operation">Operation to remove</param>
 		void RemoveOperation(Operation operation);
 
+		/// <summary>
+		/// Adds a biz rule to the task
+		/// </summary>
+		/// <param name="path">path to the file to load</param>
+		/// <param name="language">language the bizrule script is written in</param>
 		void LoadBizRuleScript(string path, BizRuleLanguage language);
+		/// <summary>
+		/// Removes the biz rule from the task
+		/// </summary>
 		void ClearBizRuleScript();
 	}
 }

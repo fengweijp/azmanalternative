@@ -9,6 +9,16 @@ namespace AzAlternative
 	{
 		internal readonly Interfaces.IRoleAssignment Instance;
 
+		public override Application Parent
+		{
+			get { return BaseApplication; }
+			internal set
+			{
+				BaseApplication = value;
+				
+			}
+		}
+
 		/// <summary>
 		/// Gets the role identifier
 		/// </summary>
@@ -40,9 +50,9 @@ namespace AzAlternative
 			set { Instance.Description = value; }
 		}
 
-		public Interfaces.IRoleDefinition Definition
+		public RoleDefinition Definition
 		{
-			get { throw new NotImplementedException(); }
+			get { return Instance.Definition; }
 		}
 
 		internal RoleAssignments(Interfaces.IRoleAssignment role)
@@ -54,13 +64,13 @@ namespace AzAlternative
 		internal RoleAssignments(Interfaces.IRoleAssignment role, Application parent)
 			: this(role)
 		{
-			Application = parent;
+			Parent = parent;
 		}
 
 		/// <summary>
 		/// Gets the collection of groups in the role
 		/// </summary>
-		public System.Collections.ObjectModel.ReadOnlyCollection<ApplicationGroup> Groups
+		public Collections.ApplicationGroupCollection Groups
 		{
 			get { return Instance.Groups; }
 		}
@@ -81,9 +91,6 @@ namespace AzAlternative
 		{
 			CheckObjectIsValid(group);
 
-			if (group.Store != null && group.Store.Guid != this.Application.Store.Guid)
-				throw new AzException("The group is not defined in the current store.");
-
 			Instance.AddGroup(group);
 		}
 
@@ -95,10 +102,21 @@ namespace AzAlternative
 		{
 			CheckObjectIsValid(group);
 
-			if (group.Store != null && group.Store.Guid != this.Application.Store.Guid)
-				throw new AzException("The group is not defined in the current store.");
-
 			Instance.RemoveGroup(group);
+		}
+
+		protected override bool CheckObjectIsValid(ContainerBase o)
+		{
+			ApplicationGroup g = (ApplicationGroup)o;
+
+			if (g.IsGlobalGroup)
+			{
+				if (g.Store.Guid != this.Parent.Store.Guid)
+					throw new AzException("The group is not defined in the current store.");
+				return true;
+			}
+			else
+				return base.CheckObjectIsValid(o);
 		}
 	}
 }
