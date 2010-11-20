@@ -39,6 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveDirectory\AdBaseObject.cs" />
+    <Compile Include="ActiveDirectory\AdOperation.cs" />
+    <Compile Include="ActiveDirectory\AdService.cs" />
     <Compile Include="AdminManager.cs" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
