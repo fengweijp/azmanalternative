@@ -35,5 +35,10 @@ namespace AzAlternative.Xml
 			base.LoadInternal(element);
 			Roles = new Collections.RoleDefinitionCollection(Service, GetLinks(element, ROLE));
 		}
+
+		public static Dictionary<string, Guid> GetRoles(XmlElement element)
+		{
+			return GetChildren(element, string.Format("{0}[@{1}='True']", ELEMENTNAME, ROLEDEFINITION));
+		}
 	}
 }

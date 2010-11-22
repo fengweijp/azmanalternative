@@ -88,5 +88,10 @@ namespace AzAlternative.Xml
 
 			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
 		}
+
+		public static Dictionary<string, Guid> GetChildren(XmlElement element)
+		{
+			return GetChildren(element, ELEMENTNAME);
+		}
 	}
 }

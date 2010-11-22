@@ -8,12 +8,13 @@ namespace AzAlternative.Xml
 {
     internal class XmlTask : XmlBaseObject, Interfaces.ITask
     {
-        private const string ELEMENTNAME = "AzApplication";
-		private const string BIZRULEPATH = "BizRuleImportedPath";
-		private const string BIZRULELANGUAGE = "BizRuleLanguage";
-		private const string BIZRULE = "BizRule";
-		private const string OPERATION = "OperationLink";
-		private const string TASK = "TaskLink";
+        protected const string ELEMENTNAME = "AzTask";
+		protected const string BIZRULEPATH = "BizRuleImportedPath";
+		protected const string BIZRULELANGUAGE = "BizRuleLanguage";
+		protected const string BIZRULE = "BizRule";
+		protected const string OPERATION = "OperationLink";
+		protected const string TASK = "TaskLink";
+		protected const string ROLEDEFINITION = "RoleDefinition";
 
 		public string BizRuleImportedPath
 		{
@@ -164,6 +165,11 @@ namespace AzAlternative.Xml
 			BizRule = null;
 			BizRuleImportedPath = null;
 			BizRuleLanguage = AzAlternative.BizRuleLanguage.Undefined;
+		}
+
+		public static Dictionary<string, Guid> GetTasks(XmlElement element)
+		{
+			return GetChildren(element, string.Format("{0}[not(@{1}) or @{1}!='True']", ELEMENTNAME, ROLEDEFINITION));
 		}
 	}
 }
