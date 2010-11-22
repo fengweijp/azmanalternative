@@ -83,6 +83,7 @@ namespace AzAlternative
 			CheckGroupIsValid(group);
 
 			Instance.DeleteGroup(group);
+			Groups.RemoveValue(group.Guid);
 		}
 
 		/// <summary>
@@ -95,9 +96,12 @@ namespace AzAlternative
 		{
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
+			if (Groups.ContainsName(name))
+				throw new AzException("The group name is already in use.");
 
 			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
 			g.Store = this;
+			Groups.AddValue(g.Guid, g.Name);
 
 			return g;
 		}
@@ -106,7 +110,11 @@ namespace AzAlternative
 		{
 			CheckGroupIsValid(group);
 
+			if (Groups.ContainsName(group.Name) && Groups[group.Name].Guid != group.Guid)
+				throw new AzException("The group name is already in use by another group.");
+
 			Instance.UpdateGroup(group);
+			Groups.UpdateValue(group.Guid, group.Name);
 		}
 
 		/// <summary>
@@ -119,9 +127,12 @@ namespace AzAlternative
 		{
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "A name must be specified when adding an application");
+			if (Applications.ContainsName(name))
+				throw new AzException("The application name is already in use.");
 
 			Application a = Instance.CreateApplication(name, description, versionInformation);
 			a.Store = this;
+			Applications.AddValue(a.Guid, a.Name);
 
 			return a;
 		}
@@ -132,14 +143,24 @@ namespace AzAlternative
 		/// <param name="application">The application to remove</param>
 		public void DeleteApplication(Application application)
 		{
-			if (CheckApplicationIsValid(application))
-				Instance.DeleteApplication(application);
+			CheckApplicationIsValid(application);
+
+			Instance.DeleteApplication(application);
+			Applications.RemoveValue(application.Guid);
 		}
 
 		public void UpdateApplication(Application application)
 		{
-			if (CheckApplicationIsValid(application))
-				Instance.UpdateApplication(application);
+			CheckApplicationIsValid(application);
+
+			if (Applications.ContainsName(application.Name))
+			{
+				if (Applications[application.Name].Guid != application.Guid)
+					throw new AzException("The application name is already in use by another application.");
+			}
+
+			Instance.UpdateApplication(application);
+			Applications.UpdateValue(application.Guid, application.Name);
 		}
 
 		private bool CheckGroupIsValid(ApplicationGroup group)

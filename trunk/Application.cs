@@ -129,9 +129,12 @@ namespace AzAlternative
 		{
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name");
+			if (Groups.ContainsName(name))
+				throw new AzException("The group name is already in use.");
 
 			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
 			g.Parent = this;
+			Groups.AddValue(g.Guid, g.Name);
 
 			return g;
 		}
@@ -146,14 +149,18 @@ namespace AzAlternative
 				throw new AzException("The group is not part of this application. Only application groups can be removed here.");
 
 			Instance.DeleteGroup(group);
+			Groups.RemoveValue(group.Guid);
 		}
 
 		public void UpdateGroup(ApplicationGroup group)
 		{
 			if (!CheckObjectIsValid(group))
 				throw new AzException("The group is not part of this application. Only application groups can be updated here.");
+			if (Groups.ContainsName(group.Name) && Groups[group.Name].Guid != group.Guid)
+				throw new AzException("The group name is already in use by another group.");
 
 			Instance.UpdateGroup(group);
+			Groups.UpdateValue(group.Guid, group.Name);
 		}
 
 		/// <summary>
@@ -166,9 +173,12 @@ namespace AzAlternative
 		{
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name");
+			if (Roles.ContainsName(name))
+				throw new AzException("The role name is already in use by another role");
 
 			RoleDefinition r = Instance.CreateRole(name, description);
 			r.Parent = this;
+			Roles.AddValue(r.Guid, r.Name);
 
 			return r;
 		}
@@ -183,6 +193,7 @@ namespace AzAlternative
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRole(role);
+			Roles.RemoveValue(role.Guid);
 		}
 
 		public void UpdateRole(RoleDefinition role)
@@ -191,6 +202,7 @@ namespace AzAlternative
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.UpdateRole(role);
+			Roles.UpdateValue(role.Guid, role.Name);
 		}
 
 		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)

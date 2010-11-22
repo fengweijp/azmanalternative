@@ -184,6 +184,8 @@ namespace AzAlternative.Xml
 			SetAttribute(e, DESCRIPTION, Description);
 			SetAttribute(e, APPLICATIONVERSION, ApplicationVersion);
 
+			parent.AppendChild(e);
+
 			return e;
 		}
 
@@ -204,7 +206,9 @@ namespace AzAlternative.Xml
 
 			Groups = new Collections.ApplicationGroupCollection(Service, XmlApplicationGroup.GetChildren(element));
 			Operations = new Collections.OperationCollection(Service, XmlOperation.GetChildren(element));
-			Tasks = new Collections.TaskCollection(Service, null);
+			Tasks = new Collections.TaskCollection(Service, XmlTask.GetTasks(element));
+			Roles = new Collections.RoleDefinitionCollection(Service, XmlRoleDefinition.GetRoles(element));
+			RoleAssignments = new Collections.RoleAssignmentsCollection(Service, XmlRoleAssignments.GetChildren(element));
 		}
 
 		//public static IEnumerator<Application> GetApplications(XmlService service, Guid guid)
