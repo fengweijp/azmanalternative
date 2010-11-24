@@ -30,7 +30,7 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets or sets the role name
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get { return Instance.Name; }
 			set
@@ -55,6 +55,22 @@ namespace AzAlternative
 			get { return Instance.Definition; }
 		}
 
+		/// <summary>
+		/// Gets the collection of groups in the role
+		/// </summary>
+		public Collections.ApplicationGroupCollection Groups
+		{
+			get { return Instance.Groups; }
+		}
+
+		/// <summary>
+		/// Gets the collection of members assigned to the role
+		/// </summary>
+		public Collections.MemberCollection Members
+		{
+			get { return Instance.Members; }
+		}
+
 		internal RoleAssignments(Interfaces.IRoleAssignment role)
 			: base()
 		{
@@ -68,30 +84,17 @@ namespace AzAlternative
 		}
 
 		/// <summary>
-		/// Gets the collection of groups in the role
-		/// </summary>
-		public Collections.ApplicationGroupCollection Groups
-		{
-			get { return Instance.Groups; }
-		}
-
-		/// <summary>
-		/// Gets the collection of members assigned to the role
-		/// </summary>
-		public System.Collections.ObjectModel.ReadOnlyCollection<Interfaces.IMember> Members
-		{
-			get { return Instance.Members; }
-		}
-
-		/// <summary>
 		/// Adds a group to the role
 		/// </summary>
 		/// <param name="group">Group to add</param>
 		public void AddGroup(ApplicationGroup group)
 		{
 			CheckObjectIsValid(group);
+			if (Groups.ContainsGuid(group.Guid))
+				return;
 
 			Instance.AddGroup(group);
+			Groups.AddValue(group);
 		}
 
 		/// <summary>
@@ -101,12 +104,18 @@ namespace AzAlternative
 		public void RemoveGroup(ApplicationGroup group)
 		{
 			CheckObjectIsValid(group);
+			if (!Groups.ContainsGuid(group.Guid))
+				return;
 
 			Instance.RemoveGroup(group);
+			Groups.RemoveValue(group.Guid);
 		}
 
 		protected override bool CheckObjectIsValid(ContainerBase o)
 		{
+			if (o == null)
+				throw new ArgumentNullException("group");
+
 			ApplicationGroup g = (ApplicationGroup)o;
 
 			if (g.IsGlobalGroup)

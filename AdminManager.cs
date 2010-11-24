@@ -96,12 +96,11 @@ namespace AzAlternative
 		{
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
-			if (Groups.ContainsName(name))
-				throw new AzException("The group name is already in use.");
+			Groups.CheckName(name);
 
 			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
 			g.Store = this;
-			Groups.AddValue(g.Guid, g.Name);
+			Groups.AddValue(g);
 
 			return g;
 		}
@@ -110,11 +109,9 @@ namespace AzAlternative
 		{
 			CheckGroupIsValid(group);
 
-			if (Groups.ContainsName(group.Name) && Groups[group.Name].Guid != group.Guid)
-				throw new AzException("The group name is already in use by another group.");
-
+			Groups.CheckName(group);
 			Instance.UpdateGroup(group);
-			Groups.UpdateValue(group.Guid, group.Name);
+			Groups.UpdateValue(group);
 		}
 
 		/// <summary>
@@ -127,12 +124,11 @@ namespace AzAlternative
 		{
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "A name must be specified when adding an application");
-			if (Applications.ContainsName(name))
-				throw new AzException("The application name is already in use.");
+			Applications.CheckName(name);
 
 			Application a = Instance.CreateApplication(name, description, versionInformation);
 			a.Store = this;
-			Applications.AddValue(a.Guid, a.Name);
+			Applications.AddValue(a);
 
 			return a;
 		}
@@ -153,14 +149,9 @@ namespace AzAlternative
 		{
 			CheckApplicationIsValid(application);
 
-			if (Applications.ContainsName(application.Name))
-			{
-				if (Applications[application.Name].Guid != application.Guid)
-					throw new AzException("The application name is already in use by another application.");
-			}
-
+			Applications.CheckName(application);
 			Instance.UpdateApplication(application);
-			Applications.UpdateValue(application.Guid, application.Name);
+			Applications.UpdateValue(application);
 		}
 
 		private bool CheckGroupIsValid(ApplicationGroup group)

@@ -8,13 +8,19 @@ namespace AzAlternative
     /// <summary>
     /// Base class for the API objects. Not intended to be used directly
     /// </summary>
-    public abstract class ContainerBase
+    public abstract class ContainerBase : IEquatable<ContainerBase>
     {
 		protected Application BaseApplication;
 
 		public abstract Guid Guid
 		{
 			get;
+		}
+
+		public abstract string Name
+		{
+			get;
+			set;
 		}
 
         /// <summary>
@@ -47,5 +53,9 @@ namespace AzAlternative
 			return (o.Parent != null && o.Parent.Guid == this.Guid);
 		}
 
-    }
+		public bool Equals(ContainerBase other)
+		{
+			return Guid == other.Guid;
+		}
+	}
 }

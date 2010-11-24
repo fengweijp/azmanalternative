@@ -30,8 +30,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the collection of users assigned to the role
 		/// </summary>
-		System.Collections.ObjectModel.ReadOnlyCollection<IMember> Members { get; }
-		//System.Collections.ObjectModel.ReadOnlyCollection<Role> Roles { get; }
+		Collections.MemberCollection Members { get; }
 
 		void AddGroup(ApplicationGroup group);
 		void RemoveGroup(ApplicationGroup group);

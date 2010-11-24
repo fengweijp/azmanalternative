@@ -13,7 +13,7 @@ namespace AzAlternative
         /// <summary>
         /// Gets the collection of roles added to the role
         /// </summary>
-		Collections.RoleDefinitionCollection Interfaces.IRoleDefinition.Roles
+		public Collections.RoleDefinitionCollection Roles
 		{
 			get { return ((Interfaces.IRoleDefinition)Instance).Roles; }
 		}
@@ -33,8 +33,15 @@ namespace AzAlternative
         /// <param name="role">Role to add</param>
 		public void AddRole(RoleDefinition role)
 		{
+			if (role == null)
+				throw new ArgumentNullException("role");
+
             CheckObjectIsValid(role);
+			if (Roles.ContainsGuid(role.Guid))
+				return;
+
             ((Interfaces.IRoleDefinition)Instance).AddRole(role);
+			Roles.AddValue(role);
 		}
 
         /// <summary>
@@ -43,9 +50,15 @@ namespace AzAlternative
         /// <param name="role">Role to remove</param>
 		public void RemoveRole(RoleDefinition role)
 		{
+			if (role == null)
+				throw new ArgumentNullException("role");
+
             CheckObjectIsValid(role);
+			if (!Roles.ContainsGuid(role.Guid))
+				return;
 
 			((Interfaces.IRoleDefinition)Instance).RemoveRole(role);
+			Roles.RemoveValue(role.Guid);
 		}
 
 

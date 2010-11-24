@@ -14,8 +14,11 @@ namespace AzAlternative.Collections
         {
             get 
             {
-                Application a = Service.GetApplication(Guids[name]);
-                a.Store = AdminManager;
+				if (!ContainsName(name))
+					return null;
+
+				Application a = base[name];
+				a.Store = AdminManager;
 
                 return a;
             }
@@ -36,5 +39,15 @@ namespace AzAlternative.Collections
         {
             return Service.GetApplications(Guids.Values, AdminManager);
         }
-    }
+
+		internal override void CheckName(Application entry)
+		{
+			CheckName(entry, "application");
+		}
+
+		internal override void CheckName(string name)
+		{
+			CheckName(name, "application");
+		}
+	}
 }

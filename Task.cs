@@ -34,7 +34,7 @@ namespace AzAlternative
         /// <summary>
         /// Gets or sets the task name
         /// </summary>
-		public string Name
+		public override string Name
 		{
 			get { return Instance.Name; }
 			set 
@@ -105,9 +105,15 @@ namespace AzAlternative
         /// <param name="task">Task to add</param>
 		public void AddTask(Task task)
 		{
+			if (task == null)
+				throw new ArgumentNullException("task");
+
 			CheckObjectIsValid(task);
-			//TODO: Check task isn't already in Task
+			if (Tasks.ContainsGuid(task.Guid))
+				return;
+
 			Instance.AddTask(task);
+			Tasks.AddValue(task);
 		}
 
         /// <summary>
@@ -116,8 +122,15 @@ namespace AzAlternative
         /// <param name="task">Task to remove</param>
 		public void RemoveTask(Task task)
 		{
+			if (task == null)
+				throw new ArgumentNullException("task");
+
 			CheckObjectIsValid(task);
+			if (!Tasks.ContainsGuid(task.Guid))
+				return;
+
 			Instance.RemoveTask(task);
+			Tasks.RemoveValue(task.Guid);
 		}
 
         /// <summary>
@@ -126,9 +139,15 @@ namespace AzAlternative
         /// <param name="operation">Operation to add</param>
 		public void AddOperation(Operation operation)
 		{
+			if (operation == null)
+				throw new ArgumentNullException("operation");
+
 			CheckObjectIsValid(operation);
-			//TODO: Check op isn't in already
+			if (Operations.ContainsGuid(operation.Guid))
+				return;
+
 			Instance.AddOperation(operation);
+			Operations.AddValue(operation);
 		}
 
         /// <summary>
@@ -137,8 +156,15 @@ namespace AzAlternative
         /// <param name="operation">Operation to remove</param>
 		public void RemoveOperation(Operation operation)
 		{
+			if (operation == null)
+				throw new ArgumentNullException("operation");
+
 			CheckObjectIsValid(operation);
+			if (!Operations.ContainsGuid(operation.Guid))
+				return;
+
 			Instance.RemoveOperation(operation);
+			Operations.RemoveValue(operation.Guid);
 		}
 
 		public void LoadBizRuleScript(string path, BizRuleLanguage language)

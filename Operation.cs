@@ -29,7 +29,7 @@ namespace AzAlternative
         /// <summary>
         /// Gets or sets the operation name
         /// </summary>
-		public string Name
+		public override string Name
 		{
 			get { return Instance.Name; }
 			set 
@@ -58,7 +58,7 @@ namespace AzAlternative
 			get { return Instance.OperationId; }
 			set
             {
-                if (value < 0)
+                if (value < 1)
                     throw new ArgumentOutOfRangeException("OperationId");
                 Instance.OperationId = value; 
             }

@@ -38,9 +38,10 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public System.Collections.ObjectModel.ReadOnlyCollection<Interfaces.IMember> Members
+		public Collections.MemberCollection Members
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public XmlRoleAssignments(XmlService service)
@@ -87,6 +88,7 @@ namespace AzAlternative.Xml
 			_DefinitionGuid = new Guid(element[DEFINITION].InnerXml);
 
 			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
+			Members = Service.GetMembers(element);
 		}
 
 		public static Dictionary<string, Guid> GetChildren(XmlElement element)

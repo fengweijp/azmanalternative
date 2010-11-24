@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace AzAlternative.Xml
 {
@@ -63,7 +64,7 @@ namespace AzAlternative.Xml
 		{
 			XmlElement parentNode = Load(parent.Guid);
 
-			if (parentNode.SelectNodes(string.Format("{0}=\"{1}\"", linkName, guid)).Count > 0)
+			if (parentNode.SelectNodes(string.Format("{0}[.='{1}']", linkName, guid)).Count > 0)
 				return;
 
 			XmlElement e = parentNode.OwnerDocument.CreateElement(linkName);
@@ -75,7 +76,7 @@ namespace AzAlternative.Xml
 		public void RemoveLink(XmlBaseObject parent, string linkName, Guid guid)
 		{
 			XmlElement parentNode = Load(parent.Guid);
-			XmlNode e = parentNode.SelectSingleNode(string.Format("{0}=\"{1}\"", linkName, guid));
+			XmlNode e = parentNode.SelectSingleNode(string.Format("{0}[.='{1}']", linkName, guid));
 			if (e == null)
 				return;
 
@@ -204,13 +205,39 @@ namespace AzAlternative.Xml
 
         }
 
+		public Collections.MemberCollection GetMembers(XmlElement parent)
+		{
+			List<Member> result = new List<Member>();
+			foreach (XmlNode item in parent.SelectNodes("Member"))
+			{
+				XmlMember m = new XmlMember(this);
+				m.Load((XmlElement)item);
+				result.Add(new Member(m));
+			}
+
+			return new Collections.MemberCollection(result);
+		}
+
+		public Collections.MemberCollection GetExclusions(XmlElement parent)
+		{
+			List<Member> result = new List<Member>();
+			foreach (XmlNode item in parent.SelectNodes("NonMember"))
+			{
+				XmlMember m = new XmlMember(this);
+				m.Load((XmlElement)item);
+				result.Add(new Member(m));
+			}
+
+			return new Collections.MemberCollection(result, true);
+		}
+
 		private IEnumerable<XmlElement> FindElements(IEnumerable<Guid> guids)
 		{
 			XmlElement root = LoadRoot();
 
 			foreach (var item in guids)
 			{
-				yield return (XmlElement)root.SelectSingleNode(string.Format("//*[Guid='{0}']", item));
+				yield return (XmlElement)root.SelectSingleNode(string.Format("//*[@Guid='{0}']", item));
 			}
 		}
 	}

@@ -13,6 +13,9 @@ namespace AzAlternative.Collections
         {
             get
             {
+				if (!ContainsName(name))
+					return null;
+
                 ApplicationGroup result = base[name];
 				if (result.IsGlobalGroup)
 				{
@@ -37,5 +40,15 @@ namespace AzAlternative.Collections
         {
 			return Service.GetGroups(Guids.Values, Store, Application);
         }
-    }
+
+		internal override void CheckName(ApplicationGroup entry)
+		{
+			CheckName(entry, "group");
+		}
+
+		internal override void CheckName(string name)
+		{
+			CheckName(name, "group");
+		}
+	}
 }

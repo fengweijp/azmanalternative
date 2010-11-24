@@ -22,5 +22,15 @@ namespace AzAlternative.Collections
 		{
 			return Service.GetRoleDefinitions(Guids.Values, Application);
 		}
+
+		internal override void CheckName(RoleDefinition entry)
+		{
+			CheckName(entry, "role");
+		}
+
+		internal override void CheckName(string name)
+		{
+			CheckName(name, "role");
+		}
 	}
 }

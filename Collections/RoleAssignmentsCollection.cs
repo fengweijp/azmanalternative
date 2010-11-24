@@ -22,5 +22,31 @@ namespace AzAlternative.Collections
 		{
 			return Service.GetRoleAssignmentsCollection(Guids.Values, Application);
 		}
+
+		internal override void CheckName(RoleAssignments entry)
+		{
+			CheckName(entry, "role assignment");
+		}
+
+		internal override void CheckName(string name)
+		{
+			CheckName(name, "role assignment");
+		}
+
+		internal string MakeNameUnique(string name)
+		{
+			if (!Guids.ContainsKey(name))
+				return name;
+
+			string result;
+			int count = 1;
+			do
+			{
+				result = string.Format("{0}({1})", name, count);
+				count++;
+			} while (Guids.ContainsKey(result));
+
+			return result;
+		}
 	}
 }
