@@ -24,16 +24,16 @@ namespace AzAlternative.Xml
 			internal set;
 		}
 
-		public List<Interfaces.IMember> Members
+		public Collections.MemberCollection Members
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
+			get;
+			set;
+		}
+
+		public Collections.MemberCollection Exclusions
+		{
+			get;
+			set;
 		}
 
         public Collections.ApplicationGroupCollection Groups
@@ -65,16 +65,28 @@ namespace AzAlternative.Xml
 			}
 
 			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
-		}
-
-		public void AddMember(Interfaces.IMember member)
-		{
-			throw new NotImplementedException();
+			Exclusions = Service.GetExclusions(element);
+			Members = Service.GetMembers(element);
 		}
 
 		public void RemoveMember(Interfaces.IMember member)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void RemoveMember(string name)
+		{
+			string tmp = Member.ToSid(name);
+			Member m = Members.First(item => item.Instance.Sid == tmp);
+
+			Members.RemoveMember(m);
+		}
+
+		public void AddMember(string name)
+		{
+			Member m = new Member(new XmlMember(Service), name);
+			m.Instance.Parent = this.Guid;
+			Members.AddMember(m);
 		}
 
         public void AddGroup(ApplicationGroup group)
@@ -95,6 +107,8 @@ namespace AzAlternative.Xml
 			SetAttribute(e, DESCRIPTION, Description);
 			SetAttribute(e, GROUPTYPE, GroupType.ToString());
 
+			parent.AppendChild(e);
+			
 			return e;
 		}
 

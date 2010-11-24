@@ -22,5 +22,24 @@ namespace AzAlternative.Collections
 		{
 			return Service.GetOperations(Guids.Values, Application);
 		}
+
+		internal override void CheckName(Operation entry)
+		{
+			CheckName(entry, "operation");
+		}
+
+		internal override void CheckName(string name)
+		{
+			CheckName(name, "operation");
+		}
+
+		internal void CheckId(int id)
+		{
+			foreach (var item in this)
+			{
+				if (item.OperationId == id)
+					throw new AzException("Operation ID is already in use.");
+			}
+		}
 	}
 }

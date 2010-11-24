@@ -101,7 +101,7 @@ namespace AzAlternative.Xml
             Load(e);
 		}
 
-        public void Load(XmlElement element)
+        public virtual void Load(XmlElement element)
         {
             Guid = new System.Guid(GetAttribute(element, GUID));
             Name = GetAttribute(element, NAME);

@@ -22,5 +22,15 @@ namespace AzAlternative.Collections
 		{
 			return Service.GetTasks(Guids.Values, Application);
 		}
+
+		internal override void CheckName(Task entry)
+		{
+			CheckName(entry, "task");
+		}
+
+		internal override void CheckName(string name)
+		{
+			CheckName(name, "task");
+		}
 	}
 }

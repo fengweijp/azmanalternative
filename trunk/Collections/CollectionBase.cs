@@ -9,6 +9,8 @@ namespace AzAlternative.Collections
 
 	public abstract class CollectionBase<T> : IEnumerable<T> where T : ContainerBase
 	{
+		private const string DUPLICATENAMEERROR = "The {0} name is already in use by another {0}.";
+
 		protected Dictionary<string, Guid> Guids;
 		private InternalCollection<T> InternalCollection;
 		protected ServiceBase Service;
@@ -19,8 +21,8 @@ namespace AzAlternative.Collections
 		{
 			get
 			{
-				if (!Guids.ContainsKey(name))
-					return null;
+				//if (!Guids.ContainsKey(name))
+				//    return null;
 
 				if (!InternalCollection.Contains(Guids[name]))
 				{
@@ -52,9 +54,9 @@ namespace AzAlternative.Collections
 			return GetEnumerator();
 		}
 
-		internal void AddValue(Guid guid, string name)
+		internal void AddValue(T entry)
 		{
-			Guids.Add(name, guid);
+			Guids.Add(entry.Name, entry.Guid);
 		}
 
 		internal void RemoveValue(Guid guid)
@@ -68,15 +70,15 @@ namespace AzAlternative.Collections
 				InternalCollection.Remove(guid);
 		}
 
-		internal void UpdateValue(Guid guid, string name)
+		internal void UpdateValue(T entry)
 		{
-			var k = Guids.First(item => item.Value == guid);
+			var k = Guids.First(item => item.Value == entry.Guid);
 
-			if (k.Key == name)
+			if (k.Key == entry.Name)
 				return;
 
 			Guids.Remove(k.Key);
-			Guids.Add(name, guid);
+			Guids.Add(entry.Name, entry.Guid);
 		}
 
 		public bool ContainsName(string name)
@@ -87,6 +89,28 @@ namespace AzAlternative.Collections
 		internal bool ContainsGuid(Guid guid)
 		{
 			return Guids.ContainsValue(guid);
+		}
+
+		internal abstract void CheckName(T entry);
+
+		protected virtual void CheckName(T entry, string error)
+		{
+			if (!Guids.ContainsKey(entry.Name))
+				return;
+
+			if (Guids[entry.Name] != entry.Guid)
+				throw new AzException(string.Format(DUPLICATENAMEERROR, error));
+		}
+
+		internal abstract void CheckName(string name);
+
+		protected virtual void CheckName(string name, string error)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
+			if (Guids.ContainsKey(name))
+				throw new AzException(string.Format(DUPLICATENAMEERROR, error));
 		}
 
 	}

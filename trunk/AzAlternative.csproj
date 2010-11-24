@@ -55,6 +55,7 @@
     <Compile Include="Collections\ApplicationCollection.cs" />
     <Compile Include="Collections\ApplicationGroupCollection.cs" />
     <Compile Include="Collections\CollectionBase.cs" />
+    <Compile Include="Collections\MemberCollection.cs" />
     <Compile Include="Collections\OperationCollection.cs" />
     <Compile Include="Collections\RoleAssignmentsCollection.cs" />
     <Compile Include="Collections\RoleDefinitionCollection.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="RoleAssignments.cs" />
     <Compile Include="RoleDefinition.cs" />
     <Compile Include="Task.cs" />
+    <Compile Include="Member.cs" />
     <Compile Include="Xml\XmlAdminManager.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,6 +96,7 @@
     <Compile Include="Xml\XmlBaseObject.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml\XmlMember.cs" />
     <Compile Include="Xml\XmlOperation.cs" />
     <Compile Include="Xml\XmlRoleAssignments.cs" />
     <Compile Include="Xml\XmlRoleDefinition.cs">

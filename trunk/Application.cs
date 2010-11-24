@@ -35,7 +35,7 @@ namespace AzAlternative
         /// <summary>
         /// Gets or sets the application name
         /// </summary>
-        public string Name
+        public override string Name
 		{
 			get { return Instance.Name; }
 			set 
@@ -127,14 +127,11 @@ namespace AzAlternative
 		/// <returns>group in the current application</returns>
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
-			if (string.IsNullOrEmpty(name))
-				throw new ArgumentNullException("name");
-			if (Groups.ContainsName(name))
-				throw new AzException("The group name is already in use.");
+			Groups.CheckName(name);
 
 			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
 			g.Parent = this;
-			Groups.AddValue(g.Guid, g.Name);
+			Groups.AddValue(g);
 
 			return g;
 		}
@@ -145,6 +142,8 @@ namespace AzAlternative
 		/// <param name="group">group to delete</param>
 		public void DeleteGroup(ApplicationGroup group)
 		{
+			if (group == null)
+				throw new ArgumentNullException("group");
 			if (!CheckObjectIsValid(group))
 				throw new AzException("The group is not part of this application. Only application groups can be removed here.");
 
@@ -152,15 +151,25 @@ namespace AzAlternative
 			Groups.RemoveValue(group.Guid);
 		}
 
+		public void DeleteGroup(string name)
+		{
+			ApplicationGroup g = Groups[name];
+			if (g == null)
+				return;
+
+			DeleteGroup(g);
+		}
+
 		public void UpdateGroup(ApplicationGroup group)
 		{
+			if (group == null)
+				throw new ArgumentNullException("group");
 			if (!CheckObjectIsValid(group))
 				throw new AzException("The group is not part of this application. Only application groups can be updated here.");
-			if (Groups.ContainsName(group.Name) && Groups[group.Name].Guid != group.Guid)
-				throw new AzException("The group name is already in use by another group.");
 
+			Groups.CheckName(group);
 			Instance.UpdateGroup(group);
-			Groups.UpdateValue(group.Guid, group.Name);
+			Groups.UpdateValue(group);
 		}
 
 		/// <summary>
@@ -171,14 +180,11 @@ namespace AzAlternative
 		/// <returns>new role</returns>
 		public RoleDefinition CreateRole(string name, string description)
 		{
-			if (string.IsNullOrEmpty(name))
-				throw new ArgumentNullException("name");
-			if (Roles.ContainsName(name))
-				throw new AzException("The role name is already in use by another role");
+			Roles.CheckName(name);
 
 			RoleDefinition r = Instance.CreateRole(name, description);
 			r.Parent = this;
-			Roles.AddValue(r.Guid, r.Name);
+			Roles.AddValue(r);
 
 			return r;
 		}
@@ -189,6 +195,8 @@ namespace AzAlternative
 		/// <param name="role"></param>
 		public void DeleteRole(RoleDefinition role)
 		{
+			if (role == null)
+				throw new ArgumentNullException("role");
 			if (!CheckObjectIsValid(role))
 				throw new AzException("The Role is not part of the application.");
 
@@ -196,42 +204,86 @@ namespace AzAlternative
 			Roles.RemoveValue(role.Guid);
 		}
 
+		public void DeleteRole(string name)
+		{
+			RoleDefinition r = Roles[name];
+			if (r == null)
+				return;
+
+			DeleteRole(r);
+		}
+
 		public void UpdateRole(RoleDefinition role)
 		{
+			if (role == null)
+				throw new ArgumentNullException("role");
 			if (!CheckObjectIsValid(role))
 				throw new AzException("The Role is not part of the application.");
 
+			Roles.CheckName(role);
 			Instance.UpdateRole(role);
-			Roles.UpdateValue(role.Guid, role.Name);
+			Roles.UpdateValue(role);
 		}
 
-		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)
+		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role, bool renameOnMatch)
 		{
-			if (string.IsNullOrEmpty(name))
-				throw new ArgumentNullException("name");
 			if (role == null)
 				throw new ArgumentNullException("role");
+
+			if (renameOnMatch)
+			{
+				if (string.IsNullOrEmpty(name))
+					throw new ArgumentNullException("name");
+				name = RoleAssignments.MakeNameUnique(name);
+			}
+			else
+				RoleAssignments.CheckName(name);
 
 			if (!CheckObjectIsValid(role))
 				throw new AzException("The role is not defined in this application");
 
-			return Instance.CreateRoleAssignments(name, description, role);
+			AzAlternative.RoleAssignments r = Instance.CreateRoleAssignments(name, description, role);
+			r.Parent = this;
+			RoleAssignments.AddValue(r);
+
+			return r;
+		}
+
+		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)
+		{
+			return CreateRoleAssignments(name, description, role, false);
 		}
 
 		public void DeleteRoleAssignments(RoleAssignments role)
 		{
+			if (role == null)
+				throw new ArgumentNullException("role");
 			if (!CheckObjectIsValid(role))
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRoleAssignments(role);
+			RoleAssignments.RemoveValue(role.Guid);
+		}
+
+		public void DeleteRoleAssignments(string name)
+		{
+			RoleAssignments r = RoleAssignments[name];
+			if (r == null)
+				return;
+
+			DeleteRoleAssignments(r);
 		}
 
 		public void UpdateRoleAssignments(RoleAssignments role)
 		{
+			if (role == null)
+				throw new ArgumentNullException("role");
 			if (!CheckObjectIsValid(role))
 				throw new AzException("The Role is not part of the application.");
 
+			RoleAssignments.CheckName(role);
 			Instance.UpdateRoleAssignments(role);
+			RoleAssignments.UpdateValue(role);
 		}
 
 		/// <summary>
@@ -243,14 +295,15 @@ namespace AzAlternative
 		/// <returns>new operation</returns>
 		public Operation CreateOperation(string name, string description, int operationId)
 		{
-			if (operationId == 0)
-				throw new ArgumentOutOfRangeException("operationId", "Operation ID must be non-zero");
-			if (string.IsNullOrEmpty(name))
-				throw new ArgumentNullException("name");
+			if (operationId < 1)
+				throw new ArgumentOutOfRangeException("operationId", "Operation ID must be greater than zero.");
+			Operations.CheckName(name);
+			Operations.CheckId(operationId);
 
 			Operation o = Instance.CreateOperation(name, description, operationId);
 			o.Parent = this;
 
+			Operations.AddValue(o);
 			return o;
 		}
 
@@ -260,18 +313,35 @@ namespace AzAlternative
 		/// <param name="operation">Operaton to delete</param>
 		public void DeleteOperation(Operation operation)
 		{
+			if (operation == null)
+				throw new ArgumentNullException("operation");
 			if (!CheckObjectIsValid(operation))
 				throw new AzException("The operation is not part of this application.");
 
 			Instance.DeleteOperation(operation);
+			Operations.RemoveValue(operation.Guid);
+		}
+
+		public void DeleteOperation(string name)
+		{
+			Operation o = Operations[name];
+			if (o == null)
+				return;
+
+			DeleteOperation(o);
 		}
 
 		public void UpdateOperation(Operation operation)
 		{
+			if (operation == null)
+				throw new ArgumentNullException("operation");
 			if (!CheckObjectIsValid(operation))
 				throw new AzException("The operation is not part of this application.");
+			Operations.CheckName(operation);
+			Operations.CheckId(operation.OperationId);
 
 			Instance.UpdateOperation(operation);
+			Operations.UpdateValue(operation);
 		}
 
 		/// <summary>
@@ -282,11 +352,12 @@ namespace AzAlternative
 		/// <returns>new task</returns>
 		public Task CreateTask(string name, string description)
 		{
-			if (string.IsNullOrEmpty(name))
-				throw new ArgumentNullException("name");
+			Tasks.CheckName(name);
 
 			Task t = Instance.CreateTask(name, description);
 			t.Parent = this;
+
+			Tasks.AddValue(t);
 			return t;
 		}
 
@@ -296,20 +367,34 @@ namespace AzAlternative
 		/// <param name="task">task to delete</param>
 		public void DeleteTask(Task task)
 		{
+			if (task == null)
+				throw new ArgumentNullException("task");
 			if (!CheckObjectIsValid(task))
 				throw new AzException("The task is not part of this application.");
 
 			Instance.DeleteTask(task);
+			Tasks.RemoveValue(task.Guid);
 		}
-		
+
+		public void DeleteTask(string name)
+		{
+			Task t = Tasks[name];
+			if (t == null)
+				return;
+
+			DeleteTask(t);
+		}
+
 		public void UpdateTask(Task task)
 		{
+			if (task == null)
+				throw new ArgumentNullException("task");
 			if (!CheckObjectIsValid(task))
 				throw new AzException("The task is not part of this application.");
+			Tasks.CheckName(task);
 
 			Instance.UpdateTask(task);
+			Tasks.UpdateValue(task);
 		}
-
-
 	}
 }

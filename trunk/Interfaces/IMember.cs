@@ -10,5 +10,11 @@ namespace AzAlternative.Interfaces
 	/// </summary>
 	public interface IMember
 	{
+		string Sid { get; set; }
+		bool IsExclusion { get; set; }
+		Guid Parent { get; set; }
+
+		void Save();
+		void Remove();
 	}
 }

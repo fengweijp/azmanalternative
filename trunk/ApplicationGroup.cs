@@ -34,7 +34,7 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets or sets the name of the group
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get { return Instance.Name; }
 			set
@@ -70,12 +70,14 @@ namespace AzAlternative
         /// <summary>
         /// Gets the collection of members in the group
         /// </summary>
-		public List<Interfaces.IMember> Members
+		public Collections.MemberCollection Members
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
+			get { return Instance.Members; }
+		}
+
+		public Collections.MemberCollection Exclusions
+		{
+			get { return Instance.Exclusions; }
 		}
 
         /// <summary>
@@ -105,33 +107,37 @@ namespace AzAlternative
 		}
 
         /// <summary>
-        /// Validates the properties of the group
-        /// </summary>
-        /// <returns>returns true if the group is valid</returns>
-		internal bool ValidateGroup()
-		{
-			if (string.IsNullOrEmpty(Name))
-				return false;
-
-			return true;
-		}
-
-        /// <summary>
         /// Add a member to the group
         /// </summary>
         /// <param name="member">Member to add</param>
-		public void AddMember(Interfaces.IMember member)
+		public void AddMember(string name)
 		{
-			throw new NotImplementedException();
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
+			Instance.AddMember(name);
+		}
+
+		public void AddMember(string name, string domain)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+			if (string.IsNullOrEmpty(domain))
+				throw new ArgumentNullException("domain");
+
+			AddMember(domain + "\\" + name);
 		}
 
         /// <summary>
         /// Removes a member from the group
         /// </summary>
-        /// <param name="member">Member to remove</param>
-		public void RemoveMember(Interfaces.IMember member)
+        /// <param name="member">Member to remove in the form domain\name</param>
+		public void RemoveMember(string name)
 		{
-			throw new NotImplementedException();
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
+			Instance.RemoveMember(name);
 		}
 
         /// <summary>
@@ -140,8 +146,12 @@ namespace AzAlternative
         /// <param name="group">Group to add</param>
         public void AddGroup(ApplicationGroup group)
         {
-			//CheckGroupIsValid(group);
+			CheckGroupIsValid(group);
+			if (Groups.ContainsGuid(group.Guid))
+				return;
+
             Instance.AddGroup(group);
+			Groups.AddValue(group);
         }
 
         /// <summary>
@@ -150,24 +160,40 @@ namespace AzAlternative
         /// <param name="group">Group to remove</param>
         public void RemoveGroup(ApplicationGroup group)
         {
-			//CheckGroupIsValid(group);
+			CheckGroupIsValid(group);
+			if (!Groups.ContainsGuid(group.Guid))
+				return;
+
             Instance.RemoveGroup(group);
+			Groups.RemoveValue(group.Guid);
         }
 
-		//private void CheckGroupIsValid(ApplicationGroup group)
-		//{
-		//    if (this.Store != null)
-		//    {
-		//        if (group.Store == null || group.Store.Guid != this.Store.Guid)
-		//            throw new AzException("The group to add is not defined in this store or is not a global group");
-		//    }
-		//    if (this.Application != null)
-		//    {
-		//        CheckObjectIsValid(group);
-		//        if (group.Store != null && group.Store.Guid != this.Application.Store.Guid)
-		//            throw new AzException("The group to add is not defined in this store.");
-		//    }
-		//}
+		public void RemoveGroup(string name)
+		{
+			ApplicationGroup g = Groups[name];
+			if (g == null)
+				return;
 
+			RemoveGroup(g);
+		}
+
+		private void CheckGroupIsValid(ApplicationGroup group)
+		{
+			if (group == null)
+				throw new ArgumentNullException("group");
+
+			if (IsGlobalGroup)
+			{
+				if (!group.IsGlobalGroup || group.Store.Guid != this.Store.Guid)
+					throw new AzException("The group to add is not defined in this store or is not a global group");
+			}
+
+			if (this.Parent != null)
+			{
+				CheckObjectIsValid(group);
+				if (group.IsGlobalGroup && group.Store.Guid != this.Parent.Store.Guid)
+					throw new AzException("The group to add is not defined in this store.");
+			}
+		}
 	}
 }

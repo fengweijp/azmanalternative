@@ -33,7 +33,8 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the collection of members
 		/// </summary>
-		List<IMember> Members { get; }
+		Collections.MemberCollection Members { get; }
+		Collections.MemberCollection Exclusions { get; }
         /// <summary>
         /// Gets a collection of groups in this group
         /// </summary>
@@ -43,12 +44,12 @@ namespace AzAlternative.Interfaces
         /// Adds a member to this group
         /// </summary>
         /// <param name="member">Member to add</param>
-		void AddMember(IMember member);
+		void AddMember(string name);
         /// <summary>
         /// Removes a member from this group
         /// </summary>
         /// <param name="member">Member to remove</param>
-		void RemoveMember(IMember member);
+		void RemoveMember(string member);
 
         /// <summary>
         /// Adds a group to this group
