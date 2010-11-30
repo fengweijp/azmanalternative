@@ -44,6 +44,12 @@ namespace AzAlternative
 			Roles.AddValue(role);
 		}
 
+		public void AddRole(string name)
+		{
+			RoleDefinition r = Parent.Roles[name];
+			AddRole(r);
+		}
+
         /// <summary>
         /// Removes a role from this role
         /// </summary>
@@ -61,6 +67,11 @@ namespace AzAlternative
 			Roles.RemoveValue(role.Guid);
 		}
 
+		public void RemoveRole(string name)
+		{
+			RoleDefinition r = Roles[name];
+			RemoveRole(r);
+		}
 
 	}
 }

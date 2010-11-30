@@ -30,6 +30,7 @@ namespace AzAlternative.Interfaces
 		/// Gets whether the group is a global group or an application group
 		/// </summary>
 		bool IsGlobalGroup { get; }
+		string LdapQuery { get; set; }
 		/// <summary>
 		/// Gets the collection of members
 		/// </summary>

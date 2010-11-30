@@ -17,9 +17,9 @@ namespace AzAlternative.Xml
 			ConnectionString = connectionString;
 		}
 
-		public override AdminManager GetAdminManager()
+		public override Interfaces.IAdminManager GetAdminManager()
 		{
-			return new AdminManager(new XmlAdminManager(this));
+			return new XmlAdminManager(this);
 		}
 
 		public XmlElement LoadRoot()

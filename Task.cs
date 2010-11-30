@@ -116,6 +116,12 @@ namespace AzAlternative
 			Tasks.AddValue(task);
 		}
 
+		public void AddTask(string name)
+		{
+			Task t = Parent.Tasks[name];
+			AddTask(t);
+		}
+
         /// <summary>
         /// Removes a task from this task
         /// </summary>
@@ -131,6 +137,12 @@ namespace AzAlternative
 
 			Instance.RemoveTask(task);
 			Tasks.RemoveValue(task.Guid);
+		}
+
+		public void RemoveTask(string name)
+		{
+			Task t = Tasks[name];
+			RemoveTask(t);
 		}
 
         /// <summary>
@@ -150,6 +162,12 @@ namespace AzAlternative
 			Operations.AddValue(operation);
 		}
 
+		public void AddOperation(string name)
+		{
+			Operation o = Parent.Operations[name];
+			AddOperation(o);
+		}
+
         /// <summary>
         /// Removes an operation from this task
         /// </summary>
@@ -165,6 +183,12 @@ namespace AzAlternative
 
 			Instance.RemoveOperation(operation);
 			Operations.RemoveValue(operation.Guid);
+		}
+
+		public void RemoveOperation(string name)
+		{
+			Operation o = Operations[name];
+			RemoveOperation(o);
 		}
 
 		public void LoadBizRuleScript(string path, BizRuleLanguage language)

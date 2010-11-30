@@ -19,7 +19,7 @@ namespace AzAlternative
 			protected set;
 		}
 
-		public abstract AdminManager GetAdminManager();
+		public abstract Interfaces.IAdminManager GetAdminManager();
 
 		public abstract Application GetApplication(Guid guid);
         public abstract IEnumerator<Application> GetApplications(IEnumerable<Guid> guids, AdminManager store);
