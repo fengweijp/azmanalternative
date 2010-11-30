@@ -13,7 +13,7 @@ namespace AzAlternative.ActiveDirectory
             ConnectionString = connectionString;
         }
 
-        public override AdminManager GetAdminManager()
+        public override Interfaces.IAdminManager GetAdminManager()
         {
             throw new NotImplementedException();
         }

@@ -27,7 +27,7 @@ namespace AzAlternative
 					SecurityIdentifier s = new SecurityIdentifier(Instance.Sid);
 					_Name = s.Translate(typeof(NTAccount)).Value;
 				}
-				catch (Exception ex)
+				catch (IdentityNotMappedException)
 				{
 					_Name = Instance.Sid;
 				}

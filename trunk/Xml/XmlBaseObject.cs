@@ -52,7 +52,9 @@ namespace AzAlternative.Xml
 			if (!node.HasAttribute(name))
 				return null;
 
-			return node.Attributes[name].Value;
+			string result = node.Attributes[name].Value;
+
+			return string.IsNullOrEmpty(result) ? null : result;
 		}
 
 		/// <summary>

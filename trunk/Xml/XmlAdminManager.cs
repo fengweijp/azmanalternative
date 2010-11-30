@@ -60,6 +60,7 @@ namespace AzAlternative.Xml
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
+			ag.IsGlobalGroup = true;
 
 			ag.Groups = new Collections.ApplicationGroupCollection(Service);
 

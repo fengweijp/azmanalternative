@@ -11,6 +11,7 @@ namespace AzAlternative.Xml
 		private const string ELEMENTNAME = "AzApplicationGroup";
 		private const string GROUPTYPE = "GroupType";
 		private const string GROUP = "AppMemberLink";
+		private const string LDAPQUERY = "LdapQuery";
 
 		public GroupType GroupType
 		{
@@ -22,6 +23,12 @@ namespace AzAlternative.Xml
 		{
 			get;
 			internal set;
+		}
+
+		public string LdapQuery
+		{
+			get;
+			set;
 		}
 
 		public Collections.MemberCollection Members
@@ -56,6 +63,9 @@ namespace AzAlternative.Xml
 			{
 				case "LdapQuery":
 					GroupType = AzAlternative.GroupType.LdapQuery;
+					XmlElement e = element[LDAPQUERY];
+					if (e != null)
+						LdapQuery = e.InnerXml;
 					break;
 				case "Basic":
 					GroupType = AzAlternative.GroupType.Basic;
@@ -106,6 +116,12 @@ namespace AzAlternative.Xml
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			SetAttribute(e, GROUPTYPE, GroupType.ToString());
+			if (GroupType == AzAlternative.GroupType.LdapQuery)
+			{
+				XmlElement lq = parent.OwnerDocument.CreateElement(LDAPQUERY);
+				lq.InnerText = LdapQuery;
+				e.AppendChild(lq);
+			}
 
 			parent.AppendChild(e);
 			
@@ -117,6 +133,24 @@ namespace AzAlternative.Xml
 			XmlElement e = base.ToXml();
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
+
+			if (GroupType == AzAlternative.GroupType.LdapQuery)
+			{
+				XmlElement lq = e[LDAPQUERY];
+				if (lq == null)
+				{
+					lq = e.OwnerDocument.CreateElement(LDAPQUERY);
+					e.AppendChild(lq);
+				}
+
+				lq.InnerText = LdapQuery;
+			}
+			else
+			{
+				XmlElement lq = e[LdapQuery];
+				if (lq != null)
+					e.RemoveChild(lq);
+			}
 
 			return e;
 		}

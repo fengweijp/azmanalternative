@@ -10,7 +10,13 @@ namespace AzAlternative
     /// </summary>
     public class AdminManager : Interfaces.IAdminManager
 	{
-		private readonly Interfaces.IAdminManager Instance;
+		private Interfaces.IAdminManager Instance;
+
+		public string ConnectionString
+		{
+			get;
+			private set;
+		}
 
         /// <summary>
         /// Gets the schema major version
@@ -67,12 +73,17 @@ namespace AzAlternative
             }
         }
 
-		internal AdminManager(Interfaces.IAdminManager adminManager)
+		public AdminManager(string connectionString)
 		{
-			Instance = adminManager;
-			Instance.Groups.Store = this;
-			Instance.Applications.AdminManager = this;
+			ConnectionString = connectionString;
 		}
+
+		//internal AdminManager(Interfaces.IAdminManager adminManager)
+		//{
+		//    Instance = adminManager;
+		//    Instance.Groups.Store = this;
+		//    Instance.Applications.AdminManager = this;
+		//}
 
 		/// <summary>
 		/// Removes an application group from the store
@@ -84,6 +95,15 @@ namespace AzAlternative
 
 			Instance.DeleteGroup(group);
 			Groups.RemoveValue(group.Guid);
+		}
+
+		public void DeleteGroup(string name)
+		{
+			ApplicationGroup g = Groups[name];
+			if (g == null)
+				return;
+
+			DeleteGroup(g);
 		}
 
 		/// <summary>
@@ -145,6 +165,15 @@ namespace AzAlternative
 			Applications.RemoveValue(application.Guid);
 		}
 
+		public void DeleteApplication(string name)
+		{
+			Application a = Applications[name];
+			if (a == null)
+				return;
+
+			DeleteApplication(a);
+		}
+
 		public void UpdateApplication(Application application)
 		{
 			CheckApplicationIsValid(application);
@@ -156,6 +185,9 @@ namespace AzAlternative
 
 		private bool CheckGroupIsValid(ApplicationGroup group)
 		{
+			if (group == null)
+				throw new ArgumentNullException("group");
+
 			if (group.Store == null || group.Store.Guid != this.Guid)
 				throw new AzException("The group is not defined in the store, or is not a global group.");
 
@@ -164,6 +196,8 @@ namespace AzAlternative
 
 		private bool CheckApplicationIsValid(Application application)
 		{
+			if (application == null)
+				throw new ArgumentNullException("application");
 			if (application.Store == null || application.Store.Guid != this.Guid)
 				throw new AzException("The application is not defined in the store.");
 
@@ -173,6 +207,21 @@ namespace AzAlternative
 		public void Update()
 		{
 			Instance.Update();
+		}
+
+		public void Open()
+		{
+			if (ConnectionString.StartsWith("msxml"))
+			{
+				Xml.XmlService f = new Xml.XmlService(ConnectionString.Substring(8));
+
+				Instance = f.GetAdminManager();
+			}
+			else
+				throw new AzException("Unsupported connectionstring specified.");
+
+			Instance.Groups.Store = this;
+			Instance.Applications.AdminManager = this;
 		}
 	}
 }

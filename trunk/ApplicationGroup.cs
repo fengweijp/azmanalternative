@@ -67,6 +67,18 @@ namespace AzAlternative
 			get { return Instance.IsGlobalGroup; }
 		}
 
+		public string LdapQuery
+		{
+			get { return Instance.LdapQuery; }
+			set
+			{
+				if (GroupType != AzAlternative.GroupType.LdapQuery)
+					throw new NotSupportedException("LDAP Query can only be set for groups of type LdapQuery.");
+
+				Instance.LdapQuery = value;
+			}
+		}
+
         /// <summary>
         /// Gets the collection of members in the group
         /// </summary>
