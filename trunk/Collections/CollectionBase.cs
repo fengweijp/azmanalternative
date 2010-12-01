@@ -21,8 +21,8 @@ namespace AzAlternative.Collections
 		{
 			get
 			{
-				//if (!Guids.ContainsKey(name))
-				//    return null;
+				if (!ContainsName(name))
+					return null;
 
 				if (!InternalCollection.Contains(Guids[name]))
 				{
@@ -79,6 +79,7 @@ namespace AzAlternative.Collections
 
 			Guids.Remove(k.Key);
 			Guids.Add(entry.Name, entry.Guid);
+			InternalCollection.Remove(k.Value);
 		}
 
 		public bool ContainsName(string name)

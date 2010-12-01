@@ -27,9 +27,12 @@ namespace AzAlternative.Xml
 			SetAttribute(e, GUID, Guid.ToString());
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
+			
 			XmlElement op = e.OwnerDocument.CreateElement(OPERATIONID);
 			op.InnerText = OperationId.ToString();
 			e.AppendChild(op);
+
+			parent.AppendChild(e);
 
 			return e;
 		}

@@ -29,7 +29,11 @@ namespace AzAlternative.Xml
 				}
 				return _Definition;
 			}
-			set { _Definition = value; }
+			set
+			{
+				_Definition = value;
+				_DefinitionGuid = value.Guid;
+			}
 		}
 
 		public Collections.ApplicationGroupCollection Groups
@@ -68,6 +72,8 @@ namespace AzAlternative.Xml
 			XmlElement def = e.OwnerDocument.CreateElement(DEFINITION);
 			def.InnerXml = _DefinitionGuid.ToString();
 			e.AppendChild(def);
+
+			parent.AppendChild(e);
 
 			return e;
 		}

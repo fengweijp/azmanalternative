@@ -9,6 +9,7 @@ namespace AzAlternative.Xml
 	internal class XmlRoleDefinition : XmlTask, Interfaces.IRoleDefinition
 	{
 		private const string ROLE = "TaskLink";
+		private const string ROLEDEFINITION = "RoleDefinition";
 
 		public Collections.RoleDefinitionCollection Roles
 		{
@@ -34,6 +35,14 @@ namespace AzAlternative.Xml
 		{
 			base.LoadInternal(element);
 			Roles = new Collections.RoleDefinitionCollection(Service, GetLinks(element, ROLE));
+		}
+
+		public override XmlElement ToXml(XmlElement parent)
+		{
+			XmlElement e = base.ToXml(parent);
+			SetAttribute(e, ROLEDEFINITION, "True");
+
+			return e;
 		}
 
 		public static Dictionary<string, Guid> GetRoles(XmlElement element)

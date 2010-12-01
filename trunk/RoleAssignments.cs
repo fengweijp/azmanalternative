@@ -5,10 +5,16 @@ using System.Text;
 
 namespace AzAlternative
 {
+	/// <summary>
+	/// Represents an assignment of groups and users to a role
+	/// </summary>
 	public class RoleAssignments: ContainerBase, Interfaces.IRoleAssignment
 	{
 		internal readonly Interfaces.IRoleAssignment Instance;
 
+		/// <summary>
+		/// Gets the owning application for this group, if defined
+		/// </summary>
 		public override Application Parent
 		{
 			get { return BaseApplication; }
@@ -50,6 +56,9 @@ namespace AzAlternative
 			set { Instance.Description = value; }
 		}
 
+		/// <summary>
+		/// Gets the role this assignment is for
+		/// </summary>
 		public RoleDefinition Definition
 		{
 			get { return Instance.Definition; }

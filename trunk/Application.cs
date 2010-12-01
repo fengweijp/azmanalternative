@@ -110,6 +110,12 @@ namespace AzAlternative
 		internal Application(Interfaces.IApplication application)
 		{
 			Instance = application;
+
+			Instance.Groups.Application = this;
+			Instance.Operations.Application = this;
+			Instance.RoleAssignments.Application = this;
+			Instance.Roles.Application = this;
+			Instance.Tasks.Application = this;
 		}
 
 		internal Application(Interfaces.IApplication application, AdminManager parent)
@@ -338,7 +344,7 @@ namespace AzAlternative
 			if (!CheckObjectIsValid(operation))
 				throw new AzException("The operation is not part of this application.");
 			Operations.CheckName(operation);
-			Operations.CheckId(operation.OperationId);
+			Operations.CheckId(operation);
 
 			Instance.UpdateOperation(operation);
 			Operations.UpdateValue(operation);

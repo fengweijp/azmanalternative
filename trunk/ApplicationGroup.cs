@@ -13,6 +13,9 @@ namespace AzAlternative
 		internal readonly Interfaces.IApplicationGroup Instance;
 		private AdminManager _Store;
 
+		/// <summary>
+		/// Gets the owning application for this group, if defined
+		/// </summary>
 		public override Application Parent
 		{
 			get { return BaseApplication; }
@@ -62,11 +65,17 @@ namespace AzAlternative
 			get { return Instance.GroupType; }
 		}
 
+		/// <summary>
+		/// Gets whether the group is defined in the store and available to all applications
+		/// </summary>
 		public bool IsGlobalGroup
 		{
 			get { return Instance.IsGlobalGroup; }
 		}
 
+		/// <summary>
+		/// Gets or sets the LDAP Query used when the group type <c>GroupType.LdapQuery</c>
+		/// </summary>
 		public string LdapQuery
 		{
 			get { return Instance.LdapQuery; }
@@ -87,6 +96,9 @@ namespace AzAlternative
 			get { return Instance.Members; }
 		}
 
+		/// <summary>
+		/// Gets a collection of members excluded from the group
+		/// </summary>
 		public Collections.MemberCollection Exclusions
 		{
 			get { return Instance.Exclusions; }
@@ -119,9 +131,9 @@ namespace AzAlternative
 		}
 
         /// <summary>
-        /// Add a member to the group
+        /// Adds a member to the group
         /// </summary>
-        /// <param name="member">Member to add</param>
+        /// <param name="member">Member to add in the form domainname\username</param>
 		public void AddMember(string name)
 		{
 			if (string.IsNullOrEmpty(name))
@@ -130,6 +142,11 @@ namespace AzAlternative
 			Instance.AddMember(name);
 		}
 
+		/// <summary>
+		/// Adds a member to the group
+		/// </summary>
+		/// <param name="name">username</param>
+		/// <param name="domain">domain name</param>
 		public void AddMember(string name, string domain)
 		{
 			if (string.IsNullOrEmpty(name))
@@ -180,6 +197,10 @@ namespace AzAlternative
 			Groups.RemoveValue(group.Guid);
         }
 
+		/// <summary>
+		/// Removes a group from this group
+		/// </summary>
+		/// <param name="name">name of the group to remove</param>
 		public void RemoveGroup(string name)
 		{
 			ApplicationGroup g = Groups[name];

@@ -12,6 +12,9 @@ namespace AzAlternative
 	{
 		private Interfaces.IAdminManager Instance;
 
+		/// <summary>
+		/// Gets the connection string for the current instance
+		/// </summary>
 		public string ConnectionString
 		{
 			get;
@@ -23,7 +26,12 @@ namespace AzAlternative
         /// </summary>
         public int MajorVersion
 		{
-			get { return Instance.MajorVersion; }
+			get 
+			{
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+				return Instance.MajorVersion; 
+			}
 		}
 
         /// <summary>
@@ -31,7 +39,12 @@ namespace AzAlternative
         /// </summary>
         public int MinorVersion
 		{
-			get { return Instance.MinorVersion; }
+			get
+			{
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+				return Instance.MinorVersion;
+			}
 		}
 
         /// <summary>
@@ -39,8 +52,18 @@ namespace AzAlternative
         /// </summary>
         public string Description
 		{
-			get { return Instance.Description; }
-			set { Instance.Description = value; }
+			get
+			{
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+				return Instance.Description;
+			}
+			set
+			{
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+				Instance.Description = value;
+			}
 		}
 
         /// <summary>
@@ -48,7 +71,12 @@ namespace AzAlternative
         /// </summary>
         public Guid Guid
 		{
-			get { return Instance.Guid; }
+			get
+			{
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+				return Instance.Guid;
+			}
 		}
 
 		/// <summary>
@@ -58,7 +86,9 @@ namespace AzAlternative
 		{
 			get
 			{
-                return Instance.Groups;
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+				return Instance.Groups;
 			}
 		}
 
@@ -67,12 +97,19 @@ namespace AzAlternative
         /// </summary>
         public Collections.ApplicationCollection Applications
         {
-            get 
-            { 
+            get
+			{
+				if (Instance == null)
+					throw new AzException("A store has not been opened.");
+ 
                 return Instance.Applications;
             }
         }
 
+		/// <summary>
+		/// Initialises a new instance of the Admin Manager
+		/// </summary>
+		/// <param name="connectionString">connection string to use with this instance</param>
 		public AdminManager(string connectionString)
 		{
 			ConnectionString = connectionString;
@@ -91,12 +128,19 @@ namespace AzAlternative
 		/// <param name="group">The group to remove</param>
 		public void DeleteGroup(ApplicationGroup group)
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			CheckGroupIsValid(group);
 
 			Instance.DeleteGroup(group);
 			Groups.RemoveValue(group.Guid);
 		}
 
+		/// <summary>
+		/// Removes an application group from the store
+		/// </summary>
+		/// <param name="name">The name of the group to delete.</param>
 		public void DeleteGroup(string name)
 		{
 			ApplicationGroup g = Groups[name];
@@ -114,6 +158,9 @@ namespace AzAlternative
 		/// <param name="groupType">The type of group</param>
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
 			Groups.CheckName(name);
@@ -125,8 +172,15 @@ namespace AzAlternative
 			return g;
 		}
 
+		/// <summary>
+		/// Saves updates to a group to the store.
+		/// </summary>
+		/// <param name="group">Group to update</param>
 		public void UpdateGroup(ApplicationGroup group)
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			CheckGroupIsValid(group);
 
 			Groups.CheckName(group);
@@ -142,6 +196,9 @@ namespace AzAlternative
 		/// <param name="versionInformation">Version information</param>
 		public Application CreateApplication(string name, string description, string versionInformation)
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			if (string.IsNullOrEmpty(name))
 				throw new ArgumentNullException("name", "A name must be specified when adding an application");
 			Applications.CheckName(name);
@@ -159,12 +216,19 @@ namespace AzAlternative
 		/// <param name="application">The application to remove</param>
 		public void DeleteApplication(Application application)
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			CheckApplicationIsValid(application);
 
 			Instance.DeleteApplication(application);
 			Applications.RemoveValue(application.Guid);
 		}
 
+		/// <summary>
+		/// Removes an application from the store
+		/// </summary>
+		/// <param name="name">Name of the application to delete</param>
 		public void DeleteApplication(string name)
 		{
 			Application a = Applications[name];
@@ -174,8 +238,15 @@ namespace AzAlternative
 			DeleteApplication(a);
 		}
 
+		/// <summary>
+		/// Saves changes to an application to the store
+		/// </summary>
+		/// <param name="application">Application to update</param>
 		public void UpdateApplication(Application application)
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			CheckApplicationIsValid(application);
 
 			Applications.CheckName(application);
@@ -204,13 +275,25 @@ namespace AzAlternative
 			return true;
 		}
 
+		/// <summary>
+		/// Saves changes to the store. Only changes to the store are saved.
+		/// </summary>
 		public void Update()
 		{
+			if (Instance == null)
+				throw new AzException("A store has not been opened.");
+
 			Instance.Update();
 		}
 
+		/// <summary>
+		/// Open the connection to the store
+		/// </summary>
 		public void Open()
 		{
+			if (Instance != null)
+				throw new AzException("The store is already open.");
+
 			if (ConnectionString.StartsWith("msxml"))
 			{
 				Xml.XmlService f = new Xml.XmlService(ConnectionString.Substring(8));
