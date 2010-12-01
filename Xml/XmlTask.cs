@@ -81,6 +81,8 @@ namespace AzAlternative.Xml
 			SetElement(e, BIZRULELANGUAGE, BizRuleLanguage == AzAlternative.BizRuleLanguage.Undefined ? null : BizRuleLanguage.ToString());
 			SetElement(e, BIZRULE, BizRule);
 
+			parent.AppendChild(e);
+
 			return e;
 		}
 

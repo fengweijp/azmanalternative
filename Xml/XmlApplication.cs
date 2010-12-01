@@ -61,8 +61,7 @@ namespace AzAlternative.Xml
 
 			ag.Groups = new Collections.ApplicationGroupCollection(Service);
 
-			XmlElement root = Service.LoadRoot();
-			Service.Save(ag.ToXml(root));
+			Service.Save(ag.ToXml(Service.Load(this.Guid)));
 
 			return new ApplicationGroup(ag);
 		}
@@ -84,6 +83,10 @@ namespace AzAlternative.Xml
 			d.Guid = System.Guid.NewGuid();
 			d.Name = name;
 			d.Description = description;
+
+			d.Operations = new Collections.OperationCollection(Service);
+			d.Tasks = new Collections.TaskCollection(Service);
+			d.Roles = new Collections.RoleDefinitionCollection(Service);
 
 			Service.Save(d.ToXml(Service.Load(this.Guid)));
 

@@ -12,6 +12,9 @@ namespace AzAlternative
 	{
 		internal readonly Interfaces.IOperation Instance;
 
+		/// <summary>
+		/// Gets the owning application for this group, if defined
+		/// </summary>
 		public override Application Parent
 		{
 			get { return BaseApplication; }

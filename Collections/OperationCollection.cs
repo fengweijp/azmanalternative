@@ -41,5 +41,14 @@ namespace AzAlternative.Collections
 					throw new AzException("Operation ID is already in use.");
 			}
 		}
+
+		internal void CheckId(Operation operation)
+		{
+			foreach (var item in this)
+			{
+				if (item.OperationId == operation.OperationId && item.Guid != operation.Guid)
+					throw new AzException("Operation ID is already in use.");
+			}
+		}
 	}
 }

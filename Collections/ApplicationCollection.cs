@@ -14,10 +14,10 @@ namespace AzAlternative.Collections
         {
             get 
             {
-				if (!ContainsName(name))
+				Application a = base[name];
+				if (a == null)
 					return null;
 
-				Application a = base[name];
 				a.Store = AdminManager;
 
                 return a;

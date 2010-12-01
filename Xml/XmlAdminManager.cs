@@ -87,6 +87,8 @@ namespace AzAlternative.Xml
 			a.Groups = new Collections.ApplicationGroupCollection(Service);
 			a.Operations = new Collections.OperationCollection(Service);
 			a.Tasks = new Collections.TaskCollection(Service);
+			a.Roles = new Collections.RoleDefinitionCollection(Service);
+			a.RoleAssignments = new Collections.RoleAssignmentsCollection(Service);
 
 			XmlElement root = Service.LoadRoot();
 			Service.Save(a.ToXml(root));

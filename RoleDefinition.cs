@@ -28,7 +28,7 @@ namespace AzAlternative
 		{ }
 
         /// <summary>
-        /// Adds a role to this role
+        /// Adds a role to the Roles collection
         /// </summary>
         /// <param name="role">Role to add</param>
 		public void AddRole(RoleDefinition role)
@@ -44,6 +44,10 @@ namespace AzAlternative
 			Roles.AddValue(role);
 		}
 
+		/// <summary>
+		/// Adds a role to the Roles collection
+		/// </summary>
+		/// <param name="name">name of the role to add</param>
 		public void AddRole(string name)
 		{
 			RoleDefinition r = Parent.Roles[name];
@@ -51,7 +55,7 @@ namespace AzAlternative
 		}
 
         /// <summary>
-        /// Removes a role from this role
+		/// Removes a role from the Roles collection
         /// </summary>
         /// <param name="role">Role to remove</param>
 		public void RemoveRole(RoleDefinition role)
@@ -67,6 +71,10 @@ namespace AzAlternative
 			Roles.RemoveValue(role.Guid);
 		}
 
+		/// <summary>
+		/// Removes a role from the Roles collection
+		/// </summary>
+		/// <param name="name">name of the role to remove</param>
 		public void RemoveRole(string name)
 		{
 			RoleDefinition r = Roles[name];
