@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the group identifier
 		/// </summary>
-		Guid Guid { get; }
+		string UniqueName { get; }
 		/// <summary>
 		/// Gets or sets the group name
 		/// </summary>

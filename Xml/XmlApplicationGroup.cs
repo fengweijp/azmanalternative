@@ -74,14 +74,14 @@ namespace AzAlternative.Xml
 					throw new AzException("Unknown group type during load.");
 			}
 
-			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
+			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP), true);
 			Exclusions = Service.GetExclusions(element);
 			Members = Service.GetMembers(element);
 		}
 
-		public void RemoveMember(Interfaces.IMember member)
+		public void RemoveMember(Member member)
 		{
-			throw new NotImplementedException();
+			Members.RemoveMember(member);
 		}
 
 		public void RemoveMember(string name)
@@ -95,24 +95,24 @@ namespace AzAlternative.Xml
 		public void AddMember(string name)
 		{
 			Member m = new Member(new XmlMember(Service), name);
-			m.Instance.Parent = this.Guid;
+			m.Instance.Parent = this.UniqueName;
 			Members.AddMember(m);
 		}
 
         public void AddGroup(ApplicationGroup group)
         {
-			Service.CreateLink(this, GROUP, group.Guid);
+			Service.CreateLink(this, GROUP, group.UniqueName);
         }
 
         public void RemoveGroup(ApplicationGroup group)
         {
-			Service.RemoveLink(this, GROUP, group.Guid);
+			Service.RemoveLink(this, GROUP, group.UniqueName);
 		}
 
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, Guid.ToString());
+			SetAttribute(e, GUID, UniqueName);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			SetAttribute(e, GROUPTYPE, GroupType.ToString());
@@ -155,13 +155,13 @@ namespace AzAlternative.Xml
 			return e;
 		}
 
-		public static Dictionary<string, Guid> GetChildren(XmlElement parent)
+		public static Dictionary<string, string> GetChildren(XmlElement parent)
         {
-            Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
             foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
             {
-                result.Add(item.Attributes[NAME].Value, new Guid(item.Attributes[GUID].Value));
+                result.Add(item.Attributes[NAME].Value, item.Attributes[GUID].Value);
             }
 
             return result;

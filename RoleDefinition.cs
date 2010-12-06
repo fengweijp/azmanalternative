@@ -37,7 +37,7 @@ namespace AzAlternative
 				throw new ArgumentNullException("role");
 
             CheckObjectIsValid(role);
-			if (Roles.ContainsGuid(role.Guid))
+			if (Roles.ContainsKey(role.UniqueName))
 				return;
 
             ((Interfaces.IRoleDefinition)Instance).AddRole(role);
@@ -64,11 +64,11 @@ namespace AzAlternative
 				throw new ArgumentNullException("role");
 
             CheckObjectIsValid(role);
-			if (!Roles.ContainsGuid(role.Guid))
+			if (!Roles.ContainsKey(role.UniqueName))
 				return;
 
 			((Interfaces.IRoleDefinition)Instance).RemoveRole(role);
-			Roles.RemoveValue(role.Guid);
+			Roles.RemoveValue(role.UniqueName);
 		}
 
 		/// <summary>

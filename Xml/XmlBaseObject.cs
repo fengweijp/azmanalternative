@@ -24,7 +24,7 @@ namespace AzAlternative.Xml
 		///// </summary>
 		protected readonly XmlService Service;
 
-		public Guid Guid
+		public string UniqueName
 		{
 			get;
 			set;
@@ -97,15 +97,15 @@ namespace AzAlternative.Xml
 		//    return new System.Collections.ObjectModel.ReadOnlyCollection<T>(result);
 		//}
 
-		public void Load(Guid guid)
+		public void Load(string uniqueName)
 		{
-			XmlElement e = Service.Load(guid);
+			XmlElement e = Service.Load(uniqueName);
             Load(e);
 		}
 
         public virtual void Load(XmlElement element)
         {
-            Guid = new System.Guid(GetAttribute(element, GUID));
+            UniqueName = GetAttribute(element, GUID);
             Name = GetAttribute(element, NAME);
             Description = GetAttribute(element, DESCRIPTION);
 
@@ -117,30 +117,30 @@ namespace AzAlternative.Xml
 
 		public virtual XmlElement ToXml()
 		{
-			return Service.Load(Guid);
+			return Service.Load(UniqueName);
 		}
 
 		public abstract XmlElement ToXml(XmlElement parent);
 
-        protected static Dictionary<string, Guid> GetChildren(XmlElement parent, string elementName)
+        protected static Dictionary<string, string> GetChildren(XmlElement parent, string elementName)
         {
-            Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
             foreach (XmlNode item in parent.SelectNodes(elementName))
             {
-                result.Add(item.Attributes[NAME].Value, new Guid(item.Attributes[GUID].Value));
+                result.Add(item.Attributes[NAME].Value, item.Attributes[GUID].Value);
             }
 
             return result;
         }
 
-		protected static Dictionary<string, Guid> GetLinks(XmlElement parent, string elementName)
+		protected static Dictionary<string, string> GetLinks(XmlElement parent, string elementName)
 		{
-			Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+			Dictionary<string, string> result = new Dictionary<string, string>();
 
 			foreach (XmlNode item in parent.SelectNodes(elementName))
 			{
-				result.Add(parent.OwnerDocument.SelectSingleNode(string.Format("//*[@{0}='{1}']/@Name", GUID, item.InnerText)).Value, new Guid(item.InnerText));
+				result.Add(parent.OwnerDocument.SelectSingleNode(string.Format("//*[@{0}='{1}']/@Name", GUID, item.InnerText)).Value, item.InnerText);
 			}
 
 			return result;

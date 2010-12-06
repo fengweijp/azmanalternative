@@ -8,14 +8,12 @@ namespace AzAlternative.Collections
 	public class OperationCollection : CollectionBase<Operation>
 	{
 
-		internal OperationCollection(ServiceBase service, Dictionary<string, Guid> values)
-			: base(service, values)
-		{
-			ItemLoader = service.GetOperation;
-		}
+		internal OperationCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
+			: base(service, values, linked)
+		{ }
 
-		internal OperationCollection(ServiceBase service)
-			: this(service, new Dictionary<string, Guid>())
+		internal OperationCollection(ServiceBase service, bool linked)
+			: this(service, new Dictionary<string, string>(), linked)
 		{ }
 
 		public override IEnumerator<Operation> GetEnumerator()
@@ -46,9 +44,19 @@ namespace AzAlternative.Collections
 		{
 			foreach (var item in this)
 			{
-				if (item.OperationId == operation.OperationId && item.Guid != operation.Guid)
+				if (item.OperationId == operation.OperationId && item.UniqueName != operation.UniqueName)
 					throw new AzException("Operation ID is already in use.");
 			}
+		}
+
+		protected override ContainerBase LinkedItemLoader(string name)
+		{
+			return Application.Operations[name];
+		}
+
+		protected override Operation ItemLoader(string uniqueName)
+		{
+			return Service.GetOperation(uniqueName);
 		}
 	}
 }

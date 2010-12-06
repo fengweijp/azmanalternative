@@ -52,28 +52,28 @@ namespace AzAlternative.Xml
 
 		public void AddTask(Task task)
 		{
-			Service.CreateLink(this, TASK, task.Guid);
+			Service.CreateLink(this, TASK, task.UniqueName);
 		}
 
 		public void RemoveTask(Task task)
 		{
-			Service.RemoveLink(this, TASK, task.Guid);
+			Service.RemoveLink(this, TASK, task.UniqueName);
 		}
 
         public void AddOperation(Operation operation)
         {
-			Service.CreateLink(this, OPERATION, operation.Guid);
+			Service.CreateLink(this, OPERATION, operation.UniqueName);
         }
 
         public void RemoveOperation(Operation operation)
         {
-			Service.RemoveLink(this, OPERATION, operation.Guid);
+			Service.RemoveLink(this, OPERATION, operation.UniqueName);
         }
 
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, Guid.ToString());
+			SetAttribute(e, GUID, UniqueName);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			
@@ -121,8 +121,8 @@ namespace AzAlternative.Xml
 					throw new AzException("Unknown Biz Rule language.");
 			}
 
-			Operations = new Collections.OperationCollection(Service, GetLinks(element, OPERATION));
-			Tasks = new Collections.TaskCollection(Service, GetLinks(element, TASK));
+			Operations = new Collections.OperationCollection(Service, GetLinks(element, OPERATION), true);
+			Tasks = new Collections.TaskCollection(Service, GetLinks(element, TASK), true);
 		}
 
 		private void SetElement(XmlElement parent, string elementName, string value)
@@ -169,7 +169,7 @@ namespace AzAlternative.Xml
 			BizRuleLanguage = AzAlternative.BizRuleLanguage.Undefined;
 		}
 
-		public static Dictionary<string, Guid> GetTasks(XmlElement element)
+		public static Dictionary<string, string> GetTasks(XmlElement element)
 		{
 			return GetChildren(element, string.Format("{0}[not(@{1}) or @{1}!='True']", ELEMENTNAME, ROLEDEFINITION));
 		}

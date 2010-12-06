@@ -24,7 +24,7 @@ namespace AzAlternative.Xml
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, Guid.ToString());
+			SetAttribute(e, GUID, UniqueName);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			
@@ -55,7 +55,7 @@ namespace AzAlternative.Xml
 			OperationId = int.Parse(element[OPERATIONID].InnerText);
 		}
 
-		public static Dictionary<string, Guid> GetChildren(XmlElement parent)
+		public static Dictionary<string, string> GetChildren(XmlElement parent)
 		{
 			return GetChildren(parent, ELEMENTNAME);
 		}

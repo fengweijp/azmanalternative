@@ -17,6 +17,9 @@ namespace AzAlternative.Collections
 					return null;
 
                 ApplicationGroup result = base[name];
+				if (LinkedList)
+					return result;
+
 				if (result.IsGlobalGroup)
 				{
 					result.Store = Store;
@@ -26,14 +29,12 @@ namespace AzAlternative.Collections
             }
         }
 
-        internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, Guid> values)
-            : base(service, values)
-        {
-            ItemLoader = Service.GetGroup;
-        }
+		internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
+			: base(service, values, linked)
+		{ }
 
-		internal ApplicationGroupCollection(ServiceBase service)
-			: this(service, new Dictionary<string, Guid>())
+		internal ApplicationGroupCollection(ServiceBase service, bool linked)
+			: this(service, new Dictionary<string, string>(), linked)
 		{ }
 
         public override IEnumerator<ApplicationGroup> GetEnumerator()
@@ -49,6 +50,26 @@ namespace AzAlternative.Collections
 		internal override void CheckName(string name)
 		{
 			CheckName(name, "group");
+		}
+
+		protected override ContainerBase LinkedItemLoader(string name)
+		{
+			ContainerBase result = null;
+			if (Application != null)
+			{
+				result = Application.Groups[name];
+				if (result == null)
+					result = Application.Store.Groups[name];
+			}
+			else
+				result = Store.Groups[name];
+
+			return result;
+		}
+
+		protected override ApplicationGroup ItemLoader(string uniqueName)
+		{
+			return Service.GetGroup(uniqueName);
 		}
 	}
 }

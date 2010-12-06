@@ -43,9 +43,9 @@ namespace AzAlternative.Xml
 			MajorVersion = int.Parse(GetAttribute(e, MAJORVERSION));
 			MinorVersion = int.Parse(GetAttribute(e, MINORVERSION));
 			Description = GetAttribute(e, DESCRIPTION);
-			Guid = new Guid(e.Attributes[GUID].Value);
+			UniqueName = e.Attributes[GUID].Value;
             Applications = new Collections.ApplicationCollection(factory, XmlApplication.GetChildren(e));
-            Groups = new Collections.ApplicationGroupCollection(factory, XmlApplicationGroup.GetChildren(e));
+            Groups = new Collections.ApplicationGroupCollection(factory, XmlApplicationGroup.GetChildren(e), false);
 		}
 
 		public void DeleteGroup(ApplicationGroup group)
@@ -56,13 +56,13 @@ namespace AzAlternative.Xml
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
 			XmlApplicationGroup ag = new XmlApplicationGroup(Service);
-			ag.Guid = System.Guid.NewGuid();
+			ag.UniqueName = System.Guid.NewGuid().ToString();
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
 			ag.IsGlobalGroup = true;
 
-			ag.Groups = new Collections.ApplicationGroupCollection(Service);
+			ag.Groups = new Collections.ApplicationGroupCollection(Service, true);
 
 			XmlElement root = Service.LoadRoot();
 			Service.Save(ag.ToXml(root));
@@ -79,15 +79,15 @@ namespace AzAlternative.Xml
 		public Application CreateApplication(string name, string description, string versionInformation)
 		{
 			XmlApplication a = new XmlApplication(Service);
-			a.Guid = System.Guid.NewGuid();
+			a.UniqueName = System.Guid.NewGuid().ToString();
 			a.Name = name;
 			a.Description = description;
 			a.ApplicationVersion = versionInformation;
 			
-			a.Groups = new Collections.ApplicationGroupCollection(Service);
-			a.Operations = new Collections.OperationCollection(Service);
-			a.Tasks = new Collections.TaskCollection(Service);
-			a.Roles = new Collections.RoleDefinitionCollection(Service);
+			a.Groups = new Collections.ApplicationGroupCollection(Service, false);
+			a.Operations = new Collections.OperationCollection(Service, false);
+			a.Tasks = new Collections.TaskCollection(Service, false);
+			a.Roles = new Collections.RoleDefinitionCollection(Service, false);
 			a.RoleAssignments = new Collections.RoleAssignmentsCollection(Service);
 
 			XmlElement root = Service.LoadRoot();

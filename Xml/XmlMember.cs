@@ -24,7 +24,7 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public Guid Parent
+		public string Parent
 		{
 			get;
 			set;
@@ -59,7 +59,7 @@ namespace AzAlternative.Xml
 		{
 			IsExclusion = element.Name == "NonMember";
 			Sid = element.InnerText;
-			Parent = new System.Guid(element.ParentNode.Attributes["Guid"].Value);
+			Parent = element.ParentNode.Attributes["Guid"].Value;
 		}
 
 		public void Save()

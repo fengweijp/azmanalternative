@@ -69,13 +69,13 @@ namespace AzAlternative
         /// <summary>
         /// Gets the object identifier
         /// </summary>
-        public Guid Guid
+        public string UniqueName
 		{
 			get
 			{
 				if (Instance == null)
 					throw new AzException("A store has not been opened.");
-				return Instance.Guid;
+				return Instance.UniqueName;
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace AzAlternative
 			CheckGroupIsValid(group);
 
 			Instance.DeleteGroup(group);
-			Groups.RemoveValue(group.Guid);
+			Groups.RemoveValue(group.UniqueName);
 		}
 
 		/// <summary>
@@ -222,7 +222,7 @@ namespace AzAlternative
 			CheckApplicationIsValid(application);
 
 			Instance.DeleteApplication(application);
-			Applications.RemoveValue(application.Guid);
+			Applications.RemoveValue(application.UniqueName);
 		}
 
 		/// <summary>
@@ -259,7 +259,7 @@ namespace AzAlternative
 			if (group == null)
 				throw new ArgumentNullException("group");
 
-			if (group.Store == null || group.Store.Guid != this.Guid)
+			if (group.Store == null || group.Store.UniqueName != this.UniqueName)
 				throw new AzException("The group is not defined in the store, or is not a global group.");
 
 			return true;
@@ -269,7 +269,7 @@ namespace AzAlternative
 		{
 			if (application == null)
 				throw new ArgumentNullException("application");
-			if (application.Store == null || application.Store.Guid != this.Guid)
+			if (application.Store == null || application.Store.UniqueName != this.UniqueName)
 				throw new AzException("The application is not defined in the store.");
 
 			return true;
@@ -299,6 +299,12 @@ namespace AzAlternative
 				Xml.XmlService f = new Xml.XmlService(ConnectionString.Substring(8));
 
 				Instance = f.GetAdminManager();
+			}
+			else if (ConnectionString.StartsWith("msldap"))
+			{
+				ActiveDirectory.AdService s = new ActiveDirectory.AdService(ConnectionString.Substring(9));
+
+				Instance = s.GetAdminManager();
 			}
 			else
 				throw new AzException("Unsupported connectionstring specified.");

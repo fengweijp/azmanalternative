@@ -18,20 +18,19 @@ namespace AzAlternative.Collections
 				if (a == null)
 					return null;
 
+				a.Parent = a;
 				a.Store = AdminManager;
 
                 return a;
             }
         }
 
-        internal ApplicationCollection(ServiceBase service, Dictionary<string, Guid> values)
-            : base(service, values)
-        {
-            ItemLoader = Service.GetApplication;
-        }
+		internal ApplicationCollection(ServiceBase service, Dictionary<string, string> values)
+			: base(service, values)
+		{ }
 
 		internal ApplicationCollection(ServiceBase service)
-			: this(service, new Dictionary<string, Guid>())
+			: this(service, new Dictionary<string, string>())
 		{ }
 		
 
@@ -48,6 +47,16 @@ namespace AzAlternative.Collections
 		internal override void CheckName(string name)
 		{
 			CheckName(name, "application");
+		}
+
+		protected override ContainerBase LinkedItemLoader(string name)
+		{
+			throw new NotSupportedException();
+		}
+
+		protected override Application ItemLoader(string uniqueName)
+		{
+			return Service.GetApplication(uniqueName);
 		}
 	}
 }

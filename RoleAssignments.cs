@@ -28,9 +28,9 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets the role identifier
 		/// </summary>
-		public override Guid Guid
+		public override string UniqueName
 		{
-			get { return Instance.Guid; }
+			get { return Instance.UniqueName; }
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace AzAlternative
 		public void AddGroup(ApplicationGroup group)
 		{
 			CheckObjectIsValid(group);
-			if (Groups.ContainsGuid(group.Guid))
+			if (Groups.ContainsKey(group.UniqueName))
 				return;
 
 			Instance.AddGroup(group);
@@ -113,11 +113,50 @@ namespace AzAlternative
 		public void RemoveGroup(ApplicationGroup group)
 		{
 			CheckObjectIsValid(group);
-			if (!Groups.ContainsGuid(group.Guid))
+			if (!Groups.ContainsKey(group.UniqueName))
 				return;
 
 			Instance.RemoveGroup(group);
-			Groups.RemoveValue(group.Guid);
+			Groups.RemoveValue(group.UniqueName);
+		}
+
+		/// <summary>
+		/// Adds a member to the role
+		/// </summary>
+		/// <param name="member">Member to add in the form domainname\username</param>
+		public void AddMember(string name)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
+			Instance.AddMember(name);
+		}
+
+		/// <summary>
+		/// Adds a member to the role
+		/// </summary>
+		/// <param name="name">username</param>
+		/// <param name="domain">domain name</param>
+		public void AddMember(string name, string domain)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+			if (string.IsNullOrEmpty(domain))
+				throw new ArgumentNullException("domain");
+
+			AddMember(domain + "\\" + name);
+		}
+
+		/// <summary>
+		/// Removes a member from the role
+		/// </summary>
+		/// <param name="member">Member to remove in the form domain\name</param>
+		public void RemoveMember(string name)
+		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
+			Instance.RemoveMember(name);
 		}
 
 		protected override bool CheckObjectIsValid(ContainerBase o)
@@ -129,7 +168,7 @@ namespace AzAlternative
 
 			if (g.IsGlobalGroup)
 			{
-				if (g.Store.Guid != this.Parent.Store.Guid)
+				if (g.Store.UniqueName != this.Parent.Store.UniqueName)
 					throw new AzException("The group is not defined in the current store.");
 				return true;
 			}

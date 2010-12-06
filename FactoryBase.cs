@@ -21,22 +21,22 @@ namespace AzAlternative
 
 		public abstract Interfaces.IAdminManager GetAdminManager();
 
-		public abstract Application GetApplication(Guid guid);
-        public abstract IEnumerator<Application> GetApplications(IEnumerable<Guid> guids, AdminManager store);
+		public abstract Application GetApplication(string uniqueName);
+        public abstract IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store);
 
-        public abstract ApplicationGroup GetGroup(Guid guid);
-		public abstract IEnumerator<ApplicationGroup> GetGroups(IEnumerable<Guid> guids, AdminManager store, Application application);
+		public abstract ApplicationGroup GetGroup(string uniqueName);
+		public abstract IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application);
 
-        public abstract Operation GetOperation(Guid guid);
-		public abstract IEnumerator<Operation> GetOperations(IEnumerable<Guid> guids, Application application);
+		public abstract Operation GetOperation(string uniqueName);
+		public abstract IEnumerator<Operation> GetOperations(IEnumerable<string> uniqueNames, Application application);
 
-        public abstract Task GetTask(Guid guid);
-		public abstract IEnumerator<Task> GetTasks(IEnumerable<Guid> guids, Application application);
+		public abstract Task GetTask(string uniqueName);
+		public abstract IEnumerator<Task> GetTasks(IEnumerable<string> uniqueNames, Application application);
 
-        public abstract RoleAssignments GetRoleAssignments(Guid guid);
-		public abstract IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<Guid> guids, Application application);
+		public abstract RoleAssignments GetRoleAssignments(string uniqueName);
+		public abstract IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<string> uniqueNames, Application application);
 
-        public abstract RoleDefinition GetRoleDefinition(Guid guid);
-		public abstract IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<Guid> guids, Application application);
+		public abstract RoleDefinition GetRoleDefinition(string uniqueName);
+		public abstract IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application);
 	}
 }

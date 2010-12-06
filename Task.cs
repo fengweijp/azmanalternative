@@ -29,9 +29,9 @@ namespace AzAlternative
         /// <summary>
         /// Gets the task identifier
         /// </summary>
-		public override Guid Guid
+		public override string UniqueName
 		{
-			get { return Instance.Guid; }
+			get { return Instance.UniqueName; }
 		}
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace AzAlternative
 				throw new ArgumentNullException("task");
 
 			CheckObjectIsValid(task);
-			if (Tasks.ContainsGuid(task.Guid))
+			if (Tasks.ContainsKey(task.UniqueName))
 				return;
 
 			Instance.AddTask(task);
@@ -145,11 +145,11 @@ namespace AzAlternative
 				throw new ArgumentNullException("task");
 
 			CheckObjectIsValid(task);
-			if (!Tasks.ContainsGuid(task.Guid))
+			if (!Tasks.ContainsKey(task.UniqueName))
 				return;
 
 			Instance.RemoveTask(task);
-			Tasks.RemoveValue(task.Guid);
+			Tasks.RemoveValue(task.UniqueName);
 		}
 
 		/// <summary>
@@ -172,7 +172,7 @@ namespace AzAlternative
 				throw new ArgumentNullException("operation");
 
 			CheckObjectIsValid(operation);
-			if (Operations.ContainsGuid(operation.Guid))
+			if (Operations.ContainsKey(operation.UniqueName))
 				return;
 
 			Instance.AddOperation(operation);
@@ -199,11 +199,11 @@ namespace AzAlternative
 				throw new ArgumentNullException("operation");
 
 			CheckObjectIsValid(operation);
-			if (!Operations.ContainsGuid(operation.Guid))
+			if (!Operations.ContainsKey(operation.UniqueName))
 				return;
 
 			Instance.RemoveOperation(operation);
-			Operations.RemoveValue(operation.Guid);
+			Operations.RemoveValue(operation.UniqueName);
 		}
 
 		/// <summary>

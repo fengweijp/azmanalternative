@@ -12,7 +12,7 @@ namespace AzAlternative.Interfaces
 	{
 		string Sid { get; set; }
 		bool IsExclusion { get; set; }
-		Guid Parent { get; set; }
+		string Parent { get; set; }
 
 		void Save();
 		void Remove();

@@ -30,14 +30,14 @@ namespace AzAlternative.Xml
 			return doc.DocumentElement;
 		}
 
-		public XmlElement Load(Guid guid)
+		public XmlElement Load(string uniqueName)
 		{
 			XmlDocument doc = new XmlDocument();
 			doc.Load(ConnectionString);
 
-			XmlElement e = (XmlElement)doc.SelectSingleNode(string.Format("//*[@Guid='{0}']", guid));
+			XmlElement e = (XmlElement)doc.SelectSingleNode(string.Format("//*[@Guid='{0}']", uniqueName));
 			if (e == null)
-				throw new AzException("The Guid was not found in the store.");
+				throw new AzException("The unique name was not found in the store.");
 
 			return e;
 		}
@@ -55,28 +55,28 @@ namespace AzAlternative.Xml
 
 		public void RemoveElement(XmlBaseObject o)
 		{
-			XmlElement e = Load(o.Guid);
+			XmlElement e = Load(o.UniqueName);
 			e.ParentNode.RemoveChild(e);
 			Save(e);
 		}
 
-		public void CreateLink(XmlBaseObject parent, string linkName, Guid guid)
+		public void CreateLink(XmlBaseObject parent, string linkName, string uniqueName)
 		{
-			XmlElement parentNode = Load(parent.Guid);
+			XmlElement parentNode = Load(parent.UniqueName);
 
-			if (parentNode.SelectNodes(string.Format("{0}[.='{1}']", linkName, guid)).Count > 0)
+			if (parentNode.SelectNodes(string.Format("{0}[.='{1}']", linkName, uniqueName)).Count > 0)
 				return;
 
 			XmlElement e = parentNode.OwnerDocument.CreateElement(linkName);
-			e.InnerText = guid.ToString();
+			e.InnerText = uniqueName;
 			parentNode.AppendChild(e);
 			Save(parentNode);
 		}
 
-		public void RemoveLink(XmlBaseObject parent, string linkName, Guid guid)
+		public void RemoveLink(XmlBaseObject parent, string linkName, string uniqueName)
 		{
-			XmlElement parentNode = Load(parent.Guid);
-			XmlNode e = parentNode.SelectSingleNode(string.Format("{0}[.='{1}']", linkName, guid));
+			XmlElement parentNode = Load(parent.UniqueName);
+			XmlNode e = parentNode.SelectSingleNode(string.Format("{0}[.='{1}']", linkName, uniqueName));
 			if (e == null)
 				return;
 
@@ -84,17 +84,17 @@ namespace AzAlternative.Xml
 			Save(parentNode);
 		}
 
-		public override Application GetApplication(Guid guid)
+		public override Application GetApplication(string uniqueName)
 		{
 			XmlApplication a = new XmlApplication(this);
-			a.Load(guid);
+			a.Load(uniqueName);
 
             return new Application(a);
 		}
 
-        public override IEnumerator<Application> GetApplications(IEnumerable<Guid> guids, AdminManager store)
+        public override IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store)
         {
-			foreach (var item in FindElements(guids))
+			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlApplication a = new XmlApplication(this);
 				a.Load(item);
@@ -103,17 +103,17 @@ namespace AzAlternative.Xml
 			}
 		}
 
-        public override ApplicationGroup GetGroup(Guid guid)
+		public override ApplicationGroup GetGroup(string uniqueName)
         {
             XmlApplicationGroup g = new XmlApplicationGroup(this);
-            g.Load(guid);
+            g.Load(uniqueName);
 
             return new ApplicationGroup(g);
         }
 
-		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<Guid> guids, AdminManager store, Application application)
+		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application)
 		{
-			foreach (var item in FindElements(guids))
+			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlApplicationGroup g = new XmlApplicationGroup(this);
 				g.Load(item);
@@ -128,17 +128,17 @@ namespace AzAlternative.Xml
 			}
 		}
 
-        public override Operation GetOperation(Guid guid)
+		public override Operation GetOperation(string uniqueName)
         {
             XmlOperation o = new XmlOperation(this);
-            o.Load(guid);
+            o.Load(uniqueName);
 
             return new Operation(o);
         }
 
-		public override IEnumerator<Operation> GetOperations(IEnumerable<Guid> guids, Application application)
+		public override IEnumerator<Operation> GetOperations(IEnumerable<string> uniqueNames, Application application)
         {
-			foreach (var item in FindElements(guids))
+			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlOperation o = new XmlOperation(this);
 				o.Load(item);
@@ -147,17 +147,17 @@ namespace AzAlternative.Xml
 			}
         }
 
-        public override Task GetTask(Guid guid)
+		public override Task GetTask(string uniqueName)
         {
 			XmlTask t = new XmlTask(this);
-			t.Load(guid);
+			t.Load(uniqueName);
 
 			return new Task(t);
         }
 
-		public override IEnumerator<Task> GetTasks(IEnumerable<Guid> guids, Application application)
+		public override IEnumerator<Task> GetTasks(IEnumerable<string> uniqueNames, Application application)
         {
-			foreach (var item in FindElements(guids))
+			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlTask t = new XmlTask(this);
 				t.Load(item);
@@ -166,17 +166,17 @@ namespace AzAlternative.Xml
 			}
         }
 
-        public override RoleAssignments GetRoleAssignments(Guid guid)
+		public override RoleAssignments GetRoleAssignments(string uniqueName)
         {
 			XmlRoleAssignments r = new XmlRoleAssignments(this);
-			r.Load(guid);
+			r.Load(uniqueName);
 
 			return new RoleAssignments(r);
         }
 
-		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<Guid> guids, Application application)
+		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<string> uniqueNames, Application application)
         {
-			foreach (var item in FindElements(guids))
+			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlRoleAssignments r = new XmlRoleAssignments(this);
 				r.Load(item);
@@ -185,17 +185,17 @@ namespace AzAlternative.Xml
 			}
 		}
 
-        public override RoleDefinition GetRoleDefinition(Guid guid)
+		public override RoleDefinition GetRoleDefinition(string uniqueName)
         {
 			XmlRoleDefinition r = new XmlRoleDefinition(this);
-			r.Load(guid);
+			r.Load(uniqueName);
 
 			return new RoleDefinition(r);
         }
 
-		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<Guid> guids, Application application)
+		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application)
         {
-			foreach (var item in FindElements(guids))
+			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlRoleDefinition r = new XmlRoleDefinition(this);
 				r.Load(item);
@@ -231,11 +231,11 @@ namespace AzAlternative.Xml
 			return new Collections.MemberCollection(result, true);
 		}
 
-		private IEnumerable<XmlElement> FindElements(IEnumerable<Guid> guids)
+		private IEnumerable<XmlElement> FindElements(IEnumerable<string> uniqueNames)
 		{
 			XmlElement root = LoadRoot();
 
-			foreach (var item in guids)
+			foreach (var item in uniqueNames)
 			{
 				yield return (XmlElement)root.SelectSingleNode(string.Format("//*[@Guid='{0}']", item));
 			}
