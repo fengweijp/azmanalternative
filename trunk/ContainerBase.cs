@@ -12,7 +12,7 @@ namespace AzAlternative
     {
 		protected Application BaseApplication;
 
-		public abstract Guid Guid
+		public abstract string UniqueName
 		{
 			get;
 		}
@@ -50,12 +50,12 @@ namespace AzAlternative
 
 		protected virtual bool CheckObjectIsValid(ContainerBase o)
 		{
-			return (o.Parent != null && o.Parent.Guid == this.Guid);
+			return (o.Parent != null && o.Parent.UniqueName == this.UniqueName);
 		}
 
 		public bool Equals(ContainerBase other)
 		{
-			return Guid == other.Guid;
+			return UniqueName == other.UniqueName;
 		}
 	}
 }

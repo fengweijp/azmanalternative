@@ -37,6 +37,8 @@
     <TestLinks>
       <TestLink id="b41d362d-f7ff-6513-652f-f55c0877b315" name="OperationsTest" storage="azalternativetests\bin\debug\azalternativetests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="82143e81-01ab-64a7-2656-970451ac3016" name="AddOperation" storage="azalternativetests\bin\debug\azalternativetests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="808c75fd-e3d0-1ba7-8d77-2335957d67eb" name="UpdateTest" storage="azalternativetests\bin\debug\azalternativetests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="4927d559-d7e2-ec36-381c-4e11699c0db2" name="OperationTest" storage="azalternativetests\bin\debug\azalternativetests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
   <TestList name="Group Tests" id="e4dc522e-7e61-49a3-b1cc-f79e91afe7eb" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">

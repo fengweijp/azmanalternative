@@ -13,7 +13,7 @@ namespace AzAlternative.Xml
 		private const string MEMBER = "Member";
 		private const string DEFINITION = "TaskLink";
 
-		private Guid _DefinitionGuid;
+		private string _DefinitionId;
 		private RoleDefinition _Definition;
 
 		public RoleDefinition Definition
@@ -22,17 +22,14 @@ namespace AzAlternative.Xml
 			{
 				if (_Definition == null)
 				{
-					XmlRoleDefinition d = new XmlRoleDefinition(Service);
-					d.Load(_DefinitionGuid);
-
-					_Definition = new RoleDefinition(d);
+					_Definition = Service.GetRoleDefinition(_DefinitionId);
 				}
 				return _Definition;
 			}
 			set
 			{
 				_Definition = value;
-				_DefinitionGuid = value.Guid;
+				_DefinitionId = value.UniqueName;
 			}
 		}
 
@@ -54,23 +51,43 @@ namespace AzAlternative.Xml
 
 		public void AddGroup(ApplicationGroup group)
 		{
-			Service.CreateLink(this, GROUP, group.Guid);
+			Service.CreateLink(this, GROUP, group.UniqueName);
 		}
 
 		public void RemoveGroup(ApplicationGroup group)
 		{
-			Service.RemoveLink(this, GROUP, group.Guid);
+			Service.RemoveLink(this, GROUP, group.UniqueName);
+		}
+
+		public void RemoveMember(Member member)
+		{
+			Members.RemoveMember(member);
+		}
+
+		public void RemoveMember(string name)
+		{
+			string tmp = Member.ToSid(name);
+			Member m = Members.First(item => item.Instance.Sid == tmp);
+
+			Members.RemoveMember(m);
+		}
+
+		public void AddMember(string name)
+		{
+			Member m = new Member(new XmlMember(Service), name);
+			m.Instance.Parent = this.UniqueName;
+			Members.AddMember(m);
 		}
 
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, Guid.ToString());
+			SetAttribute(e, GUID, UniqueName);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 
 			XmlElement def = e.OwnerDocument.CreateElement(DEFINITION);
-			def.InnerXml = _DefinitionGuid.ToString();
+			def.InnerXml = _DefinitionId.ToString();
 			e.AppendChild(def);
 
 			parent.AppendChild(e);
@@ -91,13 +108,13 @@ namespace AzAlternative.Xml
 		{
 			base.LoadInternal(element);
 
-			_DefinitionGuid = new Guid(element[DEFINITION].InnerXml);
+			_DefinitionId = element[DEFINITION].InnerXml;
 
-			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP));
+			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP), true);
 			Members = Service.GetMembers(element);
 		}
 
-		public static Dictionary<string, Guid> GetChildren(XmlElement element)
+		public static Dictionary<string, string> GetChildren(XmlElement element)
 		{
 			return GetChildren(element, ELEMENTNAME);
 		}

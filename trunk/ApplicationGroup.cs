@@ -29,9 +29,9 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets the group identifier
 		/// </summary>
-		public override Guid Guid
+		public override string UniqueName
 		{
-			get { return Instance.Guid; }
+			get { return Instance.UniqueName; }
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace AzAlternative
         public void AddGroup(ApplicationGroup group)
         {
 			CheckGroupIsValid(group);
-			if (Groups.ContainsGuid(group.Guid))
+			if (Groups.ContainsKey(group.UniqueName))
 				return;
 
             Instance.AddGroup(group);
@@ -190,11 +190,11 @@ namespace AzAlternative
         public void RemoveGroup(ApplicationGroup group)
         {
 			CheckGroupIsValid(group);
-			if (!Groups.ContainsGuid(group.Guid))
+			if (!Groups.ContainsKey(group.UniqueName))
 				return;
 
             Instance.RemoveGroup(group);
-			Groups.RemoveValue(group.Guid);
+			Groups.RemoveValue(group.UniqueName);
         }
 
 		/// <summary>
@@ -217,14 +217,14 @@ namespace AzAlternative
 
 			if (IsGlobalGroup)
 			{
-				if (!group.IsGlobalGroup || group.Store.Guid != this.Store.Guid)
+				if (!group.IsGlobalGroup || group.Store.UniqueName != this.Store.UniqueName)
 					throw new AzException("The group to add is not defined in this store or is not a global group");
 			}
 
 			if (this.Parent != null)
 			{
 				CheckObjectIsValid(group);
-				if (group.IsGlobalGroup && group.Store.Guid != this.Parent.Store.Guid)
+				if (group.IsGlobalGroup && group.Store.UniqueName != this.Parent.Store.UniqueName)
 					throw new AzException("The group to add is not defined in this store.");
 			}
 		}

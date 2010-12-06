@@ -8,14 +8,12 @@ namespace AzAlternative.Collections
 	public class RoleDefinitionCollection : CollectionBase<RoleDefinition>
 	{
 
-		internal RoleDefinitionCollection(ServiceBase service, Dictionary<string, Guid> values)
-			: base(service, values)
-		{
-			ItemLoader = Service.GetRoleDefinition;
-		}
+		internal RoleDefinitionCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
+			: base(service, values, linked)
+		{ }
 
-		internal RoleDefinitionCollection(ServiceBase service)
-			: this(service, new Dictionary<string, Guid>())
+		internal RoleDefinitionCollection(ServiceBase service, bool linked)
+			: this(service, new Dictionary<string, string>(), linked)
 		{ }
 
 		public override IEnumerator<RoleDefinition> GetEnumerator()
@@ -31,6 +29,16 @@ namespace AzAlternative.Collections
 		internal override void CheckName(string name)
 		{
 			CheckName(name, "role");
+		}
+
+		protected override ContainerBase LinkedItemLoader(string name)
+		{
+			return Application.Roles[name];
+		}
+
+		protected override RoleDefinition ItemLoader(string uniqueName)
+		{
+			return Service.GetRoleDefinition(uniqueName);
 		}
 	}
 }

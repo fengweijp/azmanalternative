@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the operation identifier
 		/// </summary>
-		Guid Guid { get; }
+		string UniqueName { get; }
 		/// <summary>
 		/// Gets or sets the operation name
 		/// </summary>

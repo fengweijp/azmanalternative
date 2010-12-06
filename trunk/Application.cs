@@ -14,7 +14,7 @@ namespace AzAlternative
 
 		public override Application Parent
 		{
-			get { return BaseApplication; }
+			get { return null; }
 			internal set
 			{
 				BaseApplication = value;
@@ -27,9 +27,9 @@ namespace AzAlternative
 		/// <summary>
         /// Gets the application identifier
         /// </summary>
-        public override Guid Guid
+		public override string UniqueName
 		{
-			get { return Instance.Guid; }
+			get { return Instance.UniqueName; }
 		}
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace AzAlternative
 				throw new AzException("The group is not part of this application. Only application groups can be removed here.");
 
 			Instance.DeleteGroup(group);
-			Groups.RemoveValue(group.Guid);
+			Groups.RemoveValue(group.UniqueName);
 		}
 
 		public void DeleteGroup(string name)
@@ -207,7 +207,7 @@ namespace AzAlternative
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRole(role);
-			Roles.RemoveValue(role.Guid);
+			Roles.RemoveValue(role.UniqueName);
 		}
 
 		public void DeleteRole(string name)
@@ -268,7 +268,7 @@ namespace AzAlternative
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRoleAssignments(role);
-			RoleAssignments.RemoveValue(role.Guid);
+			RoleAssignments.RemoveValue(role.UniqueName);
 		}
 
 		public void DeleteRoleAssignments(string name)
@@ -325,7 +325,7 @@ namespace AzAlternative
 				throw new AzException("The operation is not part of this application.");
 
 			Instance.DeleteOperation(operation);
-			Operations.RemoveValue(operation.Guid);
+			Operations.RemoveValue(operation.UniqueName);
 		}
 
 		public void DeleteOperation(string name)
@@ -379,7 +379,7 @@ namespace AzAlternative
 				throw new AzException("The task is not part of this application.");
 
 			Instance.DeleteTask(task);
-			Tasks.RemoveValue(task.Guid);
+			Tasks.RemoveValue(task.UniqueName);
 		}
 
 		public void DeleteTask(string name)

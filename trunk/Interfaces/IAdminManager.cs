@@ -25,7 +25,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the object identifier
 		/// </summary>
-		Guid Guid { get; }
+		string UniqueName { get; }
 		/// <summary>
 		/// Gets a collection of application groups
 		/// </summary>

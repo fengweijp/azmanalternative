@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the task identifier
 		/// </summary>
-		Guid Guid { get; }
+		string UniqueName { get; }
 		/// <summary>
 		/// Gets or sets the task name
 		/// </summary>

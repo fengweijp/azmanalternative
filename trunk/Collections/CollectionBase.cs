@@ -5,17 +5,18 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
-	public delegate ContainerBase LoadDelegate(Guid guid);
+	public delegate ContainerBase LoadDelegate(string uniqueName);
 
 	public abstract class CollectionBase<T> : IEnumerable<T> where T : ContainerBase
 	{
 		private const string DUPLICATENAMEERROR = "The {0} name is already in use by another {0}.";
 
-		protected Dictionary<string, Guid> Guids;
+		protected Dictionary<string, string> Guids;
 		private InternalCollection<T> InternalCollection;
 		protected ServiceBase Service;
 		internal Application Application;
-		protected LoadDelegate ItemLoader;
+		//protected LoadDelegate ItemLoader;
+		protected bool LinkedList;
 
 		public virtual T this[string name]
 		{
@@ -24,9 +25,14 @@ namespace AzAlternative.Collections
 				if (!ContainsName(name))
 					return null;
 
+				if (LinkedList)
+				{
+					return (T)LinkedItemLoader(name);
+				}
+
 				if (!InternalCollection.Contains(Guids[name]))
 				{
-					ContainerBase Result = ItemLoader(Guids[name]);
+					T Result = ItemLoader(Guids[name]);
 					Result.Parent = Application;
 
 					InternalCollection.Add((T)Result);
@@ -40,11 +46,17 @@ namespace AzAlternative.Collections
 			get { return Guids.Count; }
 		}
 
-		internal CollectionBase(ServiceBase service, Dictionary<string, Guid> children)
+		internal CollectionBase(ServiceBase service, Dictionary<string, string> children)
+			: this(service, children, false)
+		{ }
+
+		internal CollectionBase(ServiceBase service, Dictionary<string, string> children, bool linked)
 		{
 			Service = service;
 			Guids = children;
 			InternalCollection = new InternalCollection<T>();
+
+			LinkedList = linked;
 		}
 
 		public abstract IEnumerator<T> GetEnumerator();
@@ -56,30 +68,42 @@ namespace AzAlternative.Collections
 
 		internal void AddValue(T entry)
 		{
-			Guids.Add(entry.Name, entry.Guid);
+			Guids.Add(entry.Name, entry.UniqueName);
+
+			if (!LinkedList)
+				InternalCollection.Add(entry);
 		}
 
-		internal void RemoveValue(Guid guid)
+		internal void RemoveValue(string uniqueName)
 		{	
-			if (!Guids.ContainsValue(guid))
+			if (!Guids.ContainsValue(uniqueName))
 				return;
 
-			Guids.Remove(Guids.First(item => item.Value == guid).Key);
+			Guids.Remove(Guids.First(item => item.Value == uniqueName).Key);
 
-			if (InternalCollection.Contains(guid))
-				InternalCollection.Remove(guid);
+			if (LinkedList)
+				return;
+
+			if (InternalCollection.Contains(uniqueName))
+				InternalCollection.Remove(uniqueName);
 		}
 
 		internal void UpdateValue(T entry)
 		{
-			var k = Guids.First(item => item.Value == entry.Guid);
+			var k = Guids.First(item => item.Value == entry.UniqueName);
 
 			if (k.Key == entry.Name)
 				return;
 
 			Guids.Remove(k.Key);
-			Guids.Add(entry.Name, entry.Guid);
-			InternalCollection.Remove(k.Value);
+			Guids.Add(entry.Name, entry.UniqueName);
+
+			if (LinkedList)
+				return;
+
+			if (InternalCollection.Contains(entry.UniqueName))
+				InternalCollection.Remove(k.Value);
+			InternalCollection.Add(entry);
 		}
 
 		public bool ContainsName(string name)
@@ -87,9 +111,9 @@ namespace AzAlternative.Collections
 			return Guids.ContainsKey(name);
 		}
 
-		internal bool ContainsGuid(Guid guid)
+		internal bool ContainsKey(string uniqueName)
 		{
-			return Guids.ContainsValue(guid);
+			return Guids.ContainsValue(uniqueName);
 		}
 
 		internal abstract void CheckName(T entry);
@@ -99,7 +123,7 @@ namespace AzAlternative.Collections
 			if (!Guids.ContainsKey(entry.Name))
 				return;
 
-			if (Guids[entry.Name] != entry.Guid)
+			if (Guids[entry.Name] != entry.UniqueName)
 				throw new AzException(string.Format(DUPLICATENAMEERROR, error));
 		}
 
@@ -114,13 +138,16 @@ namespace AzAlternative.Collections
 				throw new AzException(string.Format(DUPLICATENAMEERROR, error));
 		}
 
+		protected abstract ContainerBase LinkedItemLoader(string name);
+
+		protected abstract T ItemLoader(string uniqueName);
 	}
 
-	internal class InternalCollection<T> : System.Collections.ObjectModel.KeyedCollection<Guid, T> where T : ContainerBase
+	internal class InternalCollection<T> : System.Collections.ObjectModel.KeyedCollection<string, T> where T : ContainerBase
 	{
-		protected override Guid GetKeyForItem(T item)
+		protected override string GetKeyForItem(T item)
 		{
-			return item.Guid;
+			return item.UniqueName;
 		}
 	}
 }

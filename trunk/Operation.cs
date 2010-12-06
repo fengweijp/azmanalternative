@@ -24,9 +24,9 @@ namespace AzAlternative
         /// <summary>
         /// Gets the operation identifier
         /// </summary>
-		public override Guid Guid
+		public override string UniqueName
 		{
-			get { return Instance.Guid; }
+			get { return Instance.UniqueName; }
 		}
 
         /// <summary>

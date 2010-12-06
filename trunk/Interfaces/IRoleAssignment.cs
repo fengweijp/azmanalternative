@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the role identifier
 		/// </summary>
-		Guid Guid { get; }
+		string UniqueName { get; }
 		/// <summary>
 		/// Gets or sets the role name
 		/// </summary>
@@ -34,5 +34,8 @@ namespace AzAlternative.Interfaces
 
 		void AddGroup(ApplicationGroup group);
 		void RemoveGroup(ApplicationGroup group);
+
+		void AddMember(string name);
+		void RemoveMember(string name);
 	}
 }
