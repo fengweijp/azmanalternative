@@ -35,6 +35,11 @@ namespace AzAlternative.ActiveDirectory
 			set;
 		}
 
+		protected override string ObjectClass
+		{
+			get { return "msDS-AzAdminManager"; }
+		}
+
 		public AdAdminManager(AdService service)
 			: base(service)
 		{
@@ -83,7 +88,6 @@ namespace AzAlternative.ActiveDirectory
 			AddRequest ar = base.CreateNew();
 			
 			ar.Attributes.Add(CreateAttribute("name", Name));
-			ar.Attributes.Add(CreateAttribute(OBJECTCLASS, "msDS-AzAdminManager"));
 
 			return ar;
 		}

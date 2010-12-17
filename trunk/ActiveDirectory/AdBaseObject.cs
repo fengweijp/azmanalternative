@@ -6,7 +6,7 @@ using System.DirectoryServices.Protocols;
 
 namespace AzAlternative.ActiveDirectory
 {
-    internal class AdBaseObject
+    internal abstract class AdBaseObject
     {
 		protected const string DESCRIPTION = "description";
 		protected const string OBJECTCLASS = "objectClass";
@@ -26,6 +26,11 @@ namespace AzAlternative.ActiveDirectory
 		protected virtual string NAME
 		{
 			get { return "cn"; }
+		}
+
+		protected abstract string ObjectClass
+		{
+			get;
 		}
 
         public string UniqueName
@@ -99,7 +104,12 @@ namespace AzAlternative.ActiveDirectory
 
 		protected void SetAttribute(DirectoryAttributeModificationCollection modifications, string name, string value)
 		{
-			if (!Changes.Contains(name))
+			SetAttribute(modifications, name, name, value);
+		}
+
+		protected void SetAttribute(DirectoryAttributeModificationCollection modifications, string name, string property, string value)
+		{
+			if (!Changes.Contains(property))
 				return;
 
 			DirectoryAttributeModification m = new DirectoryAttributeModification();
@@ -158,8 +168,19 @@ namespace AzAlternative.ActiveDirectory
 			ar.DistinguishedName = GetNewUniqueName();
 			ar.Attributes.Add(CreateAttribute(NAME, Name));
 			ar.Attributes.Add(CreateAttribute(DESCRIPTION, Description));
+			ar.Attributes.Add(CreateAttribute(OBJECTCLASS, ObjectClass));
 
 			return ar;
+		}
+
+		protected Dictionary<string, string> GetLinks(DirectoryAttribute attribute)
+		{
+
+		}
+
+		protected string GetBaseDN()
+		{
+
 		}
     }
 }
