@@ -167,5 +167,15 @@ namespace AzAlternative.ActiveDirectory
         {
             throw new NotImplementedException();
         }
+
+		public Collections.MemberCollection GetMembers(DirectoryAttribute members)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Collections.MemberCollection GetExclusions(DirectoryAttribute nonMembers)
+		{
+			throw new NotImplementedException();
+		}
     }
 }

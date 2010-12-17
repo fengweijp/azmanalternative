@@ -23,6 +23,11 @@ namespace AzAlternative.ActiveDirectory
 			}
 		}
 
+		protected override string ObjectClass
+		{
+			get { return "msDS-AzOperation"; }
+		}
+
 		public AdOperation(AdService service)
 			: base(service)
 		{ }
@@ -47,7 +52,6 @@ namespace AzAlternative.ActiveDirectory
 		{
 			AddRequest ar = base.CreateNew();
 
-			ar.Attributes.Add(CreateAttribute(OBJECTCLASS, "msDS-AzOperation"));
 			ar.Attributes.Add(CreateAttribute(OPERATIONID, OperationId.ToString()));
 
 			return ar;

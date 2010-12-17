@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveDirectory\AdAdminManager.cs" />
+    <Compile Include="ActiveDirectory\AdApplicationGroup.cs" />
     <Compile Include="ActiveDirectory\AdBaseObject.cs" />
     <Compile Include="ActiveDirectory\AdOperation.cs" />
     <Compile Include="ActiveDirectory\AdService.cs" />
