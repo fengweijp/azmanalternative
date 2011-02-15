@@ -5,10 +5,10 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// Represents the top level Authorisation store
-    /// </summary>
-    public class AdminManager : Interfaces.IAdminManager
+	/// <summary>
+	/// Represents the top level Authorisation store
+	/// </summary>
+	public class AdminManager : Interfaces.IAdminManager
 	{
 		private Interfaces.IAdminManager Instance;
 
@@ -21,10 +21,10 @@ namespace AzAlternative
 			private set;
 		}
 
-        /// <summary>
-        /// Gets the schema major version
-        /// </summary>
-        public int MajorVersion
+		/// <summary>
+		/// Gets the schema major version
+		/// </summary>
+		public int MajorVersion
 		{
 			get 
 			{
@@ -34,10 +34,10 @@ namespace AzAlternative
 			}
 		}
 
-        /// <summary>
-        /// Gets the schema minor version
-        /// </summary>
-        public int MinorVersion
+		/// <summary>
+		/// Gets the schema minor version
+		/// </summary>
+		public int MinorVersion
 		{
 			get
 			{
@@ -47,10 +47,10 @@ namespace AzAlternative
 			}
 		}
 
-        /// <summary>
-        /// Gets and sets the store description
-        /// </summary>
-        public string Description
+		/// <summary>
+		/// Gets and sets the store description
+		/// </summary>
+		public string Description
 		{
 			get
 			{
@@ -66,16 +66,16 @@ namespace AzAlternative
 			}
 		}
 
-        /// <summary>
-        /// Gets the object identifier
-        /// </summary>
-        public string UniqueName
+		/// <summary>
+		/// Gets the object identifier
+		/// </summary>
+		public string Key
 		{
 			get
 			{
 				if (Instance == null)
 					throw new AzException("A store has not been opened.");
-				return Instance.UniqueName;
+				return Instance.Key;
 			}
 		}
 
@@ -92,19 +92,19 @@ namespace AzAlternative
 			}
 		}
 
-        /// <summary>
-        /// Gets a collection of applications
-        /// </summary>
-        public Collections.ApplicationCollection Applications
-        {
-            get
+		/// <summary>
+		/// Gets a collection of applications
+		/// </summary>
+		public Collections.ApplicationCollection Applications
+		{
+			get
 			{
 				if (Instance == null)
 					throw new AzException("A store has not been opened.");
  
-                return Instance.Applications;
-            }
-        }
+				return Instance.Applications;
+			}
+		}
 
 		/// <summary>
 		/// Initialises a new instance of the Admin Manager
@@ -134,7 +134,7 @@ namespace AzAlternative
 			CheckGroupIsValid(group);
 
 			Instance.DeleteGroup(group);
-			Groups.RemoveValue(group.UniqueName);
+			Groups.RemoveValue(group.Key);
 		}
 
 		/// <summary>
@@ -222,7 +222,7 @@ namespace AzAlternative
 			CheckApplicationIsValid(application);
 
 			Instance.DeleteApplication(application);
-			Applications.RemoveValue(application.UniqueName);
+			Applications.RemoveValue(application.Key);
 		}
 
 		/// <summary>
@@ -259,7 +259,7 @@ namespace AzAlternative
 			if (group == null)
 				throw new ArgumentNullException("group");
 
-			if (group.Store == null || group.Store.UniqueName != this.UniqueName)
+			if (group.Store == null || group.Store.Key != this.Key)
 				throw new AzException("The group is not defined in the store, or is not a global group.");
 
 			return true;
@@ -269,7 +269,7 @@ namespace AzAlternative
 		{
 			if (application == null)
 				throw new ArgumentNullException("application");
-			if (application.Store == null || application.Store.UniqueName != this.UniqueName)
+			if (application.Store == null || application.Store.Key != this.Key)
 				throw new AzException("The application is not defined in the store.");
 
 			return true;

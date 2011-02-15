@@ -16,10 +16,8 @@ namespace AzAlternative.ActiveDirectory
 			get { return _OperationId; }
 			set
 			{
-				if (_OperationId == value)
-					return;
+				OnPropertyChanged(OPERATIONID, _OperationId.ToString(), value.ToString());
 				_OperationId = value;
-				FlagForChange(OPERATIONID);
 			}
 		}
 

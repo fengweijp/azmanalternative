@@ -78,7 +78,7 @@ namespace AzAlternative.ActiveDirectory
 			throw new NotImplementedException();
 		}
 
-		public new void Update()
+		public void Update()
 		{
 			Service.Save(GetUpdate());
 		}

@@ -6,9 +6,9 @@ using System.Xml;
 
 namespace AzAlternative.Xml
 {
-    internal class XmlTask : XmlBaseObject, Interfaces.ITask
-    {
-        protected const string ELEMENTNAME = "AzTask";
+	internal class XmlTask : XmlBaseObject, Interfaces.ITask
+	{
+		protected const string ELEMENTNAME = "AzTask";
 		protected const string BIZRULEPATH = "BizRuleImportedPath";
 		protected const string BIZRULELANGUAGE = "BizRuleLanguage";
 		protected const string BIZRULE = "BizRule";
@@ -46,34 +46,34 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-        public XmlTask(XmlService service)
-            : base(service)
-        { }
+		public XmlTask(XmlService service)
+			: base(service)
+		{ }
 
 		public void AddTask(Task task)
 		{
-			Service.CreateLink(this, TASK, task.UniqueName);
+			Service.CreateLink(this, TASK, task.Key);
 		}
 
 		public void RemoveTask(Task task)
 		{
-			Service.RemoveLink(this, TASK, task.UniqueName);
+			Service.RemoveLink(this, TASK, task.Key);
 		}
 
-        public void AddOperation(Operation operation)
-        {
-			Service.CreateLink(this, OPERATION, operation.UniqueName);
-        }
+		public void AddOperation(Operation operation)
+		{
+			Service.CreateLink(this, OPERATION, operation.Key);
+		}
 
-        public void RemoveOperation(Operation operation)
-        {
-			Service.RemoveLink(this, OPERATION, operation.UniqueName);
-        }
+		public void RemoveOperation(Operation operation)
+		{
+			Service.RemoveLink(this, OPERATION, operation.Key);
+		}
 
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, UniqueName);
+			SetAttribute(e, GUID, Key);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			

@@ -5,14 +5,14 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// An application role. Used to define a role and check membership
-    /// </summary>
+	/// <summary>
+	/// An application role. Used to define a role and check membership
+	/// </summary>
 	public class RoleDefinition : Task, Interfaces.IRoleDefinition
 	{
-        /// <summary>
-        /// Gets the collection of roles added to the role
-        /// </summary>
+		/// <summary>
+		/// Gets the collection of roles added to the role
+		/// </summary>
 		public Collections.RoleDefinitionCollection Roles
 		{
 			get { return ((Interfaces.IRoleDefinition)Instance).Roles; }
@@ -27,20 +27,20 @@ namespace AzAlternative
 			: base(role, parent)
 		{ }
 
-        /// <summary>
-        /// Adds a role to the Roles collection
-        /// </summary>
-        /// <param name="role">Role to add</param>
+		/// <summary>
+		/// Adds a role to the Roles collection
+		/// </summary>
+		/// <param name="role">Role to add</param>
 		public void AddRole(RoleDefinition role)
 		{
 			if (role == null)
 				throw new ArgumentNullException("role");
 
-            CheckObjectIsValid(role);
-			if (Roles.ContainsKey(role.UniqueName))
+			CheckObjectIsValid(role);
+			if (Roles.ContainsKey(role.Key))
 				return;
 
-            ((Interfaces.IRoleDefinition)Instance).AddRole(role);
+			((Interfaces.IRoleDefinition)Instance).AddRole(role);
 			Roles.AddValue(role);
 		}
 
@@ -54,21 +54,21 @@ namespace AzAlternative
 			AddRole(r);
 		}
 
-        /// <summary>
+		/// <summary>
 		/// Removes a role from the Roles collection
-        /// </summary>
-        /// <param name="role">Role to remove</param>
+		/// </summary>
+		/// <param name="role">Role to remove</param>
 		public void RemoveRole(RoleDefinition role)
 		{
 			if (role == null)
 				throw new ArgumentNullException("role");
 
-            CheckObjectIsValid(role);
-			if (!Roles.ContainsKey(role.UniqueName))
+			CheckObjectIsValid(role);
+			if (!Roles.ContainsKey(role.Key))
 				return;
 
 			((Interfaces.IRoleDefinition)Instance).RemoveRole(role);
-			Roles.RemoveValue(role.UniqueName);
+			Roles.RemoveValue(role.Key);
 		}
 
 		/// <summary>

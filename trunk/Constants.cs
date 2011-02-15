@@ -23,8 +23,8 @@ namespace AzAlternative
 	/// <summary>
 	/// Specifies the language used by a biz rule
 	/// </summary>
-    public enum BizRuleLanguage
-    {
+	public enum BizRuleLanguage
+	{
 		/// <summary>
 		/// The language is not specified or used
 		/// </summary>
@@ -32,12 +32,12 @@ namespace AzAlternative
 		/// <summary>
 		/// The rule is written using VBScript
 		/// </summary>
-        VBScript,
+		VBScript,
 		/// <summary>
 		/// The rule is written using JScript
 		/// </summary>
-        JScript
-    }
+		JScript
+	}
 
 	public static class Constants
 	{

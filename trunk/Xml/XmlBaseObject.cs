@@ -24,7 +24,7 @@ namespace AzAlternative.Xml
 		///// </summary>
 		protected readonly XmlService Service;
 
-		public string UniqueName
+		public string Key
 		{
 			get;
 			set;
@@ -100,39 +100,39 @@ namespace AzAlternative.Xml
 		public void Load(string uniqueName)
 		{
 			XmlElement e = Service.Load(uniqueName);
-            Load(e);
+			Load(e);
 		}
 
-        public virtual void Load(XmlElement element)
-        {
-            UniqueName = GetAttribute(element, GUID);
-            Name = GetAttribute(element, NAME);
-            Description = GetAttribute(element, DESCRIPTION);
+		public virtual void Load(XmlElement element)
+		{
+			Key = GetAttribute(element, GUID);
+			Name = GetAttribute(element, NAME);
+			Description = GetAttribute(element, DESCRIPTION);
 
-            LoadInternal(element);
-        }
+			LoadInternal(element);
+		}
 
 		protected virtual void LoadInternal(XmlElement element)
 		{ }
 
 		public virtual XmlElement ToXml()
 		{
-			return Service.Load(UniqueName);
+			return Service.Load(Key);
 		}
 
 		public abstract XmlElement ToXml(XmlElement parent);
 
-        protected static Dictionary<string, string> GetChildren(XmlElement parent, string elementName)
-        {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+		protected static Dictionary<string, string> GetChildren(XmlElement parent, string elementName)
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
 
-            foreach (XmlNode item in parent.SelectNodes(elementName))
-            {
-                result.Add(item.Attributes[NAME].Value, item.Attributes[GUID].Value);
-            }
+			foreach (XmlNode item in parent.SelectNodes(elementName))
+			{
+				result.Add(item.Attributes[NAME].Value, item.Attributes[GUID].Value);
+			}
 
-            return result;
-        }
+			return result;
+		}
 
 		protected static Dictionary<string, string> GetLinks(XmlElement parent, string elementName)
 		{
@@ -145,5 +145,5 @@ namespace AzAlternative.Xml
 
 			return result;
 		}
-    }
+	}
 }

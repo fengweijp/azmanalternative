@@ -44,7 +44,7 @@ namespace AzAlternative.Collections
 		{
 			foreach (var item in this)
 			{
-				if (item.OperationId == operation.OperationId && item.UniqueName != operation.UniqueName)
+				if (item.OperationId == operation.OperationId && item.Key != operation.Key)
 					throw new AzException("Operation ID is already in use.");
 			}
 		}

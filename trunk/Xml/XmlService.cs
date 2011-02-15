@@ -55,14 +55,14 @@ namespace AzAlternative.Xml
 
 		public void RemoveElement(XmlBaseObject o)
 		{
-			XmlElement e = Load(o.UniqueName);
+			XmlElement e = Load(o.Key);
 			e.ParentNode.RemoveChild(e);
 			Save(e);
 		}
 
 		public void CreateLink(XmlBaseObject parent, string linkName, string uniqueName)
 		{
-			XmlElement parentNode = Load(parent.UniqueName);
+			XmlElement parentNode = Load(parent.Key);
 
 			if (parentNode.SelectNodes(string.Format("{0}[.='{1}']", linkName, uniqueName)).Count > 0)
 				return;
@@ -75,7 +75,7 @@ namespace AzAlternative.Xml
 
 		public void RemoveLink(XmlBaseObject parent, string linkName, string uniqueName)
 		{
-			XmlElement parentNode = Load(parent.UniqueName);
+			XmlElement parentNode = Load(parent.Key);
 			XmlNode e = parentNode.SelectSingleNode(string.Format("{0}[.='{1}']", linkName, uniqueName));
 			if (e == null)
 				return;
@@ -89,11 +89,11 @@ namespace AzAlternative.Xml
 			XmlApplication a = new XmlApplication(this);
 			a.Load(uniqueName);
 
-            return new Application(a);
+			return new Application(a);
 		}
 
-        public override IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store)
-        {
+		public override IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store)
+		{
 			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlApplication a = new XmlApplication(this);
@@ -104,12 +104,12 @@ namespace AzAlternative.Xml
 		}
 
 		public override ApplicationGroup GetGroup(string uniqueName)
-        {
-            XmlApplicationGroup g = new XmlApplicationGroup(this);
-            g.Load(uniqueName);
+		{
+			XmlApplicationGroup g = new XmlApplicationGroup(this);
+			g.Load(uniqueName);
 
-            return new ApplicationGroup(g);
-        }
+			return new ApplicationGroup(g);
+		}
 
 		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application)
 		{
@@ -129,15 +129,15 @@ namespace AzAlternative.Xml
 		}
 
 		public override Operation GetOperation(string uniqueName)
-        {
-            XmlOperation o = new XmlOperation(this);
-            o.Load(uniqueName);
+		{
+			XmlOperation o = new XmlOperation(this);
+			o.Load(uniqueName);
 
-            return new Operation(o);
-        }
+			return new Operation(o);
+		}
 
 		public override IEnumerator<Operation> GetOperations(IEnumerable<string> uniqueNames, Application application)
-        {
+		{
 			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlOperation o = new XmlOperation(this);
@@ -145,18 +145,18 @@ namespace AzAlternative.Xml
 
 				yield return new Operation(o, application);
 			}
-        }
+		}
 
 		public override Task GetTask(string uniqueName)
-        {
+		{
 			XmlTask t = new XmlTask(this);
 			t.Load(uniqueName);
 
 			return new Task(t);
-        }
+		}
 
 		public override IEnumerator<Task> GetTasks(IEnumerable<string> uniqueNames, Application application)
-        {
+		{
 			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlTask t = new XmlTask(this);
@@ -164,18 +164,18 @@ namespace AzAlternative.Xml
 
 				yield return new Task(t, application);
 			}
-        }
+		}
 
 		public override RoleAssignments GetRoleAssignments(string uniqueName)
-        {
+		{
 			XmlRoleAssignments r = new XmlRoleAssignments(this);
 			r.Load(uniqueName);
 
 			return new RoleAssignments(r);
-        }
+		}
 
 		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<string> uniqueNames, Application application)
-        {
+		{
 			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlRoleAssignments r = new XmlRoleAssignments(this);
@@ -186,15 +186,15 @@ namespace AzAlternative.Xml
 		}
 
 		public override RoleDefinition GetRoleDefinition(string uniqueName)
-        {
+		{
 			XmlRoleDefinition r = new XmlRoleDefinition(this);
 			r.Load(uniqueName);
 
 			return new RoleDefinition(r);
-        }
+		}
 
 		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application)
-        {
+		{
 			foreach (var item in FindElements(uniqueNames))
 			{
 				XmlRoleDefinition r = new XmlRoleDefinition(this);
@@ -203,7 +203,7 @@ namespace AzAlternative.Xml
 				yield return new RoleDefinition(r, application);
 			}
 
-        }
+		}
 
 		public Collections.MemberCollection GetMembers(XmlElement parent)
 		{

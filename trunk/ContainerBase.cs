@@ -5,14 +5,14 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// Base class for the API objects. Not intended to be used directly
-    /// </summary>
-    public abstract class ContainerBase : IEquatable<ContainerBase>
-    {
+	/// <summary>
+	/// Base class for the API objects. Not intended to be used directly
+	/// </summary>
+	public abstract class ContainerBase : IEquatable<ContainerBase>
+	{
 		protected Application BaseApplication;
 
-		public abstract string UniqueName
+		public abstract string Key
 		{
 			get;
 		}
@@ -23,9 +23,9 @@ namespace AzAlternative
 			set;
 		}
 
-        /// <summary>
-        /// Gets the application this object belongs to
-        /// </summary>
+		/// <summary>
+		/// Gets the application this object belongs to
+		/// </summary>
 		public abstract Application Parent
 		{
 			get;
@@ -50,12 +50,12 @@ namespace AzAlternative
 
 		protected virtual bool CheckObjectIsValid(ContainerBase o)
 		{
-			return (o.Parent != null && o.Parent.UniqueName == this.UniqueName);
+			return (o.Parent != null && o.Parent.Key == this.Key);
 		}
 
 		public bool Equals(ContainerBase other)
 		{
-			return UniqueName == other.UniqueName;
+			return Key == other.Key;
 		}
 	}
 }

@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// A group of users in the application or store
-    /// </summary>
+	/// <summary>
+	/// A group of users in the application or store
+	/// </summary>
 	public class ApplicationGroup : ContainerBase, Interfaces.IApplicationGroup
 	{
 		internal readonly Interfaces.IApplicationGroup Instance;
@@ -29,9 +29,9 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets the group identifier
 		/// </summary>
-		public override string UniqueName
+		public override string Key
 		{
-			get { return Instance.UniqueName; }
+			get { return Instance.Key; }
 		}
 
 		/// <summary>
@@ -57,9 +57,9 @@ namespace AzAlternative
 			set { Instance.Description = value; }
 		}
 
-        /// <summary>
-        /// Gets the type of group
-        /// </summary>
+		/// <summary>
+		/// Gets the type of group
+		/// </summary>
 		public GroupType GroupType
 		{
 			get { return Instance.GroupType; }
@@ -88,9 +88,9 @@ namespace AzAlternative
 			}
 		}
 
-        /// <summary>
-        /// Gets the collection of members in the group
-        /// </summary>
+		/// <summary>
+		/// Gets the collection of members in the group
+		/// </summary>
 		public Collections.MemberCollection Members
 		{
 			get { return Instance.Members; }
@@ -104,36 +104,36 @@ namespace AzAlternative
 			get { return Instance.Exclusions; }
 		}
 
-        /// <summary>
-        /// Gets a collection of groups in this group
-        /// </summary>
-        public Collections.ApplicationGroupCollection Groups
-        {
-            get { return Instance.Groups; }
-        }
+		/// <summary>
+		/// Gets a collection of groups in this group
+		/// </summary>
+		public Collections.ApplicationGroupCollection Groups
+		{
+			get { return Instance.Groups; }
+		}
 
-        /// <summary>
-        /// Gets the store this group belongs to
-        /// </summary>
-        public AdminManager Store
-        {
+		/// <summary>
+		/// Gets the store this group belongs to
+		/// </summary>
+		public AdminManager Store
+		{
 			get { return _Store; }
 			internal set
 			{
 				_Store = value;
 				Groups.Store = value;
 			}
-        }
+		}
 
 		internal ApplicationGroup(Interfaces.IApplicationGroup applicationGroup)
 		{
 			Instance = applicationGroup;
 		}
 
-        /// <summary>
-        /// Adds a member to the group
-        /// </summary>
-        /// <param name="member">Member to add in the form domainname\username</param>
+		/// <summary>
+		/// Adds a member to the group
+		/// </summary>
+		/// <param name="member">Member to add in the form domainname\username</param>
 		public void AddMember(string name)
 		{
 			if (string.IsNullOrEmpty(name))
@@ -157,10 +157,10 @@ namespace AzAlternative
 			AddMember(domain + "\\" + name);
 		}
 
-        /// <summary>
-        /// Removes a member from the group
-        /// </summary>
-        /// <param name="member">Member to remove in the form domain\name</param>
+		/// <summary>
+		/// Removes a member from the group
+		/// </summary>
+		/// <param name="member">Member to remove in the form domain\name</param>
 		public void RemoveMember(string name)
 		{
 			if (string.IsNullOrEmpty(name))
@@ -169,33 +169,33 @@ namespace AzAlternative
 			Instance.RemoveMember(name);
 		}
 
-        /// <summary>
-        /// Adds a group to this group
-        /// </summary>
-        /// <param name="group">Group to add</param>
-        public void AddGroup(ApplicationGroup group)
-        {
+		/// <summary>
+		/// Adds a group to this group
+		/// </summary>
+		/// <param name="group">Group to add</param>
+		public void AddGroup(ApplicationGroup group)
+		{
 			CheckGroupIsValid(group);
-			if (Groups.ContainsKey(group.UniqueName))
+			if (Groups.ContainsKey(group.Key))
 				return;
 
-            Instance.AddGroup(group);
+			Instance.AddGroup(group);
 			Groups.AddValue(group);
-        }
+		}
 
-        /// <summary>
-        /// Removes a group from this group
-        /// </summary>
-        /// <param name="group">Group to remove</param>
-        public void RemoveGroup(ApplicationGroup group)
-        {
+		/// <summary>
+		/// Removes a group from this group
+		/// </summary>
+		/// <param name="group">Group to remove</param>
+		public void RemoveGroup(ApplicationGroup group)
+		{
 			CheckGroupIsValid(group);
-			if (!Groups.ContainsKey(group.UniqueName))
+			if (!Groups.ContainsKey(group.Key))
 				return;
 
-            Instance.RemoveGroup(group);
-			Groups.RemoveValue(group.UniqueName);
-        }
+			Instance.RemoveGroup(group);
+			Groups.RemoveValue(group.Key);
+		}
 
 		/// <summary>
 		/// Removes a group from this group
@@ -217,14 +217,14 @@ namespace AzAlternative
 
 			if (IsGlobalGroup)
 			{
-				if (!group.IsGlobalGroup || group.Store.UniqueName != this.Store.UniqueName)
+				if (!group.IsGlobalGroup || group.Store.Key != this.Store.Key)
 					throw new AzException("The group to add is not defined in this store or is not a global group");
 			}
 
 			if (this.Parent != null)
 			{
 				CheckObjectIsValid(group);
-				if (group.IsGlobalGroup && group.Store.UniqueName != this.Parent.Store.UniqueName)
+				if (group.IsGlobalGroup && group.Store.Key != this.Parent.Store.Key)
 					throw new AzException("The group to add is not defined in this store.");
 			}
 		}

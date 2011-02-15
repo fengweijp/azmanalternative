@@ -7,17 +7,17 @@ using System.DirectoryServices.Protocols;
 
 namespace AzAlternative.ActiveDirectory
 {
-    internal class AdService : ServiceBase
-    {
+	internal class AdService : ServiceBase
+	{
 		private string _BaseDN;
 		private string _Host;
 
-        public AdService(string connectionString)
-            : base()
-        {
-            ConnectionString = connectionString;
+		public AdService(string connectionString)
+			: base()
+		{
+			ConnectionString = connectionString;
 			ParseConnectionString();
-        }
+		}
 
 		private void ParseConnectionString()
 		{
@@ -103,70 +103,70 @@ namespace AzAlternative.ActiveDirectory
 
 		}
 
-        public override Interfaces.IAdminManager GetAdminManager()
-        {
+		public override Interfaces.IAdminManager GetAdminManager()
+		{
 			return new AdAdminManager(this);
-        }
+		}
 
-        public override Application GetApplication(string uniqueName)
-        {
-            throw new NotImplementedException();
-        }
+		public override Application GetApplication(string uniqueName)
+		{
+			throw new NotImplementedException();
+		}
 
 		public override IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override ApplicationGroup GetGroup(string uniqueName)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override Operation GetOperation(string uniqueName)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override IEnumerator<Operation> GetOperations(IEnumerable<string> uniqueNames, Application application)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override Task GetTask(string uniqueName)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override IEnumerator<Task> GetTasks(IEnumerable<string> uniqueNames, Application application)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override RoleAssignments GetRoleAssignments(string uniqueName)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<string> uniqueNames, Application application)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override RoleDefinition GetRoleDefinition(string uniqueName)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			throw new NotImplementedException();
+		}
 
 		public Collections.MemberCollection GetMembers(DirectoryAttribute members)
 		{
@@ -177,5 +177,5 @@ namespace AzAlternative.ActiveDirectory
 		{
 			throw new NotImplementedException();
 		}
-    }
+	}
 }

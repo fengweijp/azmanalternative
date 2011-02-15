@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the group identifier
 		/// </summary>
-		string UniqueName { get; }
+		string Key { get; }
 		/// <summary>
 		/// Gets or sets the group name
 		/// </summary>
@@ -36,31 +36,31 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		Collections.MemberCollection Members { get; }
 		Collections.MemberCollection Exclusions { get; }
-        /// <summary>
-        /// Gets a collection of groups in this group
-        /// </summary>
-        Collections.ApplicationGroupCollection Groups { get; }
+		/// <summary>
+		/// Gets a collection of groups in this group
+		/// </summary>
+		Collections.ApplicationGroupCollection Groups { get; }
 
-        /// <summary>
-        /// Adds a member to this group
-        /// </summary>
-        /// <param name="member">Member to add</param>
+		/// <summary>
+		/// Adds a member to this group
+		/// </summary>
+		/// <param name="member">Member to add</param>
 		void AddMember(string name);
-        /// <summary>
-        /// Removes a member from this group
-        /// </summary>
-        /// <param name="member">Member to remove</param>
+		/// <summary>
+		/// Removes a member from this group
+		/// </summary>
+		/// <param name="member">Member to remove</param>
 		void RemoveMember(string member);
 
-        /// <summary>
-        /// Adds a group to this group
-        /// </summary>
-        /// <param name="group">Group to add</param>
-        void AddGroup(ApplicationGroup group);
-        /// <summary>
-        /// Removes a group from this group
-        /// </summary>
-        /// <param name="group">Group to remove</param>
-        void RemoveGroup(ApplicationGroup group);
+		/// <summary>
+		/// Adds a group to this group
+		/// </summary>
+		/// <param name="group">Group to add</param>
+		void AddGroup(ApplicationGroup group);
+		/// <summary>
+		/// Removes a group from this group
+		/// </summary>
+		/// <param name="group">Group to remove</param>
+		void RemoveGroup(ApplicationGroup group);
 	}
 }
