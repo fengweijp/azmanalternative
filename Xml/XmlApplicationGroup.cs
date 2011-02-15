@@ -43,11 +43,11 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-        public Collections.ApplicationGroupCollection Groups
-        {
-            get;
-            set;
-        }
+		public Collections.ApplicationGroupCollection Groups
+		{
+			get;
+			set;
+		}
 
 		public XmlApplicationGroup(XmlService service)
 			: base(service)
@@ -95,24 +95,24 @@ namespace AzAlternative.Xml
 		public void AddMember(string name)
 		{
 			Member m = new Member(new XmlMember(Service), name);
-			m.Instance.Parent = this.UniqueName;
+			m.Instance.Parent = this.Key;
 			Members.AddMember(m);
 		}
 
-        public void AddGroup(ApplicationGroup group)
-        {
-			Service.CreateLink(this, GROUP, group.UniqueName);
-        }
+		public void AddGroup(ApplicationGroup group)
+		{
+			Service.CreateLink(this, GROUP, group.Key);
+		}
 
-        public void RemoveGroup(ApplicationGroup group)
-        {
-			Service.RemoveLink(this, GROUP, group.UniqueName);
+		public void RemoveGroup(ApplicationGroup group)
+		{
+			Service.RemoveLink(this, GROUP, group.Key);
 		}
 
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, UniqueName);
+			SetAttribute(e, GUID, Key);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			SetAttribute(e, GROUPTYPE, GroupType.ToString());
@@ -156,16 +156,16 @@ namespace AzAlternative.Xml
 		}
 
 		public static Dictionary<string, string> GetChildren(XmlElement parent)
-        {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
 
-            foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
-            {
-                result.Add(item.Attributes[NAME].Value, item.Attributes[GUID].Value);
-            }
+			foreach (XmlNode item in parent.SelectNodes(ELEMENTNAME))
+			{
+				result.Add(item.Attributes[NAME].Value, item.Attributes[GUID].Value);
+			}
 
-            return result;
-        }
+			return result;
+		}
 
 	}
 }

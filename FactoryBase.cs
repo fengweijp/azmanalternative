@@ -10,9 +10,9 @@ namespace AzAlternative
 	/// </summary>
 	public abstract class ServiceBase
 	{
-        /// <summary>
-        /// Gets the connectionstring used by this factory object
-        /// </summary>
+		/// <summary>
+		/// Gets the connectionstring used by this factory object
+		/// </summary>
 		public string ConnectionString
 		{
 			get;
@@ -22,7 +22,7 @@ namespace AzAlternative
 		public abstract Interfaces.IAdminManager GetAdminManager();
 
 		public abstract Application GetApplication(string uniqueName);
-        public abstract IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store);
+		public abstract IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store);
 
 		public abstract ApplicationGroup GetGroup(string uniqueName);
 		public abstract IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application);

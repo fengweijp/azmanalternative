@@ -24,7 +24,7 @@ namespace AzAlternative.Xml
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, UniqueName);
+			SetAttribute(e, GUID, Key);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			

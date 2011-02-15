@@ -22,12 +22,12 @@ namespace AzAlternative.Xml
 
 		public void AddRole(RoleDefinition role)
 		{
-			Service.CreateLink(this, ROLE, role.UniqueName);
+			Service.CreateLink(this, ROLE, role.Key);
 		}
 
 		public void RemoveRole(RoleDefinition role)
 		{
-			Service.RemoveLink(this, ROLE, role.UniqueName);
+			Service.RemoveLink(this, ROLE, role.Key);
 		}
 
 		protected override void LoadInternal(XmlElement element)

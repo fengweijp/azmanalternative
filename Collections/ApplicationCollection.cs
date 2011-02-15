@@ -6,14 +6,14 @@ using System.Text;
 namespace AzAlternative.Collections
 {
 
-    public class ApplicationCollection : CollectionBase<Application>
-    {
-        internal AdminManager AdminManager;
+	public class ApplicationCollection : CollectionBase<Application>
+	{
+		internal AdminManager AdminManager;
 
-        public override Application this[string name]
-        {
-            get 
-            {
+		public override Application this[string name]
+		{
+			get 
+			{
 				Application a = base[name];
 				if (a == null)
 					return null;
@@ -21,9 +21,9 @@ namespace AzAlternative.Collections
 				a.Parent = a;
 				a.Store = AdminManager;
 
-                return a;
-            }
-        }
+				return a;
+			}
+		}
 
 		internal ApplicationCollection(ServiceBase service, Dictionary<string, string> values)
 			: base(service, values)
@@ -34,10 +34,10 @@ namespace AzAlternative.Collections
 		{ }
 		
 
-        public override IEnumerator<Application> GetEnumerator()
-        {
-            return Service.GetApplications(Guids.Values, AdminManager);
-        }
+		public override IEnumerator<Application> GetEnumerator()
+		{
+			return Service.GetApplications(Guids.Values, AdminManager);
+		}
 
 		internal override void CheckName(Application entry)
 		{

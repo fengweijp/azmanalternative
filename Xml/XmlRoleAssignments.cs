@@ -29,7 +29,7 @@ namespace AzAlternative.Xml
 			set
 			{
 				_Definition = value;
-				_DefinitionId = value.UniqueName;
+				_DefinitionId = value.Key;
 			}
 		}
 
@@ -51,12 +51,12 @@ namespace AzAlternative.Xml
 
 		public void AddGroup(ApplicationGroup group)
 		{
-			Service.CreateLink(this, GROUP, group.UniqueName);
+			Service.CreateLink(this, GROUP, group.Key);
 		}
 
 		public void RemoveGroup(ApplicationGroup group)
 		{
-			Service.RemoveLink(this, GROUP, group.UniqueName);
+			Service.RemoveLink(this, GROUP, group.Key);
 		}
 
 		public void RemoveMember(Member member)
@@ -75,14 +75,14 @@ namespace AzAlternative.Xml
 		public void AddMember(string name)
 		{
 			Member m = new Member(new XmlMember(Service), name);
-			m.Instance.Parent = this.UniqueName;
+			m.Instance.Parent = this.Key;
 			Members.AddMember(m);
 		}
 
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, UniqueName);
+			SetAttribute(e, GUID, Key);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 

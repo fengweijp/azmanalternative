@@ -29,10 +29,8 @@ namespace AzAlternative.ActiveDirectory
 			get { return _GroupType; }
 			set
 			{
-				if (value == _GroupType)
-					return;
+				OnPropertyChanged(GROUPTYPE, _GroupType.ToString(), value.ToString());
 				_GroupType = value;
-				FlagForChange(GROUPTYPE);
 			}
 		}
 
@@ -47,10 +45,8 @@ namespace AzAlternative.ActiveDirectory
 			get { return _LdapQuery; }
 			set
 			{
-				if (_LdapQuery == value)
-					return;
+				OnPropertyChanged(LDAPQUERY, _LdapQuery, value);
 				_LdapQuery = value;
-				FlagForChange(LDAPQUERY);
 			}
 		}
 
@@ -127,6 +123,7 @@ namespace AzAlternative.ActiveDirectory
 			SetAttribute(mr.Modifications, NAME2, NAME, Name);
 			SetAttribute(mr.Modifications, LDAPQUERY, LdapQuery);
 
+			Changes.Clear();
 			return mr;
 		}
 

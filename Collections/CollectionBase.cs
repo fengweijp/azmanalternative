@@ -68,7 +68,7 @@ namespace AzAlternative.Collections
 
 		internal void AddValue(T entry)
 		{
-			Guids.Add(entry.Name, entry.UniqueName);
+			Guids.Add(entry.Name, entry.Key);
 
 			if (!LinkedList)
 				InternalCollection.Add(entry);
@@ -90,18 +90,18 @@ namespace AzAlternative.Collections
 
 		internal void UpdateValue(T entry)
 		{
-			var k = Guids.First(item => item.Value == entry.UniqueName);
+			var k = Guids.First(item => item.Value == entry.Key);
 
 			if (k.Key == entry.Name)
 				return;
 
 			Guids.Remove(k.Key);
-			Guids.Add(entry.Name, entry.UniqueName);
+			Guids.Add(entry.Name, entry.Key);
 
 			if (LinkedList)
 				return;
 
-			if (InternalCollection.Contains(entry.UniqueName))
+			if (InternalCollection.Contains(entry.Key))
 				InternalCollection.Remove(k.Value);
 			InternalCollection.Add(entry);
 		}
@@ -123,7 +123,7 @@ namespace AzAlternative.Collections
 			if (!Guids.ContainsKey(entry.Name))
 				return;
 
-			if (Guids[entry.Name] != entry.UniqueName)
+			if (Guids[entry.Name] != entry.Key)
 				throw new AzException(string.Format(DUPLICATENAMEERROR, error));
 		}
 
@@ -147,7 +147,7 @@ namespace AzAlternative.Collections
 	{
 		protected override string GetKeyForItem(T item)
 		{
-			return item.UniqueName;
+			return item.Key;
 		}
 	}
 }

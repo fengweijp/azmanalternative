@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the task identifier
 		/// </summary>
-		string UniqueName { get; }
+		string Key { get; }
 		/// <summary>
 		/// Gets or sets the task name
 		/// </summary>
@@ -26,15 +26,15 @@ namespace AzAlternative.Interfaces
 		/// Gets or sets the rule script path
 		/// </summary>
 		string BizRuleImportedPath { get; }
-        /// <summary>
-        /// Gets or sets the rule script language
-        /// </summary>
-        BizRuleLanguage BizRuleLanguage { get; }
-        /// <summary>
-        /// Gets the rule script
-        /// </summary>
-        string BizRule { get; }
-        /// <summary>
+		/// <summary>
+		/// Gets or sets the rule script language
+		/// </summary>
+		BizRuleLanguage BizRuleLanguage { get; }
+		/// <summary>
+		/// Gets the rule script
+		/// </summary>
+		string BizRule { get; }
+		/// <summary>
 		/// Gets a collection of tasks assigned to the task
 		/// </summary>
 		Collections.TaskCollection Tasks { get; }
@@ -43,26 +43,26 @@ namespace AzAlternative.Interfaces
 		/// </summary>
 		Collections.OperationCollection Operations { get; }
 
-        /// <summary>
-        /// Adds a task to this task
-        /// </summary>
-        /// <param name="task">Task to add</param>
+		/// <summary>
+		/// Adds a task to this task
+		/// </summary>
+		/// <param name="task">Task to add</param>
 		void AddTask(Task task);
-        /// <summary>
-        /// Removes a task from this task
-        /// </summary>
-        /// <param name="task">Task to remove</param>
+		/// <summary>
+		/// Removes a task from this task
+		/// </summary>
+		/// <param name="task">Task to remove</param>
 		void RemoveTask(Task task);
 
-        /// <summary>
-        /// Adds an operation to this task
-        /// </summary>
-        /// <param name="operation">Operation to add</param>
+		/// <summary>
+		/// Adds an operation to this task
+		/// </summary>
+		/// <param name="operation">Operation to add</param>
 		void AddOperation(Operation operation);
-        /// <summary>
-        /// Removes an operation from this task
-        /// </summary>
-        /// <param name="operation">Operation to remove</param>
+		/// <summary>
+		/// Removes an operation from this task
+		/// </summary>
+		/// <param name="operation">Operation to remove</param>
 		void RemoveOperation(Operation operation);
 
 		/// <summary>

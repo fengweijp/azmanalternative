@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// A task
-    /// </summary>
+	/// <summary>
+	/// A task
+	/// </summary>
 	public class Task : ContainerBase, Interfaces.ITask
 	{
 		internal readonly Interfaces.ITask Instance;
@@ -26,40 +26,40 @@ namespace AzAlternative
 			}
 		}
 
-        /// <summary>
-        /// Gets the task identifier
-        /// </summary>
-		public override string UniqueName
+		/// <summary>
+		/// Gets the task identifier
+		/// </summary>
+		public override string Key
 		{
-			get { return Instance.UniqueName; }
+			get { return Instance.Key; }
 		}
 
-        /// <summary>
-        /// Gets or sets the task name
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the task name
+		/// </summary>
 		public override string Name
 		{
 			get { return Instance.Name; }
 			set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentNullException("Name");
-                Instance.Name = value;
-            }
+			{
+				if (string.IsNullOrEmpty(value))
+					throw new ArgumentNullException("Name");
+				Instance.Name = value;
+			}
 		}
 
-        /// <summary>
-        /// Gets or sets the task description
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the task description
+		/// </summary>
 		public string Description
 		{
 			get { return Instance.Description; }
 			set { Instance.Description = value; }
 		}
 
-        /// <summary>
-        /// Gets or sets the path to the biz rule script
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the path to the biz rule script
+		/// </summary>
 		public string BizRuleImportedPath
 		{
 			get { return Instance.BizRuleImportedPath; }
@@ -81,26 +81,26 @@ namespace AzAlternative
 			get { return Instance.BizRule; }
 		}
 
-        /// <summary>
-        /// Gets a collection of tasks directly added to this task
-        /// </summary>
+		/// <summary>
+		/// Gets a collection of tasks directly added to this task
+		/// </summary>
 		public Collections.TaskCollection Tasks
 		{
 			get { return Instance.Tasks; }
 		}
 
-        /// <summary>
-        /// Gets a collection of operations directly added to this task
-        /// </summary>
+		/// <summary>
+		/// Gets a collection of operations directly added to this task
+		/// </summary>
 		public Collections.OperationCollection Operations
 		{
 			get { return Instance.Operations; }
 		}
 
-        internal Task(Interfaces.ITask task)
-        {
-            Instance = task;
-        }
+		internal Task(Interfaces.ITask task)
+		{
+			Instance = task;
+		}
 
 		internal Task(Interfaces.ITask task, Application parent)
 			: this(task)
@@ -108,17 +108,17 @@ namespace AzAlternative
 			Parent = parent;
 		}
 
-        /// <summary>
+		/// <summary>
 		/// Adds a task to the Tasks collection
-        /// </summary>
-        /// <param name="task">Task to add</param>
+		/// </summary>
+		/// <param name="task">Task to add</param>
 		public void AddTask(Task task)
 		{
 			if (task == null)
 				throw new ArgumentNullException("task");
 
 			CheckObjectIsValid(task);
-			if (Tasks.ContainsKey(task.UniqueName))
+			if (Tasks.ContainsKey(task.Key))
 				return;
 
 			Instance.AddTask(task);
@@ -135,21 +135,21 @@ namespace AzAlternative
 			AddTask(t);
 		}
 
-        /// <summary>
-        /// Removes a task from the Tasks collection
-        /// </summary>
-        /// <param name="task">Task to remove</param>
+		/// <summary>
+		/// Removes a task from the Tasks collection
+		/// </summary>
+		/// <param name="task">Task to remove</param>
 		public void RemoveTask(Task task)
 		{
 			if (task == null)
 				throw new ArgumentNullException("task");
 
 			CheckObjectIsValid(task);
-			if (!Tasks.ContainsKey(task.UniqueName))
+			if (!Tasks.ContainsKey(task.Key))
 				return;
 
 			Instance.RemoveTask(task);
-			Tasks.RemoveValue(task.UniqueName);
+			Tasks.RemoveValue(task.Key);
 		}
 
 		/// <summary>
@@ -162,17 +162,17 @@ namespace AzAlternative
 			RemoveTask(t);
 		}
 
-        /// <summary>
-        /// Adds an operation to the Operations collection
-        /// </summary>
-        /// <param name="operation">Operation to add</param>
+		/// <summary>
+		/// Adds an operation to the Operations collection
+		/// </summary>
+		/// <param name="operation">Operation to add</param>
 		public void AddOperation(Operation operation)
 		{
 			if (operation == null)
 				throw new ArgumentNullException("operation");
 
 			CheckObjectIsValid(operation);
-			if (Operations.ContainsKey(operation.UniqueName))
+			if (Operations.ContainsKey(operation.Key))
 				return;
 
 			Instance.AddOperation(operation);
@@ -189,21 +189,21 @@ namespace AzAlternative
 			AddOperation(o);
 		}
 
-        /// <summary>
-        /// Removes an operation from the Operations collection
-        /// </summary>
-        /// <param name="operation">Operation to remove</param>
+		/// <summary>
+		/// Removes an operation from the Operations collection
+		/// </summary>
+		/// <param name="operation">Operation to remove</param>
 		public void RemoveOperation(Operation operation)
 		{
 			if (operation == null)
 				throw new ArgumentNullException("operation");
 
 			CheckObjectIsValid(operation);
-			if (!Operations.ContainsKey(operation.UniqueName))
+			if (!Operations.ContainsKey(operation.Key))
 				return;
 
 			Instance.RemoveOperation(operation);
-			Operations.RemoveValue(operation.UniqueName);
+			Operations.RemoveValue(operation.Key);
 		}
 
 		/// <summary>

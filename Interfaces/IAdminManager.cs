@@ -25,7 +25,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the object identifier
 		/// </summary>
-		string UniqueName { get; }
+		string Key { get; }
 		/// <summary>
 		/// Gets a collection of application groups
 		/// </summary>

@@ -25,40 +25,40 @@ namespace AzAlternative
 		}
 
 		/// <summary>
-        /// Gets the application identifier
-        /// </summary>
-		public override string UniqueName
+		/// Gets the application identifier
+		/// </summary>
+		public override string Key
 		{
-			get { return Instance.UniqueName; }
+			get { return Instance.Key; }
 		}
 
-        /// <summary>
-        /// Gets or sets the application name
-        /// </summary>
-        public override string Name
+		/// <summary>
+		/// Gets or sets the application name
+		/// </summary>
+		public override string Name
 		{
 			get { return Instance.Name; }
 			set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentNullException("Name");
-                Instance.Name = value; 
-            }
+			{
+				if (string.IsNullOrEmpty(value))
+					throw new ArgumentNullException("Name");
+				Instance.Name = value; 
+			}
 		}
 
-        /// <summary>
-        /// Gets or sets the description
-        /// </summary>
-        public string Description
+		/// <summary>
+		/// Gets or sets the description
+		/// </summary>
+		public string Description
 		{
 			get { return Instance.Description; }
 			set { Instance.Description = value; }
 		}
 
-        /// <summary>
-        /// Gets or sets the application version
-        /// </summary>
-        public string ApplicationVersion
+		/// <summary>
+		/// Gets or sets the application version
+		/// </summary>
+		public string ApplicationVersion
 		{
 			get { return Instance.ApplicationVersion; }
 			set { Instance.ApplicationVersion = value; }
@@ -101,11 +101,11 @@ namespace AzAlternative
 			get { return Instance.Tasks; }
 		}
 
-        public AdminManager Store
-        {
-            get;
-            internal set;
-        }
+		public AdminManager Store
+		{
+			get;
+			internal set;
+		}
 
 		internal Application(Interfaces.IApplication application)
 		{
@@ -154,7 +154,7 @@ namespace AzAlternative
 				throw new AzException("The group is not part of this application. Only application groups can be removed here.");
 
 			Instance.DeleteGroup(group);
-			Groups.RemoveValue(group.UniqueName);
+			Groups.RemoveValue(group.Key);
 		}
 
 		public void DeleteGroup(string name)
@@ -207,7 +207,7 @@ namespace AzAlternative
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRole(role);
-			Roles.RemoveValue(role.UniqueName);
+			Roles.RemoveValue(role.Key);
 		}
 
 		public void DeleteRole(string name)
@@ -268,7 +268,7 @@ namespace AzAlternative
 				throw new AzException("The Role is not part of the application.");
 
 			Instance.DeleteRoleAssignments(role);
-			RoleAssignments.RemoveValue(role.UniqueName);
+			RoleAssignments.RemoveValue(role.Key);
 		}
 
 		public void DeleteRoleAssignments(string name)
@@ -325,7 +325,7 @@ namespace AzAlternative
 				throw new AzException("The operation is not part of this application.");
 
 			Instance.DeleteOperation(operation);
-			Operations.RemoveValue(operation.UniqueName);
+			Operations.RemoveValue(operation.Key);
 		}
 
 		public void DeleteOperation(string name)
@@ -379,7 +379,7 @@ namespace AzAlternative
 				throw new AzException("The task is not part of this application.");
 
 			Instance.DeleteTask(task);
-			Tasks.RemoveValue(task.UniqueName);
+			Tasks.RemoveValue(task.Key);
 		}
 
 		public void DeleteTask(string name)

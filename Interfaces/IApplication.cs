@@ -13,7 +13,7 @@ namespace AzAlternative.Interfaces
 		/// <summary>
 		/// Gets the application identifier
 		/// </summary>
-		string UniqueName { get; }
+		string Key { get; }
 		/// <summary>
 		/// Gets or sets the application name
 		/// </summary>

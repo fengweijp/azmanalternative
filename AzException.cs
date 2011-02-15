@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// Exception used when AzMan throws an API related exception
-    /// </summary>
+	/// <summary>
+	/// Exception used when AzMan throws an API related exception
+	/// </summary>
 	public class AzException : Exception
 	{
 		public AzException()

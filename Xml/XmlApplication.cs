@@ -54,14 +54,14 @@ namespace AzAlternative.Xml
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
 			XmlApplicationGroup ag = new XmlApplicationGroup(Service);
-			ag.UniqueName = System.Guid.NewGuid().ToString();
+			ag.Key = System.Guid.NewGuid().ToString();
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
 
 			ag.Groups = new Collections.ApplicationGroupCollection(Service, true);
 
-			Service.Save(ag.ToXml(Service.Load(this.UniqueName)));
+			Service.Save(ag.ToXml(Service.Load(this.Key)));
 
 			return new ApplicationGroup(ag);
 		}
@@ -80,7 +80,7 @@ namespace AzAlternative.Xml
 		public RoleDefinition CreateRole(string name, string description)
 		{
 			XmlRoleDefinition d = new XmlRoleDefinition(Service);
-			d.UniqueName = System.Guid.NewGuid().ToString();
+			d.Key = System.Guid.NewGuid().ToString();
 			d.Name = name;
 			d.Description = description;
 
@@ -88,7 +88,7 @@ namespace AzAlternative.Xml
 			d.Tasks = new Collections.TaskCollection(Service, true);
 			d.Roles = new Collections.RoleDefinitionCollection(Service, true);
 
-			Service.Save(d.ToXml(Service.Load(this.UniqueName)));
+			Service.Save(d.ToXml(Service.Load(this.Key)));
 
 			return new RoleDefinition(d);
 		}
@@ -106,12 +106,12 @@ namespace AzAlternative.Xml
 		public Operation CreateOperation(string name, string description, int operationId)
 		{
 			XmlOperation o = new XmlOperation(Service);
-			o.UniqueName = System.Guid.NewGuid().ToString();
+			o.Key = System.Guid.NewGuid().ToString();
 			o.Name = name;
 			o.Description = description;
 			o.OperationId = operationId;
 
-			XmlElement thisNode = Service.Load(this.UniqueName);
+			XmlElement thisNode = Service.Load(this.Key);
 			Service.Save(o.ToXml(thisNode));
 
 			return new Operation(o);
@@ -130,14 +130,14 @@ namespace AzAlternative.Xml
 		public Task CreateTask(string name, string description)
 		{
 			XmlTask t = new XmlTask(Service);
-			t.UniqueName = System.Guid.NewGuid().ToString();
+			t.Key = System.Guid.NewGuid().ToString();
 			t.Name = name;
 			t.Description = description;
 
 			t.Operations = new Collections.OperationCollection(Service, true);
 			t.Tasks = new Collections.TaskCollection(Service, true);
 
-			XmlElement thisNode = Service.Load(this.UniqueName);
+			XmlElement thisNode = Service.Load(this.Key);
 			Service.Save(t.ToXml(thisNode));
 
 			return new Task(t);
@@ -156,14 +156,14 @@ namespace AzAlternative.Xml
 		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)
 		{
 			XmlRoleAssignments r = new XmlRoleAssignments(Service);
-			r.UniqueName = System.Guid.NewGuid().ToString();
+			r.Key = System.Guid.NewGuid().ToString();
 			r.Name = name;
 			r.Description = description;
 			r.Definition = role;
 
 			r.Groups = new Collections.ApplicationGroupCollection(Service, true);
 
-			XmlElement thisNode = Service.Load(this.UniqueName);
+			XmlElement thisNode = Service.Load(this.Key);
 			Service.Save(r.ToXml(thisNode));
 
 			return new RoleAssignments(r);
@@ -182,7 +182,7 @@ namespace AzAlternative.Xml
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);
-			SetAttribute(e, GUID, UniqueName);
+			SetAttribute(e, GUID, Key);
 			SetAttribute(e, NAME, Name);
 			SetAttribute(e, DESCRIPTION, Description);
 			SetAttribute(e, APPLICATIONVERSION, ApplicationVersion);
@@ -226,9 +226,9 @@ namespace AzAlternative.Xml
 		//    }
 		//}
 
-        public static Dictionary<string, string> GetChildren(XmlElement parent)
-        {
-            return GetChildren(parent, ELEMENTNAME);
-        }
+		public static Dictionary<string, string> GetChildren(XmlElement parent)
+		{
+			return GetChildren(parent, ELEMENTNAME);
+		}
 	}
 }

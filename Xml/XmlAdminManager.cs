@@ -24,17 +24,17 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-        public Collections.ApplicationGroupCollection Groups
-        {
-            get;
-            set;
-        }
+		public Collections.ApplicationGroupCollection Groups
+		{
+			get;
+			set;
+		}
 
-        public Collections.ApplicationCollection Applications
-        {
-            get;
-            set;
-        }
+		public Collections.ApplicationCollection Applications
+		{
+			get;
+			set;
+		}
 
 		public XmlAdminManager(XmlService factory)
 			: base(factory)
@@ -43,9 +43,9 @@ namespace AzAlternative.Xml
 			MajorVersion = int.Parse(GetAttribute(e, MAJORVERSION));
 			MinorVersion = int.Parse(GetAttribute(e, MINORVERSION));
 			Description = GetAttribute(e, DESCRIPTION);
-			UniqueName = e.Attributes[GUID].Value;
-            Applications = new Collections.ApplicationCollection(factory, XmlApplication.GetChildren(e));
-            Groups = new Collections.ApplicationGroupCollection(factory, XmlApplicationGroup.GetChildren(e), false);
+			Key = e.Attributes[GUID].Value;
+			Applications = new Collections.ApplicationCollection(factory, XmlApplication.GetChildren(e));
+			Groups = new Collections.ApplicationGroupCollection(factory, XmlApplicationGroup.GetChildren(e), false);
 		}
 
 		public void DeleteGroup(ApplicationGroup group)
@@ -56,7 +56,7 @@ namespace AzAlternative.Xml
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
 			XmlApplicationGroup ag = new XmlApplicationGroup(Service);
-			ag.UniqueName = System.Guid.NewGuid().ToString();
+			ag.Key = System.Guid.NewGuid().ToString();
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
@@ -79,7 +79,7 @@ namespace AzAlternative.Xml
 		public Application CreateApplication(string name, string description, string versionInformation)
 		{
 			XmlApplication a = new XmlApplication(Service);
-			a.UniqueName = System.Guid.NewGuid().ToString();
+			a.Key = System.Guid.NewGuid().ToString();
 			a.Name = name;
 			a.Description = description;
 			a.ApplicationVersion = versionInformation;

@@ -6,19 +6,26 @@ using System.DirectoryServices.Protocols;
 
 namespace AzAlternative.ActiveDirectory
 {
-    internal abstract class AdBaseObject
-    {
+	public enum ChangeType
+	{
+		Add,
+		Remove,
+		Modify
+	}
+
+	internal abstract class AdBaseObject
+	{
 		protected const string DESCRIPTION = "description";
 		protected const string OBJECTCLASS = "objectClass";
 
-		protected List<string> Changes;
+		protected Dictionary<string, ChangeType> Changes;
 		private string _UniqueName;
 		private string _Name;
 		private string _Description;
 
 		protected readonly AdService Service;
 
-		protected virtual string UNIQUENAME
+		protected virtual string KeyName
 		{
 			get { return "distinguishedName"; }
 		}
@@ -33,43 +40,35 @@ namespace AzAlternative.ActiveDirectory
 			get;
 		}
 
-        public string UniqueName
-        {
+		public string Key
+		{
 			get { return _UniqueName; }
 			set
 			{
-				if (_UniqueName == value)
-					return;
-
+				OnPropertyChanged(KeyName, _UniqueName, value);
 				_UniqueName = value;
-				FlagForChange(UNIQUENAME);
 			}
-        }
+		}
 
-        public string Name
-        {
+		public string Name
+		{
 			get { return _Name; }
 			set
 			{
-				if (_Name == value)
-					return;
+				OnPropertyChanged(NAME, _Name, value);
 				_Name = value;
-				FlagForChange(NAME);
 			}
-        }
+		}
 
-        public string Description
-        {
+		public string Description
+		{
 			get { return _Description; }
 			set
 			{
-				if (_Description == value)
-					return;
-
+				OnPropertyChanged(DESCRIPTION, _Description, value);
 				_Description = value;
-				FlagForChange(DESCRIPTION);
 			}
-        }
+		}
 
 		public string ContainerDn
 		{
@@ -78,16 +77,16 @@ namespace AzAlternative.ActiveDirectory
 		}
 
 		public AdBaseObject(AdService service)
-        {
+		{
 			Service = service;
 
-			Changes = new List<string>();
-        }
+			Changes = new Dictionary<string, ChangeType>();
+		}
 
 		public virtual void Load(SearchResultEntry entry)
 		{
 			//UniqueName = GetAttribute(entry.Attributes, UniqueName);
-			UniqueName = entry.DistinguishedName;
+			Key = entry.DistinguishedName;
 			Name = GetAttribute(entry.Attributes, NAME);
 			Description = GetAttribute(entry.Attributes, DESCRIPTION);
 		}
@@ -109,13 +108,24 @@ namespace AzAlternative.ActiveDirectory
 
 		protected void SetAttribute(DirectoryAttributeModificationCollection modifications, string name, string property, string value)
 		{
-			if (!Changes.Contains(property))
+			if (!Changes.ContainsKey(property))
 				return;
 
 			DirectoryAttributeModification m = new DirectoryAttributeModification();
 			m.Add(value);
 			m.Name = name;
-			m.Operation = DirectoryAttributeOperation.Replace;
+			switch (Changes[property])
+			{
+				case ChangeType.Add:
+					m.Operation = DirectoryAttributeOperation.Add;
+					break;
+				case ChangeType.Remove:
+					m.Operation = DirectoryAttributeOperation.Delete;
+					break;
+				case ChangeType.Modify:
+					m.Operation = DirectoryAttributeOperation.Replace;
+					break;
+			}
 
 			modifications.Add(m);
 		}
@@ -132,16 +142,16 @@ namespace AzAlternative.ActiveDirectory
 		protected virtual ModifyRequest GetUpdate()
 		{
 			string tmp = GetNewUniqueName();
-			if (UniqueName != tmp)
+			if (Key != tmp)
 			{
-				string orignalDn = UniqueName;
-				UniqueName = tmp;
+				string orignalDn = Key;
+				Key = tmp;
 
-				Service.UpdateDN(UniqueName, orignalDn);
+				Service.UpdateDN(Key, orignalDn);
 			}
 
 			ModifyRequest mr = new ModifyRequest();
-			mr.DistinguishedName = UniqueName;
+			mr.DistinguishedName = Key;
 
 			SetAttribute(mr.Modifications, DESCRIPTION, Description);
 			SetAttribute(mr.Modifications, NAME, Name);
@@ -149,12 +159,35 @@ namespace AzAlternative.ActiveDirectory
 			return mr;
 		}
 
-		protected void FlagForChange(string name)
+		protected void OnPropertyChanged(string name, string oldValue, string newValue)
 		{
-			if (Changes.Contains(name))
+			if (oldValue == newValue)
 				return;
 
-			Changes.Add(name);
+			ChangeType c;
+			if (oldValue == null)
+			{
+				c = ChangeType.Add;
+				if (Changes.ContainsKey(name) && Changes[name] != ChangeType.Add)
+					c = ChangeType.Modify;
+			}
+			else if (newValue == null)
+			{
+				c = ChangeType.Remove;
+				if (Changes.ContainsKey(name) && Changes[name] == ChangeType.Add)
+				{
+					Changes.Remove(name);
+					return;
+				}
+			}
+			else
+			{
+				c = ChangeType.Modify;
+				if (Changes.ContainsKey(name) && Changes[name] == ChangeType.Add)
+					c = ChangeType.Add;
+			}
+
+			Changes[name] = c;
 		}
 
 		protected virtual string GetNewUniqueName()
@@ -173,14 +206,15 @@ namespace AzAlternative.ActiveDirectory
 			return ar;
 		}
 
-		protected Dictionary<string, string> GetLinks(DirectoryAttribute attribute)
-		{
+		//protected Dictionary<string, string> GetLinks(DirectoryAttribute attribute)
+		//{
 
-		}
+		//}
 
-		protected string GetBaseDN()
-		{
+		//protected string GetBaseDN()
+		//{
 
-		}
-    }
+		//}
+
+	}
 }

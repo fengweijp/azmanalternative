@@ -44,8 +44,12 @@
     <Compile Include="ActiveDirectory\AdAdminManager.cs" />
     <Compile Include="ActiveDirectory\AdApplicationGroup.cs" />
     <Compile Include="ActiveDirectory\AdBaseObject.cs" />
+    <Compile Include="ActiveDirectory\AdMember.cs" />
     <Compile Include="ActiveDirectory\AdOperation.cs" />
+    <Compile Include="ActiveDirectory\AdRoleAssignments.cs" />
+    <Compile Include="ActiveDirectory\AdRoleDefinition.cs" />
     <Compile Include="ActiveDirectory\AdService.cs" />
+    <Compile Include="ActiveDirectory\AdTask.cs" />
     <Compile Include="AdminManager.cs" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>

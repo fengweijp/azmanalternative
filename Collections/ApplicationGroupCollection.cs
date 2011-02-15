@@ -5,18 +5,18 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
-    public class ApplicationGroupCollection : Collections.CollectionBase<ApplicationGroup>
-    {
-        internal AdminManager Store;
+	public class ApplicationGroupCollection : Collections.CollectionBase<ApplicationGroup>
+	{
+		internal AdminManager Store;
 
-        public override ApplicationGroup this[string name]
-        {
-            get
-            {
+		public override ApplicationGroup this[string name]
+		{
+			get
+			{
 				if (!ContainsName(name))
 					return null;
 
-                ApplicationGroup result = base[name];
+				ApplicationGroup result = base[name];
 				if (LinkedList)
 					return result;
 
@@ -25,9 +25,9 @@ namespace AzAlternative.Collections
 					result.Store = Store;
 					result.Parent = null;
 				}                
-                return result;
-            }
-        }
+				return result;
+			}
+		}
 
 		internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
 			: base(service, values, linked)
@@ -37,10 +37,10 @@ namespace AzAlternative.Collections
 			: this(service, new Dictionary<string, string>(), linked)
 		{ }
 
-        public override IEnumerator<ApplicationGroup> GetEnumerator()
-        {
+		public override IEnumerator<ApplicationGroup> GetEnumerator()
+		{
 			return Service.GetGroups(Guids.Values, Store, Application);
-        }
+		}
 
 		internal override void CheckName(ApplicationGroup entry)
 		{

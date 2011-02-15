@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AzAlternative
 {
-    /// <summary>
-    /// An operation
-    /// </summary>
+	/// <summary>
+	/// An operation
+	/// </summary>
 	public class Operation : ContainerBase, Interfaces.IOperation
 	{
 		internal readonly Interfaces.IOperation Instance;
@@ -21,56 +21,56 @@ namespace AzAlternative
 			internal set { BaseApplication = value; }
 		}
 
-        /// <summary>
-        /// Gets the operation identifier
-        /// </summary>
-		public override string UniqueName
+		/// <summary>
+		/// Gets the operation identifier
+		/// </summary>
+		public override string Key
 		{
-			get { return Instance.UniqueName; }
+			get { return Instance.Key; }
 		}
 
-        /// <summary>
-        /// Gets or sets the operation name
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the operation name
+		/// </summary>
 		public override string Name
 		{
 			get { return Instance.Name; }
 			set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentNullException("Name");
+			{
+				if (string.IsNullOrEmpty(value))
+					throw new ArgumentNullException("Name");
 
-                Instance.Name = value; 
-            }
+				Instance.Name = value; 
+			}
 		}
 
-        /// <summary>
-        /// Gets or sets the operation description
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the operation description
+		/// </summary>
 		public string Description
 		{
 			get { return Instance.Description; }
 			set { Instance.Description = value; }
 		}
 
-        /// <summary>
-        /// Gets or sets the operation ID. Must be unique in the application.
-        /// </summary>
+		/// <summary>
+		/// Gets or sets the operation ID. Must be unique in the application.
+		/// </summary>
 		public int OperationId
 		{
 			get { return Instance.OperationId; }
 			set
-            {
-                if (value < 1)
-                    throw new ArgumentOutOfRangeException("OperationId");
-                Instance.OperationId = value; 
-            }
+			{
+				if (value < 1)
+					throw new ArgumentOutOfRangeException("OperationId");
+				Instance.OperationId = value; 
+			}
 		}
 
-        internal Operation(Interfaces.IOperation operation)
-        {
-            Instance = operation;
-        }
+		internal Operation(Interfaces.IOperation operation)
+		{
+			Instance = operation;
+		}
 
 		internal Operation(Interfaces.IOperation operation, Application parent)
 			: this(operation)

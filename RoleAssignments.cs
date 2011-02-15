@@ -28,9 +28,9 @@ namespace AzAlternative
 		/// <summary>
 		/// Gets the role identifier
 		/// </summary>
-		public override string UniqueName
+		public override string Key
 		{
-			get { return Instance.UniqueName; }
+			get { return Instance.Key; }
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace AzAlternative
 		public void AddGroup(ApplicationGroup group)
 		{
 			CheckObjectIsValid(group);
-			if (Groups.ContainsKey(group.UniqueName))
+			if (Groups.ContainsKey(group.Key))
 				return;
 
 			Instance.AddGroup(group);
@@ -113,11 +113,11 @@ namespace AzAlternative
 		public void RemoveGroup(ApplicationGroup group)
 		{
 			CheckObjectIsValid(group);
-			if (!Groups.ContainsKey(group.UniqueName))
+			if (!Groups.ContainsKey(group.Key))
 				return;
 
 			Instance.RemoveGroup(group);
-			Groups.RemoveValue(group.UniqueName);
+			Groups.RemoveValue(group.Key);
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace AzAlternative
 
 			if (g.IsGlobalGroup)
 			{
-				if (g.Store.UniqueName != this.Parent.Store.UniqueName)
+				if (g.Store.Key != this.Parent.Store.Key)
 					throw new AzException("The group is not defined in the current store.");
 				return true;
 			}
