@@ -10,7 +10,8 @@ namespace AzAlternative.ActiveDirectory
 	{
 		private const string GROUPTYPE = "groupType";
 		private const string LDAPQUERY = "msDS-AzLDAPQuery";
-		private const string NAME2 = "name";
+		//private const string NAME2 = "name";
+		private const string SAMACCOUNTNAME = "sAMAccountName";
 		private const string MEMBEROF = "msDS-MembersForAzRoleBL";
 		private const string NONMEMBEROF = "msDS-NonMembersBL";
 		private const string MEMBERS = "member";
@@ -92,10 +93,11 @@ namespace AzAlternative.ActiveDirectory
 			throw new NotImplementedException();
 		}
 
-		protected override System.DirectoryServices.Protocols.AddRequest CreateNew()
+		public override AddRequest CreateNew()
 		{
 			AddRequest ar = base.CreateNew();
 
+			ar.Attributes.Add(CreateAttribute(SAMACCOUNTNAME, "$" + Guid.NewGuid()));
 			int value = 0;
 			switch (GroupType)
 			{
@@ -109,18 +111,16 @@ namespace AzAlternative.ActiveDirectory
 					throw new AzException("Unknown group type.");
 			}
 			ar.Attributes.Add(CreateAttribute(GROUPTYPE, value.ToString()));
-			ar.Attributes.Add(CreateAttribute(NAME2, Name));
 			if (GroupType == AzAlternative.GroupType.LdapQuery)
 				ar.Attributes.Add(CreateAttribute(LDAPQUERY, LdapQuery));
 
 			return ar;
 		}
 
-		protected override ModifyRequest GetUpdate()
+		public override ModifyRequest GetUpdate()
 		{
 			ModifyRequest mr = base.GetUpdate();
 
-			SetAttribute(mr.Modifications, NAME2, NAME, Name);
 			SetAttribute(mr.Modifications, LDAPQUERY, LdapQuery);
 
 			Changes.Clear();

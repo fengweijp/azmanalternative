@@ -17,6 +17,7 @@ namespace AzAlternative.ActiveDirectory
 	{
 		protected const string DESCRIPTION = "description";
 		protected const string OBJECTCLASS = "objectClass";
+		protected const string CONTAINER = "container";
 
 		protected Dictionary<string, ChangeType> Changes;
 		private string _UniqueName;
@@ -89,6 +90,7 @@ namespace AzAlternative.ActiveDirectory
 			Key = entry.DistinguishedName;
 			Name = GetAttribute(entry.Attributes, NAME);
 			Description = GetAttribute(entry.Attributes, DESCRIPTION);
+			ContainerDn = Key.Substring(4 + Name.Length);
 		}
 
 		protected string GetAttribute(SearchResultAttributeCollection attributes, string name)
@@ -139,7 +141,7 @@ namespace AzAlternative.ActiveDirectory
 			return result;
 		}
 
-		protected virtual ModifyRequest GetUpdate()
+		public virtual ModifyRequest GetUpdate()
 		{
 			string tmp = GetNewUniqueName();
 			if (Key != tmp)
@@ -154,7 +156,7 @@ namespace AzAlternative.ActiveDirectory
 			mr.DistinguishedName = Key;
 
 			SetAttribute(mr.Modifications, DESCRIPTION, Description);
-			SetAttribute(mr.Modifications, NAME, Name);
+//			SetAttribute(mr.Modifications, NAME, Name);
 
 			return mr;
 		}
@@ -195,15 +197,28 @@ namespace AzAlternative.ActiveDirectory
 			return string.Format("CN={0},{1}", Name, ContainerDn);
 		}
 
-		protected virtual AddRequest CreateNew()
+		public virtual AddRequest CreateNew()
 		{
 			AddRequest ar = new AddRequest();
 			ar.DistinguishedName = GetNewUniqueName();
-			ar.Attributes.Add(CreateAttribute(NAME, Name));
+			//ar.Attributes.Add(CreateAttribute(NAME, Name));
 			ar.Attributes.Add(CreateAttribute(DESCRIPTION, Description));
 			ar.Attributes.Add(CreateAttribute(OBJECTCLASS, ObjectClass));
 
 			return ar;
+		}
+
+		public virtual AddRequest[] CreateChildEntries()
+		{
+			throw new NotSupportedException();
+		}
+
+		public virtual void Delete()
+		{
+			DeleteRequest dr = new DeleteRequest();
+			dr.DistinguishedName = Key;
+
+			Service.Save(dr);
 		}
 
 		//protected Dictionary<string, string> GetLinks(DirectoryAttribute attribute)

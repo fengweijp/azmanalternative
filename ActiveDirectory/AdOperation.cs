@@ -37,7 +37,7 @@ namespace AzAlternative.ActiveDirectory
 			OperationId = int.Parse(GetAttribute(entry.Attributes, OPERATIONID));
 		}
 
-		protected override ModifyRequest GetUpdate()
+		public override ModifyRequest GetUpdate()
 		{
 			ModifyRequest mr = base.GetUpdate();
 			SetAttribute(mr.Modifications, OPERATIONID, OperationId.ToString());
@@ -46,7 +46,7 @@ namespace AzAlternative.ActiveDirectory
 			return mr;
 		}
 
-		protected override AddRequest CreateNew()
+		public override AddRequest CreateNew()
 		{
 			AddRequest ar = base.CreateNew();
 
