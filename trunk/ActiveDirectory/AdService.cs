@@ -120,7 +120,10 @@ namespace AzAlternative.ActiveDirectory
 
 		public override ApplicationGroup GetGroup(string uniqueName)
 		{
-			throw new NotImplementedException();
+			AdApplicationGroup ag = new AdApplicationGroup(this);
+			ag.Load(Load(uniqueName));
+
+			return new ApplicationGroup(ag);
 		}
 
 		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application)
@@ -130,7 +133,10 @@ namespace AzAlternative.ActiveDirectory
 
 		public override Operation GetOperation(string uniqueName)
 		{
-			throw new NotImplementedException();
+			AdOperation o = new AdOperation(this);
+			o.Load(Load(uniqueName));
+
+			return new Operation(o);
 		}
 
 		public override IEnumerator<Operation> GetOperations(IEnumerable<string> uniqueNames, Application application)
@@ -140,7 +146,10 @@ namespace AzAlternative.ActiveDirectory
 
 		public override Task GetTask(string uniqueName)
 		{
-			throw new NotImplementedException();
+			AdTask t = new AdTask(this);
+			t.Load(Load(uniqueName));
+
+			return new Task(t);
 		}
 
 		public override IEnumerator<Task> GetTasks(IEnumerable<string> uniqueNames, Application application)
@@ -150,7 +159,10 @@ namespace AzAlternative.ActiveDirectory
 
 		public override RoleAssignments GetRoleAssignments(string uniqueName)
 		{
-			throw new NotImplementedException();
+			AdRoleAssignments r = new AdRoleAssignments(this);
+			r.Load(Load(uniqueName));
+
+			return new RoleAssignments(r);
 		}
 
 		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<string> uniqueNames, Application application)
@@ -160,7 +172,10 @@ namespace AzAlternative.ActiveDirectory
 
 		public override RoleDefinition GetRoleDefinition(string uniqueName)
 		{
-			throw new NotImplementedException();
+			AdRoleDefinition r = new AdRoleDefinition(this);
+			r.Load(Load(uniqueName));
+
+			return new RoleDefinition(r);
 		}
 
 		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application)

@@ -10,6 +10,7 @@ namespace AzAlternative.ActiveDirectory
 	{
 		private const string MAJORVERSION = "msDS-AzMajorVersion";
 		private const string MINORVERSION = "msDS-AzMinorVersion";
+		protected const string GROUPSCONTAINER = "AzGroupObjectContainer-";
 
 		public int MajorVersion
 		{
@@ -50,32 +51,57 @@ namespace AzAlternative.ActiveDirectory
 
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
 		{
-			throw new NotImplementedException();
+			AdApplicationGroup ag = new AdApplicationGroup(Service);
+			ag.Name = name;
+			ag.Description = description;
+			ag.GroupType = groupType;
+			ag.ContainerDn = GROUPSCONTAINER + this.Name + "," + this.Key;
+			ag.IsGlobalGroup = true;
+
+			ag.Groups = new Collections.ApplicationGroupCollection(Service, true);
+
+			Service.Save(ag.CreateNew());
+
+			return new ApplicationGroup(ag);
 		}
 
 		public void DeleteGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+			((AdApplicationGroup)group.Instance).Delete();
 		}
 
 		public void UpdateGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+			AdApplicationGroup ag = (AdApplicationGroup)group.Instance;
+			Service.Save(ag.GetUpdate());
 		}
 
 		public Application CreateApplication(string name, string description, string versionInformation)
 		{
-			throw new NotImplementedException();
+			AdApplication a = new AdApplication(Service);
+			a.Name = name;
+			a.Description = description;
+			a.ApplicationVersion = versionInformation;
+
+			a.Groups = new Collections.ApplicationGroupCollection(Service, false);
+			a.Operations = new Collections.OperationCollection(Service, false);
+			a.RoleAssignments = new Collections.RoleAssignmentsCollection(Service);
+			a.Roles = new Collections.RoleDefinitionCollection(Service, false);
+
+			Service.Save(a.CreateNew());
+
+			return new Application(a);
 		}
 
 		public void DeleteApplication(Application application)
 		{
-			throw new NotImplementedException();
+			((AdApplication)application.Instance).Delete();
 		}
 
 		public void UpdateApplication(Application application)
 		{
-			throw new NotImplementedException();
+			AdApplication a = (AdApplication)application.Instance;
+			Service.Save(a.GetUpdate());
 		}
 
 		public void Update()
@@ -83,16 +109,26 @@ namespace AzAlternative.ActiveDirectory
 			Service.Save(GetUpdate());
 		}
 
-		protected override System.DirectoryServices.Protocols.AddRequest CreateNew()
+		public override System.DirectoryServices.Protocols.AddRequest CreateNew()
 		{
 			AddRequest ar = base.CreateNew();
 			
-			ar.Attributes.Add(CreateAttribute("name", Name));
-
 			return ar;
 		}
 
-		protected override ModifyRequest GetUpdate()
+		public override AddRequest[] CreateChildEntries()
+		{
+			List<AddRequest> result = new List<AddRequest>();
+
+			AddRequest a = new AddRequest();
+			a.DistinguishedName = string.Format("cn={2}{0},{1}", this.Name, this.Key, GROUPSCONTAINER);
+			a.Attributes.Add(new DirectoryAttribute(OBJECTCLASS, CONTAINER));
+			result.Add(a);
+
+			return result.ToArray();
+		}
+
+		public override ModifyRequest GetUpdate()
 		{
 			return base.GetUpdate();
 		}
