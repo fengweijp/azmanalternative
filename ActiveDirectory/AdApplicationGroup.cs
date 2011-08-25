@@ -16,13 +16,14 @@ namespace AzAlternative.ActiveDirectory
 		private const string NONMEMBEROF = "msDS-NonMembersBL";
 		private const string MEMBERS = "member";
 		private const string NONMEMBERS = "msDS-NonMembers";
+		private const string CLASSNAME = "group";
 
 		private string _LdapQuery;
 		private GroupType _GroupType;
 
 		protected override string ObjectClass
 		{
-			get { return "group"; }
+			get { return CLASSNAME; }
 		}
 
 		public GroupType GroupType
@@ -129,6 +130,8 @@ namespace AzAlternative.ActiveDirectory
 
 		public override void Load(SearchResultEntry entry)
 		{
+			ChangeTrackingDisabled = true;
+
 			base.Load(entry);
 
 			switch (GetAttribute(entry.Attributes,GROUPTYPE))
@@ -143,8 +146,23 @@ namespace AzAlternative.ActiveDirectory
 					throw new AzException("Unknown or unsupported group type");
 			}
 
-			Members = Service.GetMembers(entry.Attributes[MEMBERS]);
-			Exclusions = Service.GetExclusions(entry.Attributes[NONMEMBERS]);
+			Members = new Collections.MemberCollection(Service, Key);
+			Exclusions = new Collections.MemberCollection(Service, Key, true);
+			Groups = new Collections.ApplicationGroupCollection(Service, true);
+
+			ChangeTrackingDisabled = false;
+		}
+
+		public static Collections.ApplicationGroupCollection GetCollection(AdService service, string key, bool linked)
+		{
+			var results = service.Load(key, "(ObjectClass=" + CLASSNAME + ")");
+			var q = from i in results.Cast<SearchResultEntry>() select i;
+			return new Collections.ApplicationGroupCollection(service, q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
+		}
+
+		public static DirectoryAttribute GetMembers(SearchResultEntry entry, bool isExclusions)
+		{
+			return entry.Attributes[isExclusions ? NONMEMBERS : MEMBERS];
 		}
 	}
 }

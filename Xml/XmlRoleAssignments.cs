@@ -111,7 +111,7 @@ namespace AzAlternative.Xml
 			_DefinitionId = element[DEFINITION].InnerXml;
 
 			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP), true);
-			Members = Service.GetMembers(element);
+			Members = new Collections.MemberCollection(Service, Key);
 		}
 
 		public static Dictionary<string, string> GetChildren(XmlElement element)

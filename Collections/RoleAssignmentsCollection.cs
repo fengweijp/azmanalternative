@@ -5,8 +5,15 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
+	/// <summary>
+	/// A collection of role assignments
+	/// </summary>
 	public class RoleAssignmentsCollection : CollectionBase<RoleAssignments>
 	{
+		protected override string ErrorObjectName
+		{
+			get { return "role assignment"; }
+		}
 
 		internal RoleAssignmentsCollection(ServiceBase service, Dictionary<string, string> values)
 			: base(service, values)
@@ -19,16 +26,6 @@ namespace AzAlternative.Collections
 		public override IEnumerator<RoleAssignments> GetEnumerator()
 		{
 			return Service.GetRoleAssignmentsCollection(Guids.Values, Application);
-		}
-
-		internal override void CheckName(RoleAssignments entry)
-		{
-			CheckName(entry, "role assignment");
-		}
-
-		internal override void CheckName(string name)
-		{
-			CheckName(name, "role assignment");
 		}
 
 		internal string MakeNameUnique(string name)

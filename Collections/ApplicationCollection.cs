@@ -5,7 +5,9 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
-
+	/// <summary>
+	/// A collection of applications
+	/// </summary>
 	public class ApplicationCollection : CollectionBase<Application>
 	{
 		internal AdminManager AdminManager;
@@ -25,6 +27,11 @@ namespace AzAlternative.Collections
 			}
 		}
 
+		protected override string ErrorObjectName
+		{
+			get { return "application"; }
+		}
+
 		internal ApplicationCollection(ServiceBase service, Dictionary<string, string> values)
 			: base(service, values)
 		{ }
@@ -37,16 +44,6 @@ namespace AzAlternative.Collections
 		public override IEnumerator<Application> GetEnumerator()
 		{
 			return Service.GetApplications(Guids.Values, AdminManager);
-		}
-
-		internal override void CheckName(Application entry)
-		{
-			CheckName(entry, "application");
-		}
-
-		internal override void CheckName(string name)
-		{
-			CheckName(name, "application");
 		}
 
 		protected override ContainerBase LinkedItemLoader(string name)

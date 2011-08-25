@@ -50,6 +50,7 @@
     <Compile Include="ActiveDirectory\AdRoleAssignments.cs" />
     <Compile Include="ActiveDirectory\AdRoleDefinition.cs" />
     <Compile Include="ActiveDirectory\AdService.cs" />
+    <Compile Include="ActiveDirectory\AdServiceMain.cs" />
     <Compile Include="ActiveDirectory\AdTask.cs" />
     <Compile Include="AdminManager.cs" />
     <Compile Include="Application.cs">
@@ -87,6 +88,7 @@
     <Compile Include="Interfaces\IRoleAssignment.cs" />
     <Compile Include="Interfaces\IRoleDefinition.cs" />
     <Compile Include="Interfaces\IScope.cs" />
+    <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Interfaces\ITask.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -33,6 +33,27 @@ namespace AzAlternative.ActiveDirectory
 			return conn;
 		}
 
+		private SearchResultEntry Load(string uniqueName, LdapConnection conn)
+		{
+			try
+			{
+				SearchRequest sr = new SearchRequest();
+				sr.DistinguishedName = uniqueName;
+				sr.Scope = System.DirectoryServices.Protocols.SearchScope.Base;
+				sr.Filter = "(ObjectClass=*)";
+
+				SearchResponse resp = (SearchResponse)conn.SendRequest(sr);
+				if (resp.Entries.Count != 1)
+					throw new AzException("The requested object could not be found.");
+
+				return resp.Entries[0];
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+		
 		public SearchResultEntry LoadRoot()
 		{
 			return Load(_BaseDN);
@@ -40,22 +61,28 @@ namespace AzAlternative.ActiveDirectory
 
 		public SearchResultEntry Load(string uniqueName)
 		{
+			using (LdapConnection conn = GetConnection())
+			{
+				return Load(uniqueName, conn);
+			}
+		}
+
+		public SearchResultEntryCollection Load(string container, string filter)
+		{
 			LdapConnection conn = null;
 			try
 			{
 				conn = GetConnection();
 
 				SearchRequest sr = new SearchRequest();
-				sr.DistinguishedName = uniqueName;
-				sr.Scope = System.DirectoryServices.Protocols.SearchScope.Base;
-				sr.Filter = "(ObjectClass=*)";
+				sr.DistinguishedName = container;
+				sr.Scope = System.DirectoryServices.Protocols.SearchScope.OneLevel;
+				sr.Filter = filter;
 
 				conn.Bind();
 				SearchResponse resp = (SearchResponse)conn.SendRequest(sr);
-				if (resp.Entries.Count != 1)
-					throw new AzException("The requested object could not be found.");
 
-				return resp.Entries[0];
+				return resp.Entries;
 			}
 			catch (Exception)
 			{
@@ -110,12 +137,24 @@ namespace AzAlternative.ActiveDirectory
 
 		public override Application GetApplication(string uniqueName)
 		{
-			throw new NotImplementedException();
+			AdApplication a = new AdApplication(this);
+			a.Load(Load(uniqueName));
+
+			return new Application(a);
 		}
 
 		public override IEnumerator<Application> GetApplications(IEnumerable<string> uniqueNames, AdminManager store)
 		{
-			throw new NotImplementedException();
+			using (LdapConnection conn = GetConnection())
+			{
+				foreach (var item in uniqueNames)
+				{
+					AdApplication a = new AdApplication(this);
+					a.Load(Load(item, conn));
+
+					yield return new Application(a, store);
+				}
+			}
 		}
 
 		public override ApplicationGroup GetGroup(string uniqueName)
@@ -128,7 +167,22 @@ namespace AzAlternative.ActiveDirectory
 
 		public override IEnumerator<ApplicationGroup> GetGroups(IEnumerable<string> uniqueNames, AdminManager store, Application application)
 		{
-			throw new NotImplementedException();
+			using (LdapConnection conn = GetConnection())
+			{
+				foreach (var item in uniqueNames)
+				{
+					AdApplicationGroup g = new AdApplicationGroup(this);
+					g.Load(Load(item, conn));
+					ApplicationGroup result = new ApplicationGroup(g);
+
+					if (result.IsGlobalGroup)
+						result.Store = store;
+					else
+						result.Parent = application;
+
+					yield return result;
+				}
+			}
 		}
 
 		public override Operation GetOperation(string uniqueName)
@@ -141,7 +195,16 @@ namespace AzAlternative.ActiveDirectory
 
 		public override IEnumerator<Operation> GetOperations(IEnumerable<string> uniqueNames, Application application)
 		{
-			throw new NotImplementedException();
+			using (LdapConnection conn = GetConnection())
+			{
+				foreach (var item in uniqueNames)
+				{
+					AdOperation a = new AdOperation(this);
+					a.Load(Load(item, conn));
+
+					yield return new Operation(a, application);
+				}
+			}
 		}
 
 		public override Task GetTask(string uniqueName)
@@ -154,7 +217,16 @@ namespace AzAlternative.ActiveDirectory
 
 		public override IEnumerator<Task> GetTasks(IEnumerable<string> uniqueNames, Application application)
 		{
-			throw new NotImplementedException();
+			using (LdapConnection conn = GetConnection())
+			{
+				foreach (var item in uniqueNames)
+				{
+					AdTask a = new AdTask(this);
+					a.Load(Load(item, conn));
+
+					yield return new Task(a, application);
+				}
+			}
 		}
 
 		public override RoleAssignments GetRoleAssignments(string uniqueName)
@@ -167,7 +239,16 @@ namespace AzAlternative.ActiveDirectory
 
 		public override IEnumerator<RoleAssignments> GetRoleAssignmentsCollection(IEnumerable<string> uniqueNames, Application application)
 		{
-			throw new NotImplementedException();
+			using (LdapConnection conn = GetConnection())
+			{
+				foreach (var item in uniqueNames)
+				{
+					AdRoleAssignments a = new AdRoleAssignments(this);
+					a.Load(Load(item, conn));
+
+					yield return new RoleAssignments(a, application);
+				}
+			}
 		}
 
 		public override RoleDefinition GetRoleDefinition(string uniqueName)
@@ -180,17 +261,28 @@ namespace AzAlternative.ActiveDirectory
 
 		public override IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application)
 		{
-			throw new NotImplementedException();
+			using (LdapConnection conn = GetConnection())
+			{
+				foreach (var item in uniqueNames)
+				{
+					AdRoleDefinition a = new AdRoleDefinition(this);
+					a.Load(Load(item, conn));
+
+					yield return new RoleDefinition(a, application);
+				}
+			}
 		}
 
-		public Collections.MemberCollection GetMembers(DirectoryAttribute members)
+		public override IEnumerator<Member> GetMembers(string uniqueName, bool isExclusions)
 		{
-			throw new NotImplementedException();
-		}
+			SearchResultEntry result = Load(uniqueName);
 
-		public Collections.MemberCollection GetExclusions(DirectoryAttribute nonMembers)
-		{
-			throw new NotImplementedException();
+			foreach (var item in AdApplicationGroup.GetMembers(result, isExclusions))
+			{
+				AdMember a = new AdMember(this);
+
+				yield return new Member(a);
+			}
 		}
 	}
 }

@@ -205,31 +205,31 @@ namespace AzAlternative.Xml
 
 		}
 
-		public Collections.MemberCollection GetMembers(XmlElement parent)
-		{
-			List<Member> result = new List<Member>();
-			foreach (XmlNode item in parent.SelectNodes("Member"))
-			{
-				XmlMember m = new XmlMember(this);
-				m.Load((XmlElement)item);
-				result.Add(new Member(m));
-			}
+		//public Collections.MemberCollection GetMembers(XmlElement parent)
+		//{
+		//    List<Member> result = new List<Member>();
+		//    foreach (XmlNode item in parent.SelectNodes("Member"))
+		//    {
+		//        XmlMember m = new XmlMember(this);
+		//        m.Load((XmlElement)item);
+		//        result.Add(new Member(m));
+		//    }
 
-			return new Collections.MemberCollection(result);
-		}
+		//    return new Collections.MemberCollection(result);
+		//}
 
-		public Collections.MemberCollection GetExclusions(XmlElement parent)
-		{
-			List<Member> result = new List<Member>();
-			foreach (XmlNode item in parent.SelectNodes("NonMember"))
-			{
-				XmlMember m = new XmlMember(this);
-				m.Load((XmlElement)item);
-				result.Add(new Member(m));
-			}
+		//public Collections.MemberCollection GetExclusions(XmlElement parent)
+		//{
+		//    List<Member> result = new List<Member>();
+		//    foreach (XmlNode item in parent.SelectNodes("NonMember"))
+		//    {
+		//        XmlMember m = new XmlMember(this);
+		//        m.Load((XmlElement)item);
+		//        result.Add(new Member(m));
+		//    }
 
-			return new Collections.MemberCollection(result, true);
-		}
+		//    return new Collections.MemberCollection(result, true);
+		//}
 
 		private IEnumerable<XmlElement> FindElements(IEnumerable<string> uniqueNames)
 		{
@@ -238,6 +238,19 @@ namespace AzAlternative.Xml
 			foreach (var item in uniqueNames)
 			{
 				yield return (XmlElement)root.SelectSingleNode(string.Format("//*[@Guid='{0}']", item));
+			}
+		}
+
+		public override IEnumerator<Member> GetMembers(string uniqueName, bool isExclusions)
+		{
+			XmlElement parent = Load(uniqueName);
+
+			foreach (XmlNode item in XmlMember.GetNodes(parent, isExclusions))
+			{
+				XmlMember m = new XmlMember(this);
+				m.Load((XmlElement)item);
+
+				yield return new Member(m);
 			}
 		}
 	}
