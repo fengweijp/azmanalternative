@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
+	/// <summary>
+	/// A collection of groups
+	/// </summary>
 	public class ApplicationGroupCollection : Collections.CollectionBase<ApplicationGroup>
 	{
 		internal AdminManager Store;
@@ -17,7 +20,7 @@ namespace AzAlternative.Collections
 					return null;
 
 				ApplicationGroup result = base[name];
-				if (LinkedList)
+				if (IsChildList)
 					return result;
 
 				if (result.IsGlobalGroup)
@@ -29,27 +32,33 @@ namespace AzAlternative.Collections
 			}
 		}
 
-		internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
-			: base(service, values, linked)
+		protected override string ErrorObjectName
+		{
+			get { return "group"; }
+		}
+
+		/// <summary>
+		/// Initialises the group collection
+		/// </summary>
+		/// <param name="service">The service factory object</param>
+		/// <param name="values">A list of names & keys</param>
+		/// <param name="isChildList">Indicates whether this collection can load objects from other collections</param>
+		internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
+			: base(service, values, isChildList)
 		{ }
 
-		internal ApplicationGroupCollection(ServiceBase service, bool linked)
-			: this(service, new Dictionary<string, string>(), linked)
+		/// <summary>
+		/// Initialises the group collection
+		/// </summary>
+		/// <param name="service">The service factory object</param>
+		/// <param name="isChildList">Indicates whether this collection can load objects from other collections</param>
+		internal ApplicationGroupCollection(ServiceBase service, bool isChildList)
+			: this(service, new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<ApplicationGroup> GetEnumerator()
 		{
 			return Service.GetGroups(Guids.Values, Store, Application);
-		}
-
-		internal override void CheckName(ApplicationGroup entry)
-		{
-			CheckName(entry, "group");
-		}
-
-		internal override void CheckName(string name)
-		{
-			CheckName(name, "group");
 		}
 
 		protected override ContainerBase LinkedItemLoader(string name)

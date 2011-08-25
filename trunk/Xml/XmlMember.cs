@@ -80,5 +80,10 @@ namespace AzAlternative.Xml
 			parent.RemoveChild(e);
 			Service.Save(parent);
 		}
+
+		public static XmlNodeList GetNodes(XmlElement parent, bool isExclusions)
+		{
+			return parent.SelectNodes(isExclusions ? NONMEMBER : MEMBER);
+		}
 	}
 }

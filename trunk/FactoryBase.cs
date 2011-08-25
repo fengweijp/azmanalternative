@@ -38,5 +38,7 @@ namespace AzAlternative
 
 		public abstract RoleDefinition GetRoleDefinition(string uniqueName);
 		public abstract IEnumerator<RoleDefinition> GetRoleDefinitions(IEnumerable<string> uniqueNames, Application application);
+
+		public abstract IEnumerator<Member> GetMembers(string uniqueName, bool isExclusions);
 	}
 }

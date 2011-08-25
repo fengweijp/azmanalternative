@@ -75,8 +75,8 @@ namespace AzAlternative.Xml
 			}
 
 			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP), true);
-			Exclusions = Service.GetExclusions(element);
-			Members = Service.GetMembers(element);
+			Exclusions = new Collections.MemberCollection(Service, Key, true);
+			Members = new Collections.MemberCollection(Service, Key);
 		}
 
 		public void RemoveMember(Member member)

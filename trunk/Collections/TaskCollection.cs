@@ -5,30 +5,27 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
+	/// <summary>
+	/// A collection of tasks
+	/// </summary>
 	public class TaskCollection : CollectionBase<Task>
 	{
+		protected override string ErrorObjectName
+		{
+			get { return "task"; }
+		}
 
-		internal TaskCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
-			: base(service, values, linked)
+		internal TaskCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
+			: base(service, values, isChildList)
 		{ }
 
-		internal TaskCollection(ServiceBase service, bool linked)
-			: this(service, new Dictionary<string, string>(), linked)
+		internal TaskCollection(ServiceBase service, bool isChildList)
+			: this(service, new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<Task> GetEnumerator()
 		{
 			return Service.GetTasks(Guids.Values, Application);
-		}
-
-		internal override void CheckName(Task entry)
-		{
-			CheckName(entry, "task");
-		}
-
-		internal override void CheckName(string name)
-		{
-			CheckName(name, "task");
 		}
 
 		protected override ContainerBase LinkedItemLoader(string name)

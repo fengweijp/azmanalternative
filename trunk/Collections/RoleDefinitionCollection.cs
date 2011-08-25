@@ -5,30 +5,26 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
+	/// <summary>
+	/// A collection of role definitions
+	/// </summary>
 	public class RoleDefinitionCollection : CollectionBase<RoleDefinition>
 	{
-
-		internal RoleDefinitionCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
-			: base(service, values, linked)
+		protected override string ErrorObjectName
+		{
+			get { return "role"; }
+		}
+		internal RoleDefinitionCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
+			: base(service, values, isChildList)
 		{ }
 
-		internal RoleDefinitionCollection(ServiceBase service, bool linked)
-			: this(service, new Dictionary<string, string>(), linked)
+		internal RoleDefinitionCollection(ServiceBase service, bool isChildList)
+			: this(service, new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<RoleDefinition> GetEnumerator()
 		{
 			return Service.GetRoleDefinitions(Guids.Values, Application);
-		}
-
-		internal override void CheckName(RoleDefinition entry)
-		{
-			CheckName(entry, "role");
-		}
-
-		internal override void CheckName(string name)
-		{
-			CheckName(name, "role");
 		}
 
 		protected override ContainerBase LinkedItemLoader(string name)

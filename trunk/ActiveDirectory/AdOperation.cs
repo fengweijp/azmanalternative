@@ -9,6 +9,8 @@ namespace AzAlternative.ActiveDirectory
 	internal class AdOperation : AdBaseObject, Interfaces.IOperation
 	{
 		private const string OPERATIONID = "msDS-AzOperationID";
+		private const string CLASSNAME = "msDS-AzOperation";
+
 		private int _OperationId;
 
 		public int OperationId
@@ -23,7 +25,7 @@ namespace AzAlternative.ActiveDirectory
 
 		protected override string ObjectClass
 		{
-			get { return "msDS-AzOperation"; }
+			get { return CLASSNAME; }
 		}
 
 		public AdOperation(AdService service)
@@ -32,9 +34,12 @@ namespace AzAlternative.ActiveDirectory
 
 		public override void Load(SearchResultEntry entry)
 		{
-			base.Load(entry);
+			ChangeTrackingDisabled = true;
 
+			base.Load(entry);
 			OperationId = int.Parse(GetAttribute(entry.Attributes, OPERATIONID));
+			
+			ChangeTrackingDisabled = false;
 		}
 
 		public override ModifyRequest GetUpdate()
@@ -53,6 +58,13 @@ namespace AzAlternative.ActiveDirectory
 			ar.Attributes.Add(CreateAttribute(OPERATIONID, OperationId.ToString()));
 
 			return ar;
+		}
+
+		public static Collections.OperationCollection GetCollection(AdService service, string key, bool linked)
+		{
+			var results = service.Load(key, "(ObjectClass=" + CLASSNAME + ")");
+			var q = from i in results.Cast<SearchResultEntry>() select i;
+			return new Collections.OperationCollection(service, q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
 		}
 	}
 }

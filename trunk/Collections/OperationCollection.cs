@@ -5,30 +5,27 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
+	/// <summary>
+	/// A collection of coperations
+	/// </summary>
 	public class OperationCollection : CollectionBase<Operation>
 	{
+		protected override string ErrorObjectName
+		{
+			get { return "operation"; }
+		}
 
-		internal OperationCollection(ServiceBase service, Dictionary<string, string> values, bool linked)
-			: base(service, values, linked)
+		internal OperationCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
+			: base(service, values, isChildList)
 		{ }
 
-		internal OperationCollection(ServiceBase service, bool linked)
-			: this(service, new Dictionary<string, string>(), linked)
+		internal OperationCollection(ServiceBase service, bool isChildList)
+			: this(service, new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<Operation> GetEnumerator()
 		{
 			return Service.GetOperations(Guids.Values, Application);
-		}
-
-		internal override void CheckName(Operation entry)
-		{
-			CheckName(entry, "operation");
-		}
-
-		internal override void CheckName(string name)
-		{
-			CheckName(name, "operation");
 		}
 
 		internal void CheckId(int id)

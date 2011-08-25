@@ -14,12 +14,13 @@ namespace AzAlternative.ActiveDirectory
 		private const string TASKSCONTAINER = "AzTaskObjectConatiner-";
 		private const string APPNAME = "msDS-AzApplicationName";
 		private const string VERSION = "msDS-AzApplicationVersion";
+		private const string CLASSNAME = "msDS-AzApplication";
 
 		private string _ApplicationVersion;
 
 		protected override string ObjectClass
 		{
-			get { throw new NotImplementedException(); }
+			get { return CLASSNAME; }
 		}
 
 		protected override string NAME
@@ -109,32 +110,47 @@ namespace AzAlternative.ActiveDirectory
 
 		public RoleDefinition CreateRole(string name, string description)
 		{
-			throw new NotImplementedException();
+			AdRoleDefinition role = new AdRoleDefinition(Service);
+			role.Name = name;
+			role.Description = description;
+
+			Service.Save(role.CreateNew());
+
+			return new RoleDefinition(role);
 		}
 
 		public void DeleteRole(RoleDefinition role)
 		{
-			throw new NotImplementedException();
+			((AdRoleDefinition)role.Instance).Delete();
 		}
 
 		public void UpdateRole(RoleDefinition role)
 		{
-			throw new NotImplementedException();
+			AdRoleDefinition introle = (AdRoleDefinition)role.Instance;
+			Service.Save(introle.GetUpdate());
 		}
 
 		public Operation CreateOperation(string name, string description, int operationId)
 		{
-			throw new NotImplementedException();
+			AdOperation op = new AdOperation(Service);
+			op.Name = name;
+			op.Description = description;
+			op.OperationId = operationId;
+
+			Service.Save(op.CreateNew());
+
+			return new Operation(op);
 		}
 
 		public void DeleteOperation(Operation operation)
 		{
-			throw new NotImplementedException();
+			((AdOperation)operation.Instance).Delete();
 		}
 
 		public void UpdateOperation(Operation operation)
 		{
-			throw new NotImplementedException();
+			AdOperation op = (AdOperation)operation.Instance;
+			Service.Save(op.GetUpdate());
 		}
 
 		public Task CreateTask(string name, string description)
@@ -181,11 +197,21 @@ namespace AzAlternative.ActiveDirectory
 
 		public override void Load(SearchResultEntry entry)
 		{
+			ChangeTrackingDisabled = true;
+
 			base.Load(entry);
 
 			CN = GetAttribute(entry.Attributes, "name");
 			ApplicationVersion = GetAttribute(entry.Attributes, VERSION);
 			ContainerDn = Key.Substring(4 + CN.Length);
+
+			Groups = AdApplicationGroup.GetCollection(Service, string.Format("{0}{2},{1}", GROUPSCONTAINER, Key, CN), false);
+			Roles = new Collections.RoleDefinitionCollection(Service, false);
+			RoleAssignments = new Collections.RoleAssignmentsCollection(Service);
+			Tasks = new Collections.TaskCollection(Service, false);
+			Operations = AdOperation.GetCollection(Service, string.Format("{0}{1},{2}", OPSCONTAINER, CN, Key), false);
+
+			ChangeTrackingDisabled = false;
 		}
 
 		public override AddRequest CreateNew()
@@ -198,6 +224,13 @@ namespace AzAlternative.ActiveDirectory
 				ar.Attributes.Add(CreateAttribute(VERSION, ApplicationVersion));
 
 			return ar;
+		}
+
+		public static Collections.ApplicationCollection GetCollection(AdService service, string key)
+		{
+			var results = service.Load(key, "(ObjectClass=" + CLASSNAME + ")");
+			var q = from i in results.Cast<SearchResultEntry>() select i;
+			return new Collections.ApplicationCollection(service, q.ToDictionary(x => x.Attributes[APPNAME][0].ToString(), x => x.DistinguishedName));
 		}
 	}
 }

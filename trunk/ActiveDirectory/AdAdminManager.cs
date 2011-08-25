@@ -44,9 +44,18 @@ namespace AzAlternative.ActiveDirectory
 		public AdAdminManager(AdService service)
 			: base(service)
 		{
+			ChangeTrackingDisabled = true;
+
 			SearchResultEntry en = Service.LoadRoot();
+			Load(en);
+
 			MajorVersion = int.Parse(GetAttribute(en.Attributes, MAJORVERSION));
 			MinorVersion = int.Parse(GetAttribute(en.Attributes, MINORVERSION));
+
+			Groups = AdApplicationGroup.GetCollection(Service, GetGroupContainerName(), false);
+			Applications = AdApplication.GetCollection(Service, Key);
+
+			ChangeTrackingDisabled = false;
 		}
 
 		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
@@ -121,7 +130,7 @@ namespace AzAlternative.ActiveDirectory
 			List<AddRequest> result = new List<AddRequest>();
 
 			AddRequest a = new AddRequest();
-			a.DistinguishedName = string.Format("cn={2}{0},{1}", this.Name, this.Key, GROUPSCONTAINER);
+			a.DistinguishedName = GetGroupContainerName();
 			a.Attributes.Add(new DirectoryAttribute(OBJECTCLASS, CONTAINER));
 			result.Add(a);
 
@@ -131,6 +140,11 @@ namespace AzAlternative.ActiveDirectory
 		public override ModifyRequest GetUpdate()
 		{
 			return base.GetUpdate();
+		}
+
+		private string GetGroupContainerName()
+		{
+			return string.Format("cn={2}{0},{1}", this.Name, this.Key, GROUPSCONTAINER);
 		}
 	}
 }

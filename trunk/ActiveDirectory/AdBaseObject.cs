@@ -20,6 +20,7 @@ namespace AzAlternative.ActiveDirectory
 		protected const string CONTAINER = "container";
 
 		protected Dictionary<string, ChangeType> Changes;
+		protected bool ChangeTrackingDisabled;
 		private string _UniqueName;
 		private string _Name;
 		private string _Description;
@@ -163,6 +164,9 @@ namespace AzAlternative.ActiveDirectory
 
 		protected void OnPropertyChanged(string name, string oldValue, string newValue)
 		{
+			if (ChangeTrackingDisabled)
+				return;
+
 			if (oldValue == newValue)
 				return;
 
@@ -230,6 +234,18 @@ namespace AzAlternative.ActiveDirectory
 		//{
 
 		//}
+		
+		public Dictionary<string, string> GetChildren(string container, string filter)
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
+
+			foreach (SearchResultEntry item in Service.Load(container, filter))
+			{
+				result.Add(GetAttribute(item.Attributes, NAME), item.DistinguishedName);
+			}
+
+			return result;
+		}
 
 	}
 }

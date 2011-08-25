@@ -5,17 +5,23 @@ using System.Text;
 
 namespace AzAlternative.Collections
 {
-	public class MemberCollection : System.Collections.ObjectModel.ReadOnlyCollection<Member>
+	/// <summary>
+	/// A collection of members
+	/// </summary>
+	public class MemberCollection : IEnumerable<Member>
 	{
 		private bool _IsExclusions;
+		private ServiceBase _Service;
+		private string _Key;
 
-		internal MemberCollection(IList<AzAlternative.Member> members)
-			: base(members)
+		internal MemberCollection(ServiceBase service, string key)
+			: this(service, key, false)
 		{ }
 
-		internal MemberCollection(IList<Member> members, bool isExlusions)
-			: this(members)
+		internal MemberCollection(ServiceBase service, string key, bool isExlusions)
 		{
+			_Service = service;
+			_Key = key;
 			_IsExclusions = isExlusions;
 		}
 
@@ -26,16 +32,22 @@ namespace AzAlternative.Collections
 
 			member.Instance.IsExclusion = _IsExclusions;
 			member.Instance.Save();
-			this.Items.Add(member);
-			
 		}
 
 		internal void RemoveMember(Member member)
 		{
 			member.Instance.Remove();
-			this.Items.Remove(member);
 		}
 
-		
+
+		public IEnumerator<Member> GetEnumerator()
+		{
+			return _Service.GetMembers(_Key, _IsExclusions);
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
 	}
 }
