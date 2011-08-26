@@ -19,7 +19,7 @@ namespace AzAlternative.Xml
 
 		public override Interfaces.IAdminManager GetAdminManager()
 		{
-			return new XmlAdminManager(this);
+			return new XmlAdminManager();
 		}
 
 		public XmlElement LoadRoot()
@@ -86,7 +86,7 @@ namespace AzAlternative.Xml
 
 		public override Application GetApplication(string uniqueName)
 		{
-			XmlApplication a = new XmlApplication(this);
+			XmlApplication a = new XmlApplication();
 			a.Load(uniqueName);
 
 			return new Application(a);
@@ -96,7 +96,7 @@ namespace AzAlternative.Xml
 		{
 			foreach (var item in FindElements(uniqueNames))
 			{
-				XmlApplication a = new XmlApplication(this);
+				XmlApplication a = new XmlApplication();
 				a.Load(item);
 
 				yield return new Application(a, store);
@@ -105,7 +105,7 @@ namespace AzAlternative.Xml
 
 		public override ApplicationGroup GetGroup(string uniqueName)
 		{
-			XmlApplicationGroup g = new XmlApplicationGroup(this);
+			XmlApplicationGroup g = new XmlApplicationGroup();
 			g.Load(uniqueName);
 
 			return new ApplicationGroup(g);
@@ -115,7 +115,7 @@ namespace AzAlternative.Xml
 		{
 			foreach (var item in FindElements(uniqueNames))
 			{
-				XmlApplicationGroup g = new XmlApplicationGroup(this);
+				XmlApplicationGroup g = new XmlApplicationGroup();
 				g.Load(item);
 
 				ApplicationGroup result = new ApplicationGroup(g);
@@ -130,7 +130,7 @@ namespace AzAlternative.Xml
 
 		public override Operation GetOperation(string uniqueName)
 		{
-			XmlOperation o = new XmlOperation(this);
+			XmlOperation o = new XmlOperation();
 			o.Load(uniqueName);
 
 			return new Operation(o);
@@ -140,7 +140,7 @@ namespace AzAlternative.Xml
 		{
 			foreach (var item in FindElements(uniqueNames))
 			{
-				XmlOperation o = new XmlOperation(this);
+				XmlOperation o = new XmlOperation();
 				o.Load(item);
 
 				yield return new Operation(o, application);
@@ -149,7 +149,7 @@ namespace AzAlternative.Xml
 
 		public override Task GetTask(string uniqueName)
 		{
-			XmlTask t = new XmlTask(this);
+			XmlTask t = new XmlTask();
 			t.Load(uniqueName);
 
 			return new Task(t);
@@ -159,7 +159,7 @@ namespace AzAlternative.Xml
 		{
 			foreach (var item in FindElements(uniqueNames))
 			{
-				XmlTask t = new XmlTask(this);
+				XmlTask t = new XmlTask();
 				t.Load(item);
 
 				yield return new Task(t, application);
@@ -168,7 +168,7 @@ namespace AzAlternative.Xml
 
 		public override RoleAssignments GetRoleAssignments(string uniqueName)
 		{
-			XmlRoleAssignments r = new XmlRoleAssignments(this);
+			XmlRoleAssignments r = new XmlRoleAssignments();
 			r.Load(uniqueName);
 
 			return new RoleAssignments(r);
@@ -178,7 +178,7 @@ namespace AzAlternative.Xml
 		{
 			foreach (var item in FindElements(uniqueNames))
 			{
-				XmlRoleAssignments r = new XmlRoleAssignments(this);
+				XmlRoleAssignments r = new XmlRoleAssignments();
 				r.Load(item);
 
 				yield return new RoleAssignments(r, application);
@@ -187,7 +187,7 @@ namespace AzAlternative.Xml
 
 		public override RoleDefinition GetRoleDefinition(string uniqueName)
 		{
-			XmlRoleDefinition r = new XmlRoleDefinition(this);
+			XmlRoleDefinition r = new XmlRoleDefinition();
 			r.Load(uniqueName);
 
 			return new RoleDefinition(r);
@@ -197,7 +197,7 @@ namespace AzAlternative.Xml
 		{
 			foreach (var item in FindElements(uniqueNames))
 			{
-				XmlRoleDefinition r = new XmlRoleDefinition(this);
+				XmlRoleDefinition r = new XmlRoleDefinition();
 				r.Load(item);
 
 				yield return new RoleDefinition(r, application);
@@ -247,7 +247,7 @@ namespace AzAlternative.Xml
 
 			foreach (XmlNode item in XmlMember.GetNodes(parent, isExclusions))
 			{
-				XmlMember m = new XmlMember(this);
+				XmlMember m = new XmlMember();
 				m.Load((XmlElement)item);
 
 				yield return new Member(m);

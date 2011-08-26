@@ -27,6 +27,20 @@ namespace AzAlternative
 			: base(role, parent)
 		{ }
 
+		public override void Delete()
+		{
+			Locator.Factory.DeleteRole((Interfaces.IRoleDefinition)Instance);
+			Parent.Roles.RemoveValue(Key);
+			IsDeleted = true;
+		}
+
+		public override void Save()
+		{
+			Parent.Roles.CheckName(this);
+			Locator.Factory.UpdateRole((Interfaces.IRoleDefinition)Instance);
+			Parent.Roles.UpdateValue(this);
+		}
+
 		/// <summary>
 		/// Adds a role to the Roles collection
 		/// </summary>

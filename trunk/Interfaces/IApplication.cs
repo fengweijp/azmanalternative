@@ -43,25 +43,5 @@ namespace AzAlternative.Interfaces
 		/// Gets the collection of tasks defined in the application
 		/// </summary>
 		Collections.TaskCollection Tasks { get; }
-
-		ApplicationGroup CreateGroup(string name, string description, GroupType groupType);
-		void DeleteGroup(ApplicationGroup group);
-		void UpdateGroup(ApplicationGroup group);
-
-		RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role);
-		void DeleteRoleAssignments(RoleAssignments role);
-		void UpdateRoleAssignments(RoleAssignments role);
-
-		RoleDefinition CreateRole(string name, string description);
-		void DeleteRole(RoleDefinition role);
-		void UpdateRole(RoleDefinition role);
-
-		Operation CreateOperation(string name, string description, int operationId);
-		void DeleteOperation(Operation operation);
-		void UpdateOperation(Operation operation);
-
-		Task CreateTask(string name, string description);
-		void DeleteTask(Task task);
-		void UpdateTask(Task task);
 	}
 }

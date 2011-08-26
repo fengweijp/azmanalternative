@@ -46,10 +46,6 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public XmlTask(XmlService service)
-			: base(service)
-		{ }
-
 		public void AddTask(Task task)
 		{
 			Service.CreateLink(this, TASK, task.Key);
@@ -121,8 +117,8 @@ namespace AzAlternative.Xml
 					throw new AzException("Unknown Biz Rule language.");
 			}
 
-			Operations = new Collections.OperationCollection(Service, GetLinks(element, OPERATION), true);
-			Tasks = new Collections.TaskCollection(Service, GetLinks(element, TASK), true);
+			Operations = new Collections.OperationCollection(GetLinks(element, OPERATION), true);
+			Tasks = new Collections.TaskCollection(GetLinks(element, TASK), true);
 		}
 
 		private void SetElement(XmlElement parent, string elementName, string value)

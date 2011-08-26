@@ -45,10 +45,6 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public XmlRoleAssignments(XmlService service)
-			: base(service)
-		{ }
-
 		public void AddGroup(ApplicationGroup group)
 		{
 			Service.CreateLink(this, GROUP, group.Key);
@@ -74,7 +70,7 @@ namespace AzAlternative.Xml
 
 		public void AddMember(string name)
 		{
-			Member m = new Member(new XmlMember(Service), name);
+			Member m = new Member(new XmlMember(), name);
 			m.Instance.Parent = this.Key;
 			Members.AddMember(m);
 		}
@@ -110,8 +106,8 @@ namespace AzAlternative.Xml
 
 			_DefinitionId = element[DEFINITION].InnerXml;
 
-			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP), true);
-			Members = new Collections.MemberCollection(Service, Key);
+			Groups = new Collections.ApplicationGroupCollection(GetLinks(element, GROUP), true);
+			Members = new Collections.MemberCollection(Key);
 		}
 
 		public static Dictionary<string, string> GetChildren(XmlElement element)

@@ -108,6 +108,21 @@ namespace AzAlternative
 			Parent = parent;
 		}
 
+		public virtual void Delete()
+		{
+			Locator.Factory.DeleteTask(Instance);
+			Parent.Tasks.RemoveValue(Key);
+			IsDeleted = true;
+		}
+
+		public virtual void Save()
+		{
+			Parent.Tasks.CheckName(this);
+
+			Locator.Factory.UpdateTask(Instance);
+			Parent.Tasks.UpdateValue(this);
+		}
+
 		/// <summary>
 		/// Adds a task to the Tasks collection
 		/// </summary>

@@ -32,12 +32,12 @@ namespace AzAlternative.Collections
 			get { return "application"; }
 		}
 
-		internal ApplicationCollection(ServiceBase service, Dictionary<string, string> values)
-			: base(service, values)
+		internal ApplicationCollection(Dictionary<string, string> values)
+			: base(values)
 		{ }
 
 		internal ApplicationCollection(ServiceBase service)
-			: this(service, new Dictionary<string, string>())
+			: this(new Dictionary<string, string>())
 		{ }
 		
 

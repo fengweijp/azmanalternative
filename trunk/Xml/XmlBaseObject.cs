@@ -71,10 +71,10 @@ namespace AzAlternative.Xml
 			node.Attributes[name].Value = value;
 		}
 
-		public XmlBaseObject(XmlService service)
+		public XmlBaseObject()
 		{
 			//Node = node;
-			Service = service;
+			Service = (XmlService)Locator.Service;
 		}
 
 		///// <summary>

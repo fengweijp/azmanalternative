@@ -15,10 +15,6 @@ namespace AzAlternative.ActiveDirectory
 			get { throw new NotImplementedException(); }
 		}
 
-		public AdRoleDefinition(AdService service)
-			: base(service)
-		{}
-
 		public void AddRole(RoleDefinition role)
 		{
 			throw new NotImplementedException();

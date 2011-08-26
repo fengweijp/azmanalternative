@@ -10,7 +10,7 @@ namespace AzAlternative
 	/// </summary>
 	public class ApplicationGroup : ContainerBase, Interfaces.IApplicationGroup
 	{
-		internal readonly Interfaces.IApplicationGroup Instance;
+		private readonly Interfaces.IApplicationGroup Instance;
 		private AdminManager _Store;
 
 		/// <summary>
@@ -128,6 +128,31 @@ namespace AzAlternative
 		internal ApplicationGroup(Interfaces.IApplicationGroup applicationGroup)
 		{
 			Instance = applicationGroup;
+		}
+
+		public void Save()
+		{
+			if (IsGlobalGroup)
+				Store.Groups.CheckName(this);
+			else
+				Parent.Groups.CheckName(this);
+
+			Locator.Factory.UpdateGroup(this.Instance);
+
+			if (IsGlobalGroup)
+				Store.Groups.UpdateValue(this);
+			else
+				Parent.Groups.UpdateValue(this);
+		}
+
+		public void Delete()
+		{
+			Locator.Factory.DeleteGroup(Instance);
+
+			if (IsGlobalGroup)
+				Store.Groups.RemoveValue(Key);
+			else
+				Parent.Groups.RemoveValue(Key);
 		}
 
 		/// <summary>

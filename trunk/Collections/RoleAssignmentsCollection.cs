@@ -15,12 +15,12 @@ namespace AzAlternative.Collections
 			get { return "role assignment"; }
 		}
 
-		internal RoleAssignmentsCollection(ServiceBase service, Dictionary<string, string> values)
-			: base(service, values)
+		internal RoleAssignmentsCollection(Dictionary<string, string> values)
+			: base(values)
 		{ }
 
-		internal RoleAssignmentsCollection(ServiceBase service)
-			: this(service, new Dictionary<string, string>())
+		internal RoleAssignmentsCollection()
+			: this(new Dictionary<string, string>())
 		{ }
 
 		public override IEnumerator<RoleAssignments> GetEnumerator()

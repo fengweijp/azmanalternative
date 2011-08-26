@@ -65,8 +65,8 @@ namespace AzAlternative.Collections
 		/// </summary>
 		/// <param name="service">The service factory</param>
 		/// <param name="children">The list of names & keys for this collection</param>
-		internal CollectionBase(ServiceBase service, Dictionary<string, string> children)
-			: this(service, children, false)
+		internal CollectionBase(Dictionary<string, string> children)
+			: this(children, false)
 		{ }
 
 		/// <summary>
@@ -75,9 +75,9 @@ namespace AzAlternative.Collections
 		/// <param name="service">The service factory</param>
 		/// <param name="children">The list of names & keys for this collection</param>
 		/// <param name="isChildList">Indicates this collection contains items from other collections</param>
-		internal CollectionBase(ServiceBase service, Dictionary<string, string> children, bool isChildList)
+		internal CollectionBase(Dictionary<string, string> children, bool isChildList)
 		{
-			Service = service;
+			Service = Locator.Service;
 			Guids = children;
 			InternalCollection = new InternalCollection<T>();
 

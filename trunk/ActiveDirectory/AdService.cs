@@ -116,11 +116,19 @@ namespace AzAlternative.ActiveDirectory
 
 		public void Save(DirectoryRequest dr)
 		{
+			Save(new DirectoryRequest[] { dr });
+		}
+
+		public void Save(DirectoryRequest[] requests)
+		{
 			LdapConnection conn = null;
 			try
 			{
 				conn = GetConnection();
-				conn.SendRequest(dr);
+				foreach (var item in requests)
+				{
+					conn.SendRequest(item);
+				}
 			}
 			finally
 			{
@@ -132,12 +140,12 @@ namespace AzAlternative.ActiveDirectory
 
 		public override Interfaces.IAdminManager GetAdminManager()
 		{
-			return new AdAdminManager(this);
+			return new AdAdminManager();
 		}
 
 		public override Application GetApplication(string uniqueName)
 		{
-			AdApplication a = new AdApplication(this);
+			AdApplication a = new AdApplication();
 			a.Load(Load(uniqueName));
 
 			return new Application(a);
@@ -149,7 +157,7 @@ namespace AzAlternative.ActiveDirectory
 			{
 				foreach (var item in uniqueNames)
 				{
-					AdApplication a = new AdApplication(this);
+					AdApplication a = new AdApplication();
 					a.Load(Load(item, conn));
 
 					yield return new Application(a, store);
@@ -159,7 +167,7 @@ namespace AzAlternative.ActiveDirectory
 
 		public override ApplicationGroup GetGroup(string uniqueName)
 		{
-			AdApplicationGroup ag = new AdApplicationGroup(this);
+			AdApplicationGroup ag = new AdApplicationGroup();
 			ag.Load(Load(uniqueName));
 
 			return new ApplicationGroup(ag);
@@ -171,7 +179,7 @@ namespace AzAlternative.ActiveDirectory
 			{
 				foreach (var item in uniqueNames)
 				{
-					AdApplicationGroup g = new AdApplicationGroup(this);
+					AdApplicationGroup g = new AdApplicationGroup();
 					g.Load(Load(item, conn));
 					ApplicationGroup result = new ApplicationGroup(g);
 
@@ -187,7 +195,7 @@ namespace AzAlternative.ActiveDirectory
 
 		public override Operation GetOperation(string uniqueName)
 		{
-			AdOperation o = new AdOperation(this);
+			AdOperation o = new AdOperation();
 			o.Load(Load(uniqueName));
 
 			return new Operation(o);
@@ -199,7 +207,7 @@ namespace AzAlternative.ActiveDirectory
 			{
 				foreach (var item in uniqueNames)
 				{
-					AdOperation a = new AdOperation(this);
+					AdOperation a = new AdOperation();
 					a.Load(Load(item, conn));
 
 					yield return new Operation(a, application);
@@ -209,7 +217,7 @@ namespace AzAlternative.ActiveDirectory
 
 		public override Task GetTask(string uniqueName)
 		{
-			AdTask t = new AdTask(this);
+			AdTask t = new AdTask();
 			t.Load(Load(uniqueName));
 
 			return new Task(t);
@@ -221,7 +229,7 @@ namespace AzAlternative.ActiveDirectory
 			{
 				foreach (var item in uniqueNames)
 				{
-					AdTask a = new AdTask(this);
+					AdTask a = new AdTask();
 					a.Load(Load(item, conn));
 
 					yield return new Task(a, application);
@@ -231,7 +239,7 @@ namespace AzAlternative.ActiveDirectory
 
 		public override RoleAssignments GetRoleAssignments(string uniqueName)
 		{
-			AdRoleAssignments r = new AdRoleAssignments(this);
+			AdRoleAssignments r = new AdRoleAssignments();
 			r.Load(Load(uniqueName));
 
 			return new RoleAssignments(r);
@@ -243,7 +251,7 @@ namespace AzAlternative.ActiveDirectory
 			{
 				foreach (var item in uniqueNames)
 				{
-					AdRoleAssignments a = new AdRoleAssignments(this);
+					AdRoleAssignments a = new AdRoleAssignments();
 					a.Load(Load(item, conn));
 
 					yield return new RoleAssignments(a, application);
@@ -253,7 +261,7 @@ namespace AzAlternative.ActiveDirectory
 
 		public override RoleDefinition GetRoleDefinition(string uniqueName)
 		{
-			AdRoleDefinition r = new AdRoleDefinition(this);
+			AdRoleDefinition r = new AdRoleDefinition();
 			r.Load(Load(uniqueName));
 
 			return new RoleDefinition(r);
@@ -265,7 +273,7 @@ namespace AzAlternative.ActiveDirectory
 			{
 				foreach (var item in uniqueNames)
 				{
-					AdRoleDefinition a = new AdRoleDefinition(this);
+					AdRoleDefinition a = new AdRoleDefinition();
 					a.Load(Load(item, conn));
 
 					yield return new RoleDefinition(a, application);
@@ -279,7 +287,7 @@ namespace AzAlternative.ActiveDirectory
 
 			foreach (var item in AdApplicationGroup.GetMembers(result, isExclusions))
 			{
-				AdMember a = new AdMember(this);
+				AdMember a = new AdMember();
 
 				yield return new Member(a);
 			}

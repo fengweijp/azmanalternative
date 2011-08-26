@@ -125,21 +125,6 @@ namespace AzAlternative
 		/// <summary>
 		/// Removes an application group from the store
 		/// </summary>
-		/// <param name="group">The group to remove</param>
-		public void DeleteGroup(ApplicationGroup group)
-		{
-			if (Instance == null)
-				throw new AzException("A store has not been opened.");
-
-			CheckGroupIsValid(group);
-
-			Instance.DeleteGroup(group);
-			Groups.RemoveValue(group.Key);
-		}
-
-		/// <summary>
-		/// Removes an application group from the store
-		/// </summary>
 		/// <param name="name">The name of the group to delete.</param>
 		public void DeleteGroup(string name)
 		{
@@ -147,7 +132,7 @@ namespace AzAlternative
 			if (g == null)
 				return;
 
-			DeleteGroup(g);
+			g.Delete();
 		}
 
 		/// <summary>
@@ -165,27 +150,11 @@ namespace AzAlternative
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
 			Groups.CheckName(name);
 
-			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
+			ApplicationGroup g = Locator.Factory.CreateGroup(null, name, description, groupType, true);
 			g.Store = this;
 			Groups.AddValue(g);
 
 			return g;
-		}
-
-		/// <summary>
-		/// Saves updates to a group to the store.
-		/// </summary>
-		/// <param name="group">Group to update</param>
-		public void UpdateGroup(ApplicationGroup group)
-		{
-			if (Instance == null)
-				throw new AzException("A store has not been opened.");
-
-			CheckGroupIsValid(group);
-
-			Groups.CheckName(group);
-			Instance.UpdateGroup(group);
-			Groups.UpdateValue(group);
 		}
 
 		/// <summary>
@@ -203,26 +172,11 @@ namespace AzAlternative
 				throw new ArgumentNullException("name", "A name must be specified when adding an application");
 			Applications.CheckName(name);
 
-			Application a = Instance.CreateApplication(name, description, versionInformation);
+			Application a = Locator.Factory.CreateApplication(Key, name, description, versionInformation);
 			a.Store = this;
 			Applications.AddValue(a);
 
 			return a;
-		}
-
-		/// <summary>
-		/// Removes an application from the store
-		/// </summary>
-		/// <param name="application">The application to remove</param>
-		public void DeleteApplication(Application application)
-		{
-			if (Instance == null)
-				throw new AzException("A store has not been opened.");
-
-			CheckApplicationIsValid(application);
-
-			Instance.DeleteApplication(application);
-			Applications.RemoveValue(application.Key);
 		}
 
 		/// <summary>
@@ -235,23 +189,7 @@ namespace AzAlternative
 			if (a == null)
 				return;
 
-			DeleteApplication(a);
-		}
-
-		/// <summary>
-		/// Saves changes to an application to the store
-		/// </summary>
-		/// <param name="application">Application to update</param>
-		public void UpdateApplication(Application application)
-		{
-			if (Instance == null)
-				throw new AzException("A store has not been opened.");
-
-			CheckApplicationIsValid(application);
-
-			Applications.CheckName(application);
-			Instance.UpdateApplication(application);
-			Applications.UpdateValue(application);
+			a.Delete();
 		}
 
 		private bool CheckGroupIsValid(ApplicationGroup group)
@@ -261,16 +199,6 @@ namespace AzAlternative
 
 			if (group.Store == null || group.Store.Key != this.Key)
 				throw new AzException("The group is not defined in the store, or is not a global group.");
-
-			return true;
-		}
-
-		private bool CheckApplicationIsValid(Application application)
-		{
-			if (application == null)
-				throw new ArgumentNullException("application");
-			if (application.Store == null || application.Store.Key != this.Key)
-				throw new AzException("The application is not defined in the store.");
 
 			return true;
 		}
@@ -297,13 +225,13 @@ namespace AzAlternative
 			if (ConnectionString.StartsWith("msxml"))
 			{
 				Xml.XmlService f = new Xml.XmlService(ConnectionString.Substring(8));
+				Locator.SetService(f, new Xml.XmlFactory(f));
 
 				Instance = f.GetAdminManager();
 			}
 			else if (ConnectionString.StartsWith("msldap"))
 			{
 				ActiveDirectory.AdService s = new ActiveDirectory.AdService(ConnectionString.Substring(9));
-
 				Instance = s.GetAdminManager();
 			}
 			else

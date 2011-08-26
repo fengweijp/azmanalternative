@@ -10,7 +10,7 @@ namespace AzAlternative
 	/// </summary>
 	public class RoleAssignments: ContainerBase, Interfaces.IRoleAssignment
 	{
-		internal readonly Interfaces.IRoleAssignment Instance;
+		private readonly Interfaces.IRoleAssignment Instance;
 
 		/// <summary>
 		/// Gets the owning application for this group, if defined
@@ -90,6 +90,20 @@ namespace AzAlternative
 			: this(role)
 		{
 			Parent = parent;
+		}
+
+		public void Delete()
+		{
+			Locator.Factory.DeleteRoleAssignments(Instance);
+			Parent.RoleAssignments.RemoveValue(Key);
+			IsDeleted = true;
+		}
+
+		public void Save()
+		{
+			Parent.RoleAssignments.CheckName(this);
+			Locator.Factory.UpdateRoleAssignments(Instance);
+			Parent.RoleAssignments.UpdateValue(this);
 		}
 
 		/// <summary>

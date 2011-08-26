@@ -15,12 +15,12 @@ namespace AzAlternative.Collections
 			get { return "operation"; }
 		}
 
-		internal OperationCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
-			: base(service, values, isChildList)
+		internal OperationCollection(Dictionary<string, string> values, bool isChildList)
+			: base(values, isChildList)
 		{ }
 
-		internal OperationCollection(ServiceBase service, bool isChildList)
-			: this(service, new Dictionary<string, string>(), isChildList)
+		internal OperationCollection(bool isChildList)
+			: this(new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<Operation> GetEnumerator()
