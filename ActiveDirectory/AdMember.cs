@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.DirectoryServices.Protocols;
 
 namespace AzAlternative.ActiveDirectory
 {
 	internal class AdMember : AdBaseObject, Interfaces.IMember
 	{
+		private const string SID = "objectSid";
+
 		protected override string ObjectClass
 		{
 			get { throw new NotImplementedException(); }
@@ -14,43 +17,21 @@ namespace AzAlternative.ActiveDirectory
 
 		public string Sid
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
+			get;
+			set;
 		}
 
 		public bool IsExclusion
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
+			get;
+			set;
 		}
 
 		public string Parent
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
+			get;
+			set;
 		}
-
-		public AdMember(AdService service)
-			: base(service)
-		{}
 
 		public void Save()
 		{
@@ -59,7 +40,17 @@ namespace AzAlternative.ActiveDirectory
 
 		public void Remove()
 		{
-			throw new NotImplementedException();
+			SearchResultEntry en = Service.Load(Parent);
+		}
+
+		public override void Load(System.DirectoryServices.Protocols.SearchResultEntry entry)
+		{
+			ChangeTrackingDisabled = true;
+			base.Load(entry);
+
+			Sid = GetAttribute(entry.Attributes, SID);
+			Parent = entry.DistinguishedName;
+			ChangeTrackingDisabled = false;
 		}
 	}
 }

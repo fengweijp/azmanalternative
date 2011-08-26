@@ -43,8 +43,8 @@ namespace AzAlternative.Collections
 		/// <param name="service">The service factory object</param>
 		/// <param name="values">A list of names & keys</param>
 		/// <param name="isChildList">Indicates whether this collection can load objects from other collections</param>
-		internal ApplicationGroupCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
-			: base(service, values, isChildList)
+		internal ApplicationGroupCollection(Dictionary<string, string> values, bool isChildList)
+			: base(values, isChildList)
 		{ }
 
 		/// <summary>
@@ -52,8 +52,8 @@ namespace AzAlternative.Collections
 		/// </summary>
 		/// <param name="service">The service factory object</param>
 		/// <param name="isChildList">Indicates whether this collection can load objects from other collections</param>
-		internal ApplicationGroupCollection(ServiceBase service, bool isChildList)
-			: this(service, new Dictionary<string, string>(), isChildList)
+		internal ApplicationGroupCollection(bool isChildList)
+			: this(new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<ApplicationGroup> GetEnumerator()
@@ -80,5 +80,6 @@ namespace AzAlternative.Collections
 		{
 			return Service.GetGroup(uniqueName);
 		}
+
 	}
 }

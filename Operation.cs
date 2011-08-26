@@ -10,7 +10,7 @@ namespace AzAlternative
 	/// </summary>
 	public class Operation : ContainerBase, Interfaces.IOperation
 	{
-		internal readonly Interfaces.IOperation Instance;
+		private readonly Interfaces.IOperation Instance;
 
 		/// <summary>
 		/// Gets the owning application for this group, if defined
@@ -76,6 +76,22 @@ namespace AzAlternative
 			: this(operation)
 		{
 			Parent = parent;
+		}
+
+		public void Delete()
+		{
+			Locator.Factory.DeleteOperation(Instance);
+			Parent.Operations.RemoveValue(Key);
+			IsDeleted = true;
+		}
+
+		public void Save()
+		{
+			Parent.Operations.CheckName(this);
+			Parent.Operations.CheckId(this);
+
+			Locator.Factory.UpdateOperation(Instance);
+			Parent.Operations.UpdateValue(this);
 		}
 	}
 }

@@ -17,10 +17,6 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public XmlOperation(XmlService service)
-			: base(service)
-		{ }
-
 		public override XmlElement ToXml(XmlElement parent)
 		{
 			XmlElement e = parent.OwnerDocument.CreateElement(ELEMENTNAME);

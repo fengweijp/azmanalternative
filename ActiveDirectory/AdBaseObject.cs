@@ -32,7 +32,7 @@ namespace AzAlternative.ActiveDirectory
 			get { return "distinguishedName"; }
 		}
 
-		protected virtual string NAME
+		protected virtual string NameAttribute
 		{
 			get { return "cn"; }
 		}
@@ -57,7 +57,7 @@ namespace AzAlternative.ActiveDirectory
 			get { return _Name; }
 			set
 			{
-				OnPropertyChanged(NAME, _Name, value);
+				OnPropertyChanged(NameAttribute, _Name, value);
 				_Name = value;
 			}
 		}
@@ -78,9 +78,9 @@ namespace AzAlternative.ActiveDirectory
 			set;
 		}
 
-		public AdBaseObject(AdService service)
+		public AdBaseObject()
 		{
-			Service = service;
+			Service = (AdService)Locator.Service;
 
 			Changes = new Dictionary<string, ChangeType>();
 		}
@@ -89,7 +89,7 @@ namespace AzAlternative.ActiveDirectory
 		{
 			//UniqueName = GetAttribute(entry.Attributes, UniqueName);
 			Key = entry.DistinguishedName;
-			Name = GetAttribute(entry.Attributes, NAME);
+			Name = GetAttribute(entry.Attributes, NameAttribute);
 			Description = GetAttribute(entry.Attributes, DESCRIPTION);
 			ContainerDn = Key.Substring(4 + Name.Length);
 		}
@@ -201,7 +201,7 @@ namespace AzAlternative.ActiveDirectory
 			return string.Format("CN={0},{1}", Name, ContainerDn);
 		}
 
-		public virtual AddRequest CreateNew()
+		protected virtual AddRequest CreateNewThis()
 		{
 			AddRequest ar = new AddRequest();
 			ar.DistinguishedName = GetNewUniqueName();
@@ -211,8 +211,17 @@ namespace AzAlternative.ActiveDirectory
 
 			return ar;
 		}
+		
+		public AddRequest[] CreateNew()
+		{
+			List<AddRequest> result = new List<AddRequest>();
+			result.Add(CreateNewThis());
+			result.AddRange(CreateChildEntries());
 
-		public virtual AddRequest[] CreateChildEntries()
+			return result.ToArray();
+		}
+
+		protected virtual AddRequest[] CreateChildEntries()
 		{
 			throw new NotSupportedException();
 		}
@@ -241,7 +250,7 @@ namespace AzAlternative.ActiveDirectory
 
 			foreach (SearchResultEntry item in Service.Load(container, filter))
 			{
-				result.Add(GetAttribute(item.Attributes, NAME), item.DistinguishedName);
+				result.Add(GetAttribute(item.Attributes, NameAttribute), item.DistinguishedName);
 			}
 
 			return result;

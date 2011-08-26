@@ -15,12 +15,12 @@ namespace AzAlternative.Collections
 			get { return "task"; }
 		}
 
-		internal TaskCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
-			: base(service, values, isChildList)
+		internal TaskCollection(Dictionary<string, string> values, bool isChildList)
+			: base(values, isChildList)
 		{ }
 
-		internal TaskCollection(ServiceBase service, bool isChildList)
-			: this(service, new Dictionary<string, string>(), isChildList)
+		internal TaskCollection(bool isChildList)
+			: this(new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<Task> GetEnumerator()

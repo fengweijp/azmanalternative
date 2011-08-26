@@ -23,7 +23,7 @@ namespace AzAlternative.ActiveDirectory
 			get { return CLASSNAME; }
 		}
 
-		protected override string NAME
+		protected override string NameAttribute
 		{
 			get { return APPNAME; }
 		}
@@ -42,6 +42,12 @@ namespace AzAlternative.ActiveDirectory
 		{
 			get;
 			set;
+		}
+
+		public AdApplication()
+			:base()
+		{
+			CN = Guid.NewGuid().ToString();
 		}
 
 		public Collections.RoleDefinitionCollection Roles
@@ -74,101 +80,7 @@ namespace AzAlternative.ActiveDirectory
 			set;
 		}
 
-		public AdApplication(AdService service)
-			:base(service)
-		{}
-
-		public ApplicationGroup CreateGroup(string name, string description, GroupType groupType)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void DeleteGroup(ApplicationGroup group)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void UpdateGroup(ApplicationGroup group)
-		{
-			throw new NotImplementedException();
-		}
-
-		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void DeleteRoleAssignments(RoleAssignments role)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void UpdateRoleAssignments(RoleAssignments role)
-		{
-			throw new NotImplementedException();
-		}
-
-		public RoleDefinition CreateRole(string name, string description)
-		{
-			AdRoleDefinition role = new AdRoleDefinition(Service);
-			role.Name = name;
-			role.Description = description;
-
-			Service.Save(role.CreateNew());
-
-			return new RoleDefinition(role);
-		}
-
-		public void DeleteRole(RoleDefinition role)
-		{
-			((AdRoleDefinition)role.Instance).Delete();
-		}
-
-		public void UpdateRole(RoleDefinition role)
-		{
-			AdRoleDefinition introle = (AdRoleDefinition)role.Instance;
-			Service.Save(introle.GetUpdate());
-		}
-
-		public Operation CreateOperation(string name, string description, int operationId)
-		{
-			AdOperation op = new AdOperation(Service);
-			op.Name = name;
-			op.Description = description;
-			op.OperationId = operationId;
-
-			Service.Save(op.CreateNew());
-
-			return new Operation(op);
-		}
-
-		public void DeleteOperation(Operation operation)
-		{
-			((AdOperation)operation.Instance).Delete();
-		}
-
-		public void UpdateOperation(Operation operation)
-		{
-			AdOperation op = (AdOperation)operation.Instance;
-			Service.Save(op.GetUpdate());
-		}
-
-		public Task CreateTask(string name, string description)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void DeleteTask(Task task)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void UpdateTask(Task task)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override AddRequest[] CreateChildEntries()
+		protected override AddRequest[] CreateChildEntries()
 		{
 			List<AddRequest> result = new List<AddRequest>();
 
@@ -205,18 +117,18 @@ namespace AzAlternative.ActiveDirectory
 			ApplicationVersion = GetAttribute(entry.Attributes, VERSION);
 			ContainerDn = Key.Substring(4 + CN.Length);
 
-			Groups = AdApplicationGroup.GetCollection(Service, string.Format("{0}{2},{1}", GROUPSCONTAINER, Key, CN), false);
-			Roles = new Collections.RoleDefinitionCollection(Service, false);
-			RoleAssignments = new Collections.RoleAssignmentsCollection(Service);
-			Tasks = new Collections.TaskCollection(Service, false);
-			Operations = AdOperation.GetCollection(Service, string.Format("{0}{1},{2}", OPSCONTAINER, CN, Key), false);
+			Groups = AdApplicationGroup.GetCollection(string.Format("{0}{2},{1}", GROUPSCONTAINER, Key, CN), false);
+			Roles = new Collections.RoleDefinitionCollection(false);
+			RoleAssignments = new Collections.RoleAssignmentsCollection();
+			Tasks = new Collections.TaskCollection(false);
+			Operations = AdOperation.GetCollection(string.Format("{0}{1},{2}", OPSCONTAINER, CN, Key), false);
 
 			ChangeTrackingDisabled = false;
 		}
 
-		public override AddRequest CreateNew()
+		protected override AddRequest CreateNewThis()
 		{
-			AddRequest ar = base.CreateNew();
+			AddRequest ar = base.CreateNewThis();
 			ar.DistinguishedName = string.Format("cn={0},{1}", CN, ContainerDn);
 			ar.Attributes.Add(CreateAttribute(APPNAME, Name));
 
@@ -226,11 +138,11 @@ namespace AzAlternative.ActiveDirectory
 			return ar;
 		}
 
-		public static Collections.ApplicationCollection GetCollection(AdService service, string key)
+		public static Collections.ApplicationCollection GetCollection(string key)
 		{
-			var results = service.Load(key, "(ObjectClass=" + CLASSNAME + ")");
+			var results = ((AdService)Locator.Service).Load(key, "(ObjectClass=" + CLASSNAME + ")");
 			var q = from i in results.Cast<SearchResultEntry>() select i;
-			return new Collections.ApplicationCollection(service, q.ToDictionary(x => x.Attributes[APPNAME][0].ToString(), x => x.DistinguishedName));
+			return new Collections.ApplicationCollection(q.ToDictionary(x => x.Attributes[APPNAME][0].ToString(), x => x.DistinguishedName));
 		}
 	}
 }

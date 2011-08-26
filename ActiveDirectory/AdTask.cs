@@ -37,10 +37,6 @@ namespace AzAlternative.ActiveDirectory
 			get { throw new NotImplementedException(); }
 		}
 
-		public AdTask(AdService service)
-			: base(service)
-		{}
-
 		public void AddTask(Task task)
 		{
 			throw new NotImplementedException();

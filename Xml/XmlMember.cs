@@ -30,11 +30,6 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public XmlMember(XmlService service)
-			: base(service)
-		{
-		}
-
 		public override System.Xml.XmlElement ToXml(System.Xml.XmlElement parent)
 		{
 			XmlElement e;

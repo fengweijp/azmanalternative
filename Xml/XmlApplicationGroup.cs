@@ -49,10 +49,6 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public XmlApplicationGroup(XmlService service)
-			: base(service)
-		{ }
-
 		protected override void LoadInternal(XmlElement element)
 		{
 			base.LoadInternal(element);
@@ -74,14 +70,14 @@ namespace AzAlternative.Xml
 					throw new AzException("Unknown group type during load.");
 			}
 
-			Groups = new Collections.ApplicationGroupCollection(Service, GetLinks(element, GROUP), true);
-			Exclusions = new Collections.MemberCollection(Service, Key, true);
-			Members = new Collections.MemberCollection(Service, Key);
+			Groups = new Collections.ApplicationGroupCollection(GetLinks(element, GROUP), true);
+			Exclusions = new Collections.MemberCollection(Key, true);
+			Members = new Collections.MemberCollection(Key);
 		}
 
 		public void RemoveMember(Member member)
 		{
-			Members.RemoveMember(member);
+			member.Instance.Remove();
 		}
 
 		public void RemoveMember(string name)
@@ -89,14 +85,18 @@ namespace AzAlternative.Xml
 			string tmp = Member.ToSid(name);
 			Member m = Members.First(item => item.Instance.Sid == tmp);
 
-			Members.RemoveMember(m);
+			RemoveMember(m);
 		}
 
 		public void AddMember(string name)
 		{
-			Member m = new Member(new XmlMember(Service), name);
+			Member m = new Member(new XmlMember(), name);
 			m.Instance.Parent = this.Key;
-			Members.AddMember(m);
+
+			if (Members.Contains(m))
+				return;
+
+			m.Instance.Save();
 		}
 
 		public void AddGroup(ApplicationGroup group)

@@ -16,10 +16,6 @@ namespace AzAlternative.Xml
 			set;
 		}
 
-		public XmlRoleDefinition(XmlService service)
-			: base(service)
-		{ }
-
 		public void AddRole(RoleDefinition role)
 		{
 			Service.CreateLink(this, ROLE, role.Key);
@@ -33,7 +29,7 @@ namespace AzAlternative.Xml
 		protected override void LoadInternal(XmlElement element)
 		{
 			base.LoadInternal(element);
-			Roles = new Collections.RoleDefinitionCollection(Service, GetLinks(element, ROLE), true);
+			Roles = new Collections.RoleDefinitionCollection(GetLinks(element, ROLE), true);
 		}
 
 		public override XmlElement ToXml(XmlElement parent)

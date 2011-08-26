@@ -36,42 +36,6 @@ namespace AzAlternative.Interfaces
 		Collections.ApplicationCollection Applications { get; }
 
 		/// <summary>
-		/// Add an application group to the store
-		/// </summary>
-		/// <param name="name">group name. Must not be null or empty</param>
-		/// <param name="description">Group description</param>
-		/// <param name="groupType">The type of group</param>
-		ApplicationGroup CreateGroup(string name, string description, GroupType groupType);
-		/// <summary>
-		/// Removes an application group from the store
-		/// </summary>
-		/// <param name="group">The group to remove</param>
-		void DeleteGroup(ApplicationGroup group);
-		/// <summary>
-		/// Saves a group back to the store
-		/// </summary>
-		/// <param name="group"></param>
-		void UpdateGroup(ApplicationGroup group);
-
-		/// <summary>
-		/// Add an application to the store
-		/// </summary>
-		/// <param name="name">The application name. Must not be null or empty</param>
-		/// <param name="description">Application description</param>
-		/// <param name="versionInformation">Version information</param>
-		Application CreateApplication(string name, string description, string versionInformation);
-		/// <summary>
-		/// Removes an application from the store
-		/// </summary>
-		/// <param name="application">The application to remove</param>
-		void DeleteApplication(Application application);
-		/// <summary>
-		/// Saves an application back to the store
-		/// </summary>
-		/// <param name="application"></param>
-		void UpdateApplication(Application application);
-
-		/// <summary>
 		/// Saves changes to this class
 		/// </summary>
 		void Update();

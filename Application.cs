@@ -10,7 +10,7 @@ namespace AzAlternative
 	/// </summary>
 	public class Application : ContainerBase, Interfaces.IApplication
 	{
-		internal readonly Interfaces.IApplication Instance;
+		private readonly Interfaces.IApplication Instance;
 
 		public override Application Parent
 		{
@@ -124,6 +124,20 @@ namespace AzAlternative
 			Store = parent;
 		}
 
+		public void Save()
+		{
+			Store.Applications.CheckName(this);
+			Locator.Factory.UpdateApplication(Instance);
+			Store.Applications.UpdateValue(this);
+		}
+
+		public void Delete()
+		{
+			Locator.Factory.DeleteApplication(Instance);
+			Store.Applications.RemoveValue(Key);
+			IsDeleted = true;
+		}
+		
 		/// <summary>
 		/// Create a new group in the application
 		/// </summary>
@@ -135,26 +149,11 @@ namespace AzAlternative
 		{
 			Groups.CheckName(name);
 
-			ApplicationGroup g = Instance.CreateGroup(name, description, groupType);
+			ApplicationGroup g = Locator.Factory.CreateGroup(Key, name, description, groupType, false);
 			g.Parent = this;
 			Groups.AddValue(g);
 
 			return g;
-		}
-
-		/// <summary>
-		/// Delete a group defined in the application
-		/// </summary>
-		/// <param name="group">group to delete</param>
-		public void DeleteGroup(ApplicationGroup group)
-		{
-			if (group == null)
-				throw new ArgumentNullException("group");
-			if (!CheckObjectIsValid(group))
-				throw new AzException("The group is not part of this application. Only application groups can be removed here.");
-
-			Instance.DeleteGroup(group);
-			Groups.RemoveValue(group.Key);
 		}
 
 		public void DeleteGroup(string name)
@@ -163,20 +162,20 @@ namespace AzAlternative
 			if (g == null)
 				return;
 
-			DeleteGroup(g);
+			g.Delete();
 		}
 
-		public void UpdateGroup(ApplicationGroup group)
-		{
-			if (group == null)
-				throw new ArgumentNullException("group");
-			if (!CheckObjectIsValid(group))
-				throw new AzException("The group is not part of this application. Only application groups can be updated here.");
+		//public void UpdateGroup(ApplicationGroup group)
+		//{
+		//    if (group == null)
+		//        throw new ArgumentNullException("group");
+		//    if (!CheckObjectIsValid(group))
+		//        throw new AzException("The group is not part of this application. Only application groups can be updated here.");
 
-			Groups.CheckName(group);
-			Instance.UpdateGroup(group);
-			Groups.UpdateValue(group);
-		}
+		//    Groups.CheckName(group);
+		//    Locator.Factory.UpdateGroup(group);
+		//    Groups.UpdateValue(group);
+		//}
 
 		/// <summary>
 		/// Create a new role in the application
@@ -188,7 +187,7 @@ namespace AzAlternative
 		{
 			Roles.CheckName(name);
 
-			RoleDefinition r = Instance.CreateRole(name, description);
+			RoleDefinition r = Locator.Factory.CreateRole(Key, name, description);
 			r.Parent = this;
 			Roles.AddValue(r);
 
@@ -199,36 +198,13 @@ namespace AzAlternative
 		/// Deletes a role from the application
 		/// </summary>
 		/// <param name="role"></param>
-		public void DeleteRole(RoleDefinition role)
-		{
-			if (role == null)
-				throw new ArgumentNullException("role");
-			if (!CheckObjectIsValid(role))
-				throw new AzException("The Role is not part of the application.");
-
-			Instance.DeleteRole(role);
-			Roles.RemoveValue(role.Key);
-		}
-
 		public void DeleteRole(string name)
 		{
 			RoleDefinition r = Roles[name];
 			if (r == null)
 				return;
 
-			DeleteRole(r);
-		}
-
-		public void UpdateRole(RoleDefinition role)
-		{
-			if (role == null)
-				throw new ArgumentNullException("role");
-			if (!CheckObjectIsValid(role))
-				throw new AzException("The Role is not part of the application.");
-
-			Roles.CheckName(role);
-			Instance.UpdateRole(role);
-			Roles.UpdateValue(role);
+			r.Delete();
 		}
 
 		public RoleAssignments CreateRoleAssignments(string name, string description, RoleDefinition role, bool renameOnMatch)
@@ -248,7 +224,7 @@ namespace AzAlternative
 			if (!CheckObjectIsValid(role))
 				throw new AzException("The role is not defined in this application");
 
-			AzAlternative.RoleAssignments r = Instance.CreateRoleAssignments(name, description, role);
+			AzAlternative.RoleAssignments r = Locator.Factory.CreateRoleAssignments(Key, name, description, role);
 			r.Parent = this;
 			RoleAssignments.AddValue(r);
 
@@ -260,36 +236,13 @@ namespace AzAlternative
 			return CreateRoleAssignments(name, description, role, false);
 		}
 
-		public void DeleteRoleAssignments(RoleAssignments role)
-		{
-			if (role == null)
-				throw new ArgumentNullException("role");
-			if (!CheckObjectIsValid(role))
-				throw new AzException("The Role is not part of the application.");
-
-			Instance.DeleteRoleAssignments(role);
-			RoleAssignments.RemoveValue(role.Key);
-		}
-
 		public void DeleteRoleAssignments(string name)
 		{
 			RoleAssignments r = RoleAssignments[name];
 			if (r == null)
 				return;
 
-			DeleteRoleAssignments(r);
-		}
-
-		public void UpdateRoleAssignments(RoleAssignments role)
-		{
-			if (role == null)
-				throw new ArgumentNullException("role");
-			if (!CheckObjectIsValid(role))
-				throw new AzException("The Role is not part of the application.");
-
-			RoleAssignments.CheckName(role);
-			Instance.UpdateRoleAssignments(role);
-			RoleAssignments.UpdateValue(role);
+			r.Delete();
 		}
 
 		/// <summary>
@@ -306,7 +259,7 @@ namespace AzAlternative
 			Operations.CheckName(name);
 			Operations.CheckId(operationId);
 
-			Operation o = Instance.CreateOperation(name, description, operationId);
+			Operation o = Locator.Factory.CreateOperation(Key, name, description, operationId);
 			o.Parent = this;
 
 			Operations.AddValue(o);
@@ -317,37 +270,13 @@ namespace AzAlternative
 		/// Deletes the operation from the application
 		/// </summary>
 		/// <param name="operation">Operaton to delete</param>
-		public void DeleteOperation(Operation operation)
-		{
-			if (operation == null)
-				throw new ArgumentNullException("operation");
-			if (!CheckObjectIsValid(operation))
-				throw new AzException("The operation is not part of this application.");
-
-			Instance.DeleteOperation(operation);
-			Operations.RemoveValue(operation.Key);
-		}
-
 		public void DeleteOperation(string name)
 		{
 			Operation o = Operations[name];
 			if (o == null)
 				return;
 
-			DeleteOperation(o);
-		}
-
-		public void UpdateOperation(Operation operation)
-		{
-			if (operation == null)
-				throw new ArgumentNullException("operation");
-			if (!CheckObjectIsValid(operation))
-				throw new AzException("The operation is not part of this application.");
-			Operations.CheckName(operation);
-			Operations.CheckId(operation);
-
-			Instance.UpdateOperation(operation);
-			Operations.UpdateValue(operation);
+			o.Delete();
 		}
 
 		/// <summary>
@@ -360,7 +289,7 @@ namespace AzAlternative
 		{
 			Tasks.CheckName(name);
 
-			Task t = Instance.CreateTask(name, description);
+			Task t = Locator.Factory.CreateTask(Key, name, description);
 			t.Parent = this;
 
 			Tasks.AddValue(t);
@@ -371,36 +300,13 @@ namespace AzAlternative
 		/// Deletes a task from the application
 		/// </summary>
 		/// <param name="task">task to delete</param>
-		public void DeleteTask(Task task)
-		{
-			if (task == null)
-				throw new ArgumentNullException("task");
-			if (!CheckObjectIsValid(task))
-				throw new AzException("The task is not part of this application.");
-
-			Instance.DeleteTask(task);
-			Tasks.RemoveValue(task.Key);
-		}
-
 		public void DeleteTask(string name)
 		{
 			Task t = Tasks[name];
 			if (t == null)
 				return;
 
-			DeleteTask(t);
-		}
-
-		public void UpdateTask(Task task)
-		{
-			if (task == null)
-				throw new ArgumentNullException("task");
-			if (!CheckObjectIsValid(task))
-				throw new AzException("The task is not part of this application.");
-			Tasks.CheckName(task);
-
-			Instance.UpdateTask(task);
-			Tasks.UpdateValue(task);
+			t.Delete();
 		}
 	}
 }

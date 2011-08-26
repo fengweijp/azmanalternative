@@ -27,10 +27,6 @@ namespace AzAlternative.ActiveDirectory
 			get { throw new NotImplementedException(); }
 		}
 
-		public AdRoleAssignments(AdService service)
-			: base(service)
-		{}
-
 		public void AddGroup(ApplicationGroup group)
 		{
 			throw new NotImplementedException();

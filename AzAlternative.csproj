@@ -45,12 +45,12 @@
     <Compile Include="ActiveDirectory\AdApplication.cs" />
     <Compile Include="ActiveDirectory\AdApplicationGroup.cs" />
     <Compile Include="ActiveDirectory\AdBaseObject.cs" />
+    <Compile Include="ActiveDirectory\AdFactory.cs" />
     <Compile Include="ActiveDirectory\AdMember.cs" />
     <Compile Include="ActiveDirectory\AdOperation.cs" />
     <Compile Include="ActiveDirectory\AdRoleAssignments.cs" />
     <Compile Include="ActiveDirectory\AdRoleDefinition.cs" />
     <Compile Include="ActiveDirectory\AdService.cs" />
-    <Compile Include="ActiveDirectory\AdServiceMain.cs" />
     <Compile Include="ActiveDirectory\AdTask.cs" />
     <Compile Include="AdminManager.cs" />
     <Compile Include="Application.cs">
@@ -88,8 +88,9 @@
     <Compile Include="Interfaces\IRoleAssignment.cs" />
     <Compile Include="Interfaces\IRoleDefinition.cs" />
     <Compile Include="Interfaces\IScope.cs" />
-    <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Interfaces\IFactoryService.cs" />
     <Compile Include="Interfaces\ITask.cs" />
+    <Compile Include="Locator.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleAssignments.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Xml\XmlBaseObject.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml\XmlFactory.cs" />
     <Compile Include="Xml\XmlMember.cs" />
     <Compile Include="Xml\XmlOperation.cs" />
     <Compile Include="Xml\XmlRoleAssignments.cs" />

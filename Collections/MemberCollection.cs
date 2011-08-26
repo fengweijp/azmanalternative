@@ -14,13 +14,13 @@ namespace AzAlternative.Collections
 		private ServiceBase _Service;
 		private string _Key;
 
-		internal MemberCollection(ServiceBase service, string key)
-			: this(service, key, false)
+		internal MemberCollection(string key)
+			: this(key, false)
 		{ }
 
-		internal MemberCollection(ServiceBase service, string key, bool isExlusions)
+		internal MemberCollection(string key, bool isExlusions)
 		{
-			_Service = service;
+			_Service = Locator.Service;
 			_Key = key;
 			_IsExclusions = isExlusions;
 		}
@@ -39,7 +39,6 @@ namespace AzAlternative.Collections
 			member.Instance.Remove();
 		}
 
-
 		public IEnumerator<Member> GetEnumerator()
 		{
 			return _Service.GetMembers(_Key, _IsExclusions);
@@ -49,5 +48,30 @@ namespace AzAlternative.Collections
 		{
 			return GetEnumerator();
 		}
+
+		//public void Remove(Member member)
+		//{
+		//    member.Instance.Remove();
+		//}
+
+		//public void Remove(string name)
+		//{
+		//    string tmp = Member.ToSid(name);
+		//    Member m = this.First(item => item.Instance.Sid == tmp);
+
+		//    RemoveMember(m);
+		//}
+
+		//public void Add(string name)
+		//{
+		//    Member m = new Member(new XmlMember(Service), name);
+		//    m.Instance.Parent = this.Key;
+
+		//    if (Members.Contains(m))
+		//        return;
+
+		//    m.Instance.Save();
+		//}
+
 	}
 }

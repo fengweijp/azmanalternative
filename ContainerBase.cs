@@ -32,6 +32,12 @@ namespace AzAlternative
 			internal set;
 		}
 
+		public bool IsDeleted
+		{
+			get;
+			protected set;
+		}
+
 		///// <summary>
 		///// Checks whether the child parameter is defined in the current application
 		///// </summary>

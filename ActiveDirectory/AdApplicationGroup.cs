@@ -70,10 +70,6 @@ namespace AzAlternative.ActiveDirectory
 			set;
 		}
 
-		public AdApplicationGroup(AdService service)
-			: base(service)
-		{ }
-
 		public void AddMember(string name)
 		{
 			throw new NotImplementedException();
@@ -94,9 +90,9 @@ namespace AzAlternative.ActiveDirectory
 			throw new NotImplementedException();
 		}
 
-		public override AddRequest CreateNew()
+		protected override AddRequest CreateNewThis()
 		{
-			AddRequest ar = base.CreateNew();
+			AddRequest ar = base.CreateNewThis();
 
 			ar.Attributes.Add(CreateAttribute(SAMACCOUNTNAME, "$" + Guid.NewGuid()));
 			int value = 0;
@@ -146,18 +142,18 @@ namespace AzAlternative.ActiveDirectory
 					throw new AzException("Unknown or unsupported group type");
 			}
 
-			Members = new Collections.MemberCollection(Service, Key);
-			Exclusions = new Collections.MemberCollection(Service, Key, true);
-			Groups = new Collections.ApplicationGroupCollection(Service, true);
+			Members = new Collections.MemberCollection(Key);
+			Exclusions = new Collections.MemberCollection(Key, true);
+			Groups = new Collections.ApplicationGroupCollection(true);
 
 			ChangeTrackingDisabled = false;
 		}
 
-		public static Collections.ApplicationGroupCollection GetCollection(AdService service, string key, bool linked)
+		public static Collections.ApplicationGroupCollection GetCollection(string key, bool linked)
 		{
-			var results = service.Load(key, "(ObjectClass=" + CLASSNAME + ")");
+			var results = ((AdService)Locator.Service).Load(key, "(ObjectClass=" + CLASSNAME + ")");
 			var q = from i in results.Cast<SearchResultEntry>() select i;
-			return new Collections.ApplicationGroupCollection(service, q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
+			return new Collections.ApplicationGroupCollection(q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
 		}
 
 		public static DirectoryAttribute GetMembers(SearchResultEntry entry, bool isExclusions)

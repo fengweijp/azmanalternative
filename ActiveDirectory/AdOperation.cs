@@ -28,10 +28,6 @@ namespace AzAlternative.ActiveDirectory
 			get { return CLASSNAME; }
 		}
 
-		public AdOperation(AdService service)
-			: base(service)
-		{ }
-
 		public override void Load(SearchResultEntry entry)
 		{
 			ChangeTrackingDisabled = true;
@@ -51,20 +47,20 @@ namespace AzAlternative.ActiveDirectory
 			return mr;
 		}
 
-		public override AddRequest CreateNew()
+		protected override AddRequest CreateNewThis()
 		{
-			AddRequest ar = base.CreateNew();
+			AddRequest ar = base.CreateNewThis();
 
 			ar.Attributes.Add(CreateAttribute(OPERATIONID, OperationId.ToString()));
 
 			return ar;
 		}
 
-		public static Collections.OperationCollection GetCollection(AdService service, string key, bool linked)
+		public static Collections.OperationCollection GetCollection(string key, bool linked)
 		{
-			var results = service.Load(key, "(ObjectClass=" + CLASSNAME + ")");
+			var results = ((AdService)Locator.Service).Load(key, "(ObjectClass=" + CLASSNAME + ")");
 			var q = from i in results.Cast<SearchResultEntry>() select i;
-			return new Collections.OperationCollection(service, q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
+			return new Collections.OperationCollection(q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
 		}
 	}
 }

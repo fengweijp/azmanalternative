@@ -14,12 +14,12 @@ namespace AzAlternative.Collections
 		{
 			get { return "role"; }
 		}
-		internal RoleDefinitionCollection(ServiceBase service, Dictionary<string, string> values, bool isChildList)
-			: base(service, values, isChildList)
+		internal RoleDefinitionCollection(Dictionary<string, string> values, bool isChildList)
+			: base(values, isChildList)
 		{ }
 
-		internal RoleDefinitionCollection(ServiceBase service, bool isChildList)
-			: this(service, new Dictionary<string, string>(), isChildList)
+		internal RoleDefinitionCollection(bool isChildList)
+			: this(new Dictionary<string, string>(), isChildList)
 		{ }
 
 		public override IEnumerator<RoleDefinition> GetEnumerator()
