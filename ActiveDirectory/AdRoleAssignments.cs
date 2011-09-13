@@ -14,17 +14,20 @@ namespace AzAlternative.ActiveDirectory
 
 		public RoleDefinition Definition
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public Collections.ApplicationGroupCollection Groups
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public Collections.MemberCollection Members
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public void AddGroup(ApplicationGroup group)

@@ -117,7 +117,6 @@ namespace AzAlternative.ActiveDirectory
 		public override ModifyRequest GetUpdate()
 		{
 			ModifyRequest mr = base.GetUpdate();
-
 			SetAttribute(mr.Modifications, LDAPQUERY, LdapQuery);
 
 			Changes.Clear();

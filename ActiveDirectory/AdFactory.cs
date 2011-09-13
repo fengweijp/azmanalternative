@@ -74,17 +74,29 @@ namespace AzAlternative.ActiveDirectory
 
 		public RoleAssignments CreateRoleAssignments(string parent, string name, string description, RoleDefinition role)
 		{
-			throw new NotImplementedException();
+			AdRoleAssignments r = new AdRoleAssignments();
+			r.ContainerDn = parent;
+			r.Name = name;
+			r.Description = description;
+			r.Definition = role;
+
+			r.Groups = new Collections.ApplicationGroupCollection(true);
+			r.Members = new Collections.MemberCollection(null);
+
+			_Service.Save(r.CreateNew());
+
+			return new RoleAssignments(r);
 		}
 
 		public void UpdateRoleAssignments(Interfaces.IRoleAssignment role)
 		{
-			throw new NotImplementedException();
+			AdRoleAssignments r = (AdRoleAssignments)role;
+			_Service.Save(r.GetUpdate());
 		}
 
 		public void DeleteRoleAssignments(Interfaces.IRoleAssignment role)
 		{
-			throw new NotImplementedException();
+			((AdRoleAssignments)role).Delete();
 		}
 
 		public RoleDefinition CreateRole(string parent, string name, string description)
@@ -92,6 +104,10 @@ namespace AzAlternative.ActiveDirectory
 			AdRoleDefinition role = new AdRoleDefinition();
 			role.Name = name;
 			role.Description = description;
+
+			role.Operations = new Collections.OperationCollection(true);
+			role.Tasks = new Collections.TaskCollection(true);
+			role.Roles = new Collections.RoleDefinitionCollection(true);
 
 			_Service.Save(role.CreateNew());
 
@@ -134,17 +150,28 @@ namespace AzAlternative.ActiveDirectory
 
 		public Task CreateTask(string parent, string name, string description)
 		{
-			throw new NotImplementedException();
+			AdTask t = new AdTask();
+			t.ContainerDn = parent;
+			t.Name = name;
+			t.Description = description;
+
+			t.Operations = new Collections.OperationCollection(true);
+			t.Tasks = new Collections.TaskCollection(true);
+
+			_Service.Save(t.CreateNew());
+
+			return new Task(t);
 		}
 
 		public void UpdateTask(Interfaces.ITask task)
 		{
-			throw new NotImplementedException();
+			AdTask t = (AdTask)task;
+			_Service.Save(t.GetUpdate());
 		}
 
 		public void DeleteTask(Interfaces.ITask task)
 		{
-			throw new NotImplementedException();
+			((AdTask)task).Delete();
 		}
 	}
 }

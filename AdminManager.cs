@@ -232,6 +232,8 @@ namespace AzAlternative
 			else if (ConnectionString.StartsWith("msldap"))
 			{
 				ActiveDirectory.AdService s = new ActiveDirectory.AdService(ConnectionString.Substring(9));
+				Locator.SetService(s, new ActiveDirectory.AdFactory(s));
+
 				Instance = s.GetAdminManager();
 			}
 			else
