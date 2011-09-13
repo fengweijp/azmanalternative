@@ -104,6 +104,21 @@ namespace AzAlternative.ActiveDirectory
 			return string.IsNullOrEmpty(result) ? null : result;
 		}
 
+		protected Dictionary<string, string> GetValues(SearchResultAttributeCollection attributes, string name)
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
+			if (attributes[name] == null)
+				return result;
+
+			foreach (var item in attributes[name])
+			{
+				string tmp = item.ToString();
+				result.Add(tmp.Substring(3, tmp.IndexOf(",")), tmp);
+			}
+
+			return result;
+		}
+
 		protected void SetAttribute(DirectoryAttributeModificationCollection modifications, string name, string value)
 		{
 			SetAttribute(modifications, name, name, value);

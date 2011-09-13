@@ -8,10 +8,10 @@ namespace AzAlternative.ActiveDirectory
 {
 	internal class AdApplication : AdBaseObject, Interfaces.IApplication
 	{
-		private const string GROUPSCONTAINER = "AzGroupObjectConatiner-";
-		private const string OPSCONTAINER = "AzOpObjectConatiner-";
-		private const string ROLESCONTAINER = "AzRoleObjectConatiner-";
-		private const string TASKSCONTAINER = "AzTaskObjectConatiner-";
+		private const string GROUPSCONTAINER = "AzGroupObjectContainer-";
+		private const string OPSCONTAINER = "AzOpObjectContainer-";
+		private const string ROLESCONTAINER = "AzRoleObjectContainer-";
+		private const string TASKSCONTAINER = "AzTaskObjectContainer-";
 		private const string APPNAME = "msDS-AzApplicationName";
 		private const string VERSION = "msDS-AzApplicationVersion";
 		private const string CLASSNAME = "msDS-AzApplication";
@@ -117,11 +117,11 @@ namespace AzAlternative.ActiveDirectory
 			ApplicationVersion = GetAttribute(entry.Attributes, VERSION);
 			ContainerDn = Key.Substring(4 + CN.Length);
 
-			Groups = AdApplicationGroup.GetCollection(string.Format("{0}{2},{1}", GROUPSCONTAINER, Key, CN), false);
-			Roles = new Collections.RoleDefinitionCollection(false);
+			Groups = AdApplicationGroup.GetCollection(string.Format("cn={0}{2},{1}", GROUPSCONTAINER, Key, CN), false);
+			Roles = AdRoleDefinition.GetRoles(string.Format("cn={0}{2},{1}",TASKSCONTAINER, Key, CN), false);
 			RoleAssignments = new Collections.RoleAssignmentsCollection();
-			Tasks = new Collections.TaskCollection(false);
-			Operations = AdOperation.GetCollection(string.Format("{0}{1},{2}", OPSCONTAINER, CN, Key), false);
+			Tasks = AdTask.GetTasks(string.Format("cn={0}{2},{1}", TASKSCONTAINER, Key, CN), false);
+			Operations = AdOperation.GetCollection(string.Format("cn={0}{1},{2}", OPSCONTAINER, CN, Key), false);
 
 			ChangeTrackingDisabled = false;
 		}
@@ -136,6 +136,14 @@ namespace AzAlternative.ActiveDirectory
 				ar.Attributes.Add(CreateAttribute(VERSION, ApplicationVersion));
 
 			return ar;
+		}
+
+		public override ModifyRequest GetUpdate()
+		{
+			ModifyRequest mr = base.GetUpdate();
+			SetAttribute(mr.Modifications, VERSION, ApplicationVersion);
+
+			return mr;
 		}
 
 		public static Collections.ApplicationCollection GetCollection(string key)

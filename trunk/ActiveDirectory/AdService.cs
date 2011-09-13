@@ -169,6 +169,7 @@ namespace AzAlternative.ActiveDirectory
 		{
 			AdApplicationGroup ag = new AdApplicationGroup();
 			ag.Load(Load(uniqueName));
+			ag.IsGlobalGroup = ag.ContainerDn.Substring(ag.ContainerDn.IndexOf(",") + 1).Equals(_BaseDN, StringComparison.InvariantCultureIgnoreCase);
 
 			return new ApplicationGroup(ag);
 		}
@@ -181,6 +182,7 @@ namespace AzAlternative.ActiveDirectory
 				{
 					AdApplicationGroup g = new AdApplicationGroup();
 					g.Load(Load(item, conn));
+					g.IsGlobalGroup = g.ContainerDn.Substring(g.ContainerDn.IndexOf(",") + 1).Equals(_BaseDN, StringComparison.InvariantCultureIgnoreCase);
 					ApplicationGroup result = new ApplicationGroup(g);
 
 					if (result.IsGlobalGroup)
