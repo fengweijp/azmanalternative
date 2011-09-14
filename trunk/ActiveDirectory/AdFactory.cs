@@ -22,8 +22,8 @@ namespace AzAlternative.ActiveDirectory
 			ag.Name = name;
 			ag.Description = description;
 			ag.GroupType = groupType;
-			//ag.ContainerDn = GROUPSCONTAINER + this.Name + "," + this.Key;
-			ag.IsGlobalGroup = true;
+			ag.ContainerDn = string.Format("cn={0}{1},{2}", GROUPSCONTAINER, parent.Substring(3, parent.IndexOf(",") - 3), parent);
+			ag.IsGlobalGroup = isGlobalGroup;
 
 			ag.Groups = new Collections.ApplicationGroupCollection(true);
 
@@ -50,13 +50,15 @@ namespace AzAlternative.ActiveDirectory
 			a.Name = name;
 			a.Description = description;
 			a.ApplicationVersion = versionInformation;
+			a.Key = string.Format("cn={0},{1}", a.CN, a.ContainerDn);
 
 			a.Groups = new Collections.ApplicationGroupCollection(false);
 			a.Operations = new Collections.OperationCollection(false);
 			a.RoleAssignments = new Collections.RoleAssignmentsCollection();
 			a.Roles = new Collections.RoleDefinitionCollection(false);
+			a.Tasks = new Collections.TaskCollection(false);
 
-			_Service.Save(a.CreateNew());
+			_Service.Save(a.CreateNew());			
 
 			return new Application(a);
 		}

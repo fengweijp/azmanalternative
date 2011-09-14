@@ -150,7 +150,7 @@ namespace AzAlternative
 				throw new ArgumentNullException("name", "Name cannot be blank when adding a group.");
 			Groups.CheckName(name);
 
-			ApplicationGroup g = Locator.Factory.CreateGroup(null, name, description, groupType, true);
+			ApplicationGroup g = Locator.Factory.CreateGroup(Key, name, description, groupType, true);
 			g.Store = this;
 			Groups.AddValue(g);
 

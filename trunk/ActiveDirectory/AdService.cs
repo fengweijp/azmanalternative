@@ -103,7 +103,7 @@ namespace AzAlternative.ActiveDirectory
 			mdr.DistinguishedName = originalName;
 			mdr.NewName = uniqueName;
 
-			LdapConnection conn = null;
+			using (LdapConnection conn = GetConnection())
 			try
 			{
 				conn.SendRequest(mdr);
@@ -111,6 +111,28 @@ namespace AzAlternative.ActiveDirectory
 			finally
 			{
 				if (conn != null) conn.Dispose();
+			}
+		}
+
+		public void UpdateListAttribute(string key, string attributeName, string value, DirectoryAttributeOperation operation)
+		{
+			using (LdapConnection conn = GetConnection())
+			{
+				SearchResultEntry entry = Load(key, conn);
+
+				if (entry == null)
+					return;
+
+				DirectoryAttributeModification mod = new DirectoryAttributeModification();
+				mod.Operation = DirectoryAttributeOperation.Replace;
+				mod.AddRange(entry.Attributes[attributeName].GetValues(typeof(string)));
+				if (operation == DirectoryAttributeOperation.Add)
+					mod.Add(value);
+				else
+					mod.Remove(value);
+
+				ModifyRequest mr = new ModifyRequest(key, mod);
+				conn.SendRequest(mr);
 			}
 		}
 
@@ -127,6 +149,8 @@ namespace AzAlternative.ActiveDirectory
 				conn = GetConnection();
 				foreach (var item in requests)
 				{
+					if (item is ModifyRequest && ((ModifyRequest)item).Modifications.Count == 0)
+						continue;
 					conn.SendRequest(item);
 				}
 			}
@@ -293,6 +317,11 @@ namespace AzAlternative.ActiveDirectory
 
 				yield return new Member(a);
 			}
+		}
+
+		public bool IsStoreItem(string key)
+		{
+			return key.ToUpper().Contains(_BaseDN.ToUpper());
 		}
 	}
 }

@@ -72,29 +72,38 @@ namespace AzAlternative.ActiveDirectory
 
 		public void AddMember(string name)
 		{
-			throw new NotImplementedException();
+			Member m = new Member(new AdMember(), name);
+			m.Instance.Parent = this.Key;
+
+			if (Members.Contains(m))
+				return;
+
+			m.Instance.Save();
 		}
 
 		public void RemoveMember(string member)
 		{
-			throw new NotImplementedException();
+			string tmp = Member.ToSid(member);
+			Member m = Members.First(item => item.Instance.Sid == tmp);
+
+			m.Instance.Remove();
 		}
 
 		public void AddGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, MEMBERS, group.Key, DirectoryAttributeOperation.Add);
 		}
 
 		public void RemoveGroup(ApplicationGroup group)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, MEMBERS, group.Key, DirectoryAttributeOperation.Delete);
 		}
 
 		protected override AddRequest CreateNewThis()
 		{
 			AddRequest ar = base.CreateNewThis();
 
-			ar.Attributes.Add(CreateAttribute(SAMACCOUNTNAME, "$" + Guid.NewGuid()));
+			//ar.Attributes.Add(CreateAttribute(SAMACCOUNTNAME, "$" + Guid.NewGuid()));
 			int value = 0;
 			switch (GroupType)
 			{
@@ -114,13 +123,14 @@ namespace AzAlternative.ActiveDirectory
 			return ar;
 		}
 
-		public override ModifyRequest GetUpdate()
+		public override DirectoryRequest[] GetUpdate()
 		{
-			ModifyRequest mr = base.GetUpdate();
+			var result = base.GetUpdate();
+			ModifyRequest mr = (ModifyRequest)result[result.Length - 1];
 			SetAttribute(mr.Modifications, LDAPQUERY, LdapQuery);
 
 			Changes.Clear();
-			return mr;
+			return result;
 		}
 
 		public override void Load(SearchResultEntry entry)
@@ -143,7 +153,7 @@ namespace AzAlternative.ActiveDirectory
 
 			Members = new Collections.MemberCollection(Key);
 			Exclusions = new Collections.MemberCollection(Key, true);
-			Groups = new Collections.ApplicationGroupCollection(true);
+			Groups = new Collections.ApplicationGroupCollection(GetLinkedGroups(entry, false), true);
 
 			ChangeTrackingDisabled = false;
 		}
@@ -158,6 +168,20 @@ namespace AzAlternative.ActiveDirectory
 		public static DirectoryAttribute GetMembers(SearchResultEntry entry, bool isExclusions)
 		{
 			return entry.Attributes[isExclusions ? NONMEMBERS : MEMBERS];
+		}
+
+		private Dictionary<string, string> GetLinkedGroups(SearchResultEntry entry, bool isExclusions)
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
+
+			foreach (var item in entry.Attributes[isExclusions ? MEMBERS : NONMEMBERS])
+			{
+				string tmp = item.ToString();
+				if (Service.IsStoreItem(tmp))
+					result.Add(tmp.Substring(3, tmp.IndexOf(",")), tmp);
+			}
+
+			return result;
 		}
 	}
 }

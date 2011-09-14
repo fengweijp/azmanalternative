@@ -38,13 +38,14 @@ namespace AzAlternative.ActiveDirectory
 			ChangeTrackingDisabled = false;
 		}
 
-		public override ModifyRequest GetUpdate()
+		public override DirectoryRequest[] GetUpdate()
 		{
-			ModifyRequest mr = base.GetUpdate();
+			var result = base.GetUpdate();
+			ModifyRequest mr = (ModifyRequest)result[result.Length - 1];
 			SetAttribute(mr.Modifications, OPERATIONID, OperationId.ToString());
 
 			Changes.Clear();
-			return mr;
+			return result;
 		}
 
 		protected override AddRequest CreateNewThis()
