@@ -110,9 +110,9 @@ namespace AzAlternative.ActiveDirectory
 			if (attributes[name] == null)
 				return result;
 
-			foreach (var item in attributes[name])
+			for (int i = 0; i < attributes[name].Count; i++)
 			{
-				string tmp = item.ToString();
+				string tmp = attributes[name][i].ToString();
 				result.Add(tmp.Substring(3, tmp.IndexOf(",")), tmp);
 			}
 
@@ -157,15 +157,22 @@ namespace AzAlternative.ActiveDirectory
 			return result;
 		}
 
-		public virtual ModifyRequest GetUpdate()
+		public virtual DirectoryRequest[] GetUpdate()
 		{
-			string tmp = GetNewUniqueName();
-			if (Key != tmp)
+			var result = new List<DirectoryRequest>();
+
+			if (Changes.ContainsKey(NameAttribute))
 			{
 				string orignalDn = Key;
-				Key = tmp;
+				Key = string.Format("cn={0},{1}", Name, ContainerDn);
 
-				Service.UpdateDN(Key, orignalDn);
+				ModifyDNRequest mdr = new ModifyDNRequest();
+				mdr.DistinguishedName = orignalDn;
+				mdr.NewName = "cn=" + Name;
+				mdr.NewParentDistinguishedName = ContainerDn;
+				mdr.DeleteOldRdn = true;
+
+				result.Add(mdr);
 			}
 
 			ModifyRequest mr = new ModifyRequest();
@@ -174,7 +181,8 @@ namespace AzAlternative.ActiveDirectory
 			SetAttribute(mr.Modifications, DESCRIPTION, Description);
 //			SetAttribute(mr.Modifications, NAME, Name);
 
-			return mr;
+			result.Add(mr);
+			return result.ToArray();
 		}
 
 		protected void OnPropertyChanged(string name, string oldValue, string newValue)
@@ -211,17 +219,19 @@ namespace AzAlternative.ActiveDirectory
 			Changes[name] = c;
 		}
 
-		protected virtual string GetNewUniqueName()
+		protected virtual void GetNewUniqueName()
 		{
-			return string.Format("CN={0},{1}", Name, ContainerDn);
+			Key = string.Format("CN={0},{1}", Name, ContainerDn);
 		}
 
 		protected virtual AddRequest CreateNewThis()
 		{
 			AddRequest ar = new AddRequest();
-			ar.DistinguishedName = GetNewUniqueName();
+			GetNewUniqueName();
+			ar.DistinguishedName = Key;
 			//ar.Attributes.Add(CreateAttribute(NAME, Name));
-			ar.Attributes.Add(CreateAttribute(DESCRIPTION, Description));
+			if (!string.IsNullOrEmpty(Description))
+				ar.Attributes.Add(CreateAttribute(DESCRIPTION, Description));
 			ar.Attributes.Add(CreateAttribute(OBJECTCLASS, ObjectClass));
 
 			return ar;
@@ -233,12 +243,14 @@ namespace AzAlternative.ActiveDirectory
 			result.Add(CreateNewThis());
 			result.AddRange(CreateChildEntries());
 
+			Changes.Clear();
+
 			return result.ToArray();
 		}
 
 		protected virtual AddRequest[] CreateChildEntries()
 		{
-			throw new NotSupportedException();
+			return new AddRequest[0];
 		}
 
 		public virtual void Delete()

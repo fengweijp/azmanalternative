@@ -85,22 +85,22 @@ namespace AzAlternative.ActiveDirectory
 			List<AddRequest> result = new List<AddRequest>();
 
 			AddRequest a = new AddRequest();
-			a.DistinguishedName = string.Format("cn={0}{1},{2}", GROUPSCONTAINER, "", this.Key);
+			a.DistinguishedName = string.Format("cn={0}{1},cn={1},{2}", GROUPSCONTAINER, CN, this.ContainerDn);
 			a.Attributes.Add(new DirectoryAttribute(OBJECTCLASS, CONTAINER));
 			result.Add(a);
 
 			a = new AddRequest();
-			a.DistinguishedName = string.Format("cn={0}{1},{2}", OPSCONTAINER, "", this.Key);
+			a.DistinguishedName = string.Format("cn={0}{1},cn={1},{2}", OPSCONTAINER, CN, this.ContainerDn);
 			a.Attributes.Add(new DirectoryAttribute(OBJECTCLASS, CONTAINER));
 			result.Add(a);
 
 			a = new AddRequest();
-			a.DistinguishedName = string.Format("cn={0}{1},{2}", ROLESCONTAINER, "", this.Key);
+			a.DistinguishedName = string.Format("cn={0}{1},cn={1},{2}", ROLESCONTAINER, CN, this.ContainerDn);
 			a.Attributes.Add(new DirectoryAttribute(OBJECTCLASS, CONTAINER));
 			result.Add(a);
 
 			a = new AddRequest();
-			a.DistinguishedName = string.Format("cn={0}{1},{2}", TASKSCONTAINER, "", this.Key);
+			a.DistinguishedName = string.Format("cn={0}{1},cn={1},{2}", TASKSCONTAINER, CN, this.ContainerDn);
 			a.Attributes.Add(new DirectoryAttribute(OBJECTCLASS, CONTAINER));
 			result.Add(a);
 
@@ -126,10 +126,14 @@ namespace AzAlternative.ActiveDirectory
 			ChangeTrackingDisabled = false;
 		}
 
+		protected override void GetNewUniqueName()
+		{
+			Key = string.Format("cn={0},{1}", CN, ContainerDn);
+		}
+
 		protected override AddRequest CreateNewThis()
 		{
 			AddRequest ar = base.CreateNewThis();
-			ar.DistinguishedName = string.Format("cn={0},{1}", CN, ContainerDn);
 			ar.Attributes.Add(CreateAttribute(APPNAME, Name));
 
 			if (!string.IsNullOrEmpty(ApplicationVersion))
@@ -138,12 +142,50 @@ namespace AzAlternative.ActiveDirectory
 			return ar;
 		}
 
-		public override ModifyRequest GetUpdate()
+		public override DirectoryRequest[] GetUpdate()
 		{
-			ModifyRequest mr = base.GetUpdate();
+			ModifyRequest mr = new ModifyRequest();
+			mr.DistinguishedName = Key;
+
+			SetAttribute(mr.Modifications, DESCRIPTION, Description);
+			SetAttribute(mr.Modifications, NameAttribute, Name);
 			SetAttribute(mr.Modifications, VERSION, ApplicationVersion);
 
-			return mr;
+			return new DirectoryRequest[] { mr };
+		}
+
+		public override void Delete()
+		{
+			List<DirectoryRequest> result = new List<DirectoryRequest>();
+
+			result.Add(new DeleteRequest(Key));
+			result[0].Controls.Add(new TreeDeleteControl());
+			//foreach (var item in Groups.AllKeys)
+			//{
+			//    result.Add(new DeleteRequest(item));
+			//}
+			//result.Add(new DeleteRequest(string.Format("cn={0}{1},{2}", GROUPSCONTAINER, CN, Key)));
+
+			//foreach (var item in Tasks.AllKeys)
+			//{
+			//    result.Add(new DeleteRequest(item));
+			//}
+			//result.Add(new DeleteRequest(string.Format("cn={0}{1},{2}", OPSCONTAINER, CN, Key)));
+
+			//foreach (var item in Operations.AllKeys)
+			//{
+			//    result.Add(new DeleteRequest(item));
+			//}
+			//result.Add(new DeleteRequest(string.Format("cn={0}{1},{2}", TASKSCONTAINER, CN, Key)));
+
+			//foreach (var item in RoleAssignments.AllKeys)
+			//{
+			//    result.Add(new DeleteRequest(item));
+			//}
+			//result.Add(new DeleteRequest(string.Format("cn={0}{1},{2}", ROLESCONTAINER, CN, Key)));
+			//result.Add(new DeleteRequest(Key));
+
+			Service.Save(result.ToArray());
 		}
 
 		public static Collections.ApplicationCollection GetCollection(string key)

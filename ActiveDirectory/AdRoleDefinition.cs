@@ -8,7 +8,6 @@ namespace AzAlternative.ActiveDirectory
 {
 	internal class AdRoleDefinition : AdTask, Interfaces.IRoleDefinition
 	{
-		private const string ROLE = "msDS-TasksForAzRoleBL";
 		private const string ISROLE = "msDS-AzTaskIsRoleDefinition";
 
 		public Collections.RoleDefinitionCollection Roles
@@ -19,12 +18,12 @@ namespace AzAlternative.ActiveDirectory
 
 		public void AddRole(RoleDefinition role)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, TASKS, role.Key, DirectoryAttributeOperation.Add);
 		}
 
 		public void RemoveRole(RoleDefinition role)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, TASKS, role.Key, DirectoryAttributeOperation.Delete);
 		}
 
 		protected override System.DirectoryServices.Protocols.AddRequest CreateNewThis()

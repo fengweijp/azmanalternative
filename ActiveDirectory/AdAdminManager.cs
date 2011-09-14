@@ -82,7 +82,7 @@ namespace AzAlternative.ActiveDirectory
 			return result.ToArray();
 		}
 
-		public override ModifyRequest GetUpdate()
+		public override DirectoryRequest[] GetUpdate()
 		{
 			return base.GetUpdate();
 		}

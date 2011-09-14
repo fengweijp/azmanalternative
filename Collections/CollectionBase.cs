@@ -60,6 +60,11 @@ namespace AzAlternative.Collections
 
 		protected abstract string ErrorObjectName { get; }
 
+		internal Dictionary<string, string>.ValueCollection AllKeys
+		{
+			get { return Guids.Values; }
+		}
+
 		/// <summary>
 		/// Creates an instance of the collection
 		/// </summary>

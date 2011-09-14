@@ -12,7 +12,7 @@ namespace AzAlternative.ActiveDirectory
 		private const string BIZRULELANGUAGE = "msDS-AzBizRuleLanguage";
 		private const string BIZRULEPATH = "msDS-AzLastImportedBizRulePath";
 		private const string OPERATIONS = "msDS-OperationsForAzTask";
-		private const string TASKS = "msDS-TasksForAzTask";
+		protected const string TASKS = "msDS-TasksForAzTask";
 		protected const string CLASSNAME = "msDS-AzTask";
 
 		private string _BizRuleImportedPath;
@@ -68,22 +68,22 @@ namespace AzAlternative.ActiveDirectory
 
 		public void AddTask(Task task)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, TASKS, task.Key, DirectoryAttributeOperation.Add);
 		}
 
 		public void RemoveTask(Task task)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, TASKS, task.Key, DirectoryAttributeOperation.Delete);
 		}
 
 		public void AddOperation(Operation operation)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, OPERATIONS, operation.Key, DirectoryAttributeOperation.Add);
 		}
 
 		public void RemoveOperation(Operation operation)
 		{
-			throw new NotImplementedException();
+			Service.UpdateListAttribute(Key, OPERATIONS, operation.Key, DirectoryAttributeOperation.Delete);
 		}
 
 		public void LoadBizRuleScript(string path, BizRuleLanguage language)
@@ -132,16 +132,17 @@ namespace AzAlternative.ActiveDirectory
 			return ar;
 		}
 
-		public override ModifyRequest GetUpdate()
+		public override DirectoryRequest[] GetUpdate()
 		{
-			ModifyRequest mr = base.GetUpdate();
+			var result = base.GetUpdate();
+			ModifyRequest mr = (ModifyRequest)result[result.Length - 1];
 
 			SetAttribute(mr.Modifications, BIZRULE, BizRule);
 			SetAttribute(mr.Modifications, BIZRULELANGUAGE, BizRuleLanguage.ToString());
 			SetAttribute(mr.Modifications, BIZRULEPATH, BizRuleImportedPath);
 
 			Changes.Clear();
-			return mr;
+			return result;
 		}
 
 		public static Collections.TaskCollection GetTasks(string key,bool isChildList)
