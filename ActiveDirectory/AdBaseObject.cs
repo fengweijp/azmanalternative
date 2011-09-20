@@ -106,7 +106,7 @@ namespace AzAlternative.ActiveDirectory
 
 		protected Dictionary<string, string> GetValues(SearchResultAttributeCollection attributes, string name)
 		{
-			Dictionary<string, string> result = new Dictionary<string, string>();
+			Dictionary<string, string> result = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 			if (attributes[name] == null)
 				return result;
 
@@ -273,7 +273,7 @@ namespace AzAlternative.ActiveDirectory
 		
 		public Dictionary<string, string> GetChildren(string container, string filter)
 		{
-			Dictionary<string, string> result = new Dictionary<string, string>();
+			Dictionary<string, string> result = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
 			foreach (SearchResultEntry item in Service.Load(container, filter))
 			{

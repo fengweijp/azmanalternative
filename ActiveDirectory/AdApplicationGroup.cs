@@ -117,7 +117,7 @@ namespace AzAlternative.ActiveDirectory
 					throw new AzException("Unknown group type.");
 			}
 			ar.Attributes.Add(CreateAttribute(GROUPTYPE, value.ToString()));
-			if (GroupType == AzAlternative.GroupType.LdapQuery)
+			if (GroupType == AzAlternative.GroupType.LdapQuery && !string.IsNullOrEmpty(LdapQuery))
 				ar.Attributes.Add(CreateAttribute(LDAPQUERY, LdapQuery));
 
 			return ar;
@@ -162,7 +162,7 @@ namespace AzAlternative.ActiveDirectory
 		{
 			var results = ((AdService)Locator.Service).Load(key, "(ObjectClass=" + CLASSNAME + ")");
 			var q = from i in results.Cast<SearchResultEntry>() select i;
-			return new Collections.ApplicationGroupCollection(q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName), linked);
+			return new Collections.ApplicationGroupCollection(q.ToDictionary(x => x.Attributes["cn"][0].ToString(), x => x.DistinguishedName, StringComparer.InvariantCultureIgnoreCase), linked);
 		}
 
 		public static DirectoryAttribute GetMembers(SearchResultEntry entry, bool isExclusions)
@@ -172,13 +172,17 @@ namespace AzAlternative.ActiveDirectory
 
 		private Dictionary<string, string> GetLinkedGroups(SearchResultEntry entry, bool isExclusions)
 		{
-			Dictionary<string, string> result = new Dictionary<string, string>();
+			Dictionary<string, string> result = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-			foreach (var item in entry.Attributes[isExclusions ? MEMBERS : NONMEMBERS])
+			DirectoryAttribute da = entry.Attributes[isExclusions ? NONMEMBERS : MEMBERS];
+			if (da != null)
 			{
-				string tmp = item.ToString();
-				if (Service.IsStoreItem(tmp))
-					result.Add(tmp.Substring(3, tmp.IndexOf(",")), tmp);
+				for (int i = 0; i < da.Count; i++)
+				{
+					string tmp = da[i].ToString();
+					if (Service.IsStoreItem(tmp))
+						result.Add(tmp.Substring(3, tmp.IndexOf(",") - 3), tmp);
+				}
 			}
 
 			return result;

@@ -133,16 +133,22 @@ namespace AzAlternative
 		public void Save()
 		{
 			if (IsGlobalGroup)
+			{
 				Store.Groups.CheckName(this);
+				Store.Groups.UpdateValue(this);
+			}
 			else
+			{
 				Parent.Groups.CheckName(this);
+				Parent.Groups.UpdateValue(this);
+			}
 
 			Locator.Factory.UpdateGroup(this.Instance);
 
 			if (IsGlobalGroup)
-				Store.Groups.UpdateValue(this);
+				Store.Groups.UpdateKey(this);
 			else
-				Parent.Groups.UpdateValue(this);
+				Parent.Groups.UpdateKey(this);
 		}
 
 		public void Delete()

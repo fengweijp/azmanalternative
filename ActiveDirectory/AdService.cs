@@ -124,12 +124,22 @@ namespace AzAlternative.ActiveDirectory
 					return;
 
 				DirectoryAttributeModification mod = new DirectoryAttributeModification();
+				mod.Name = attributeName;
 				mod.Operation = DirectoryAttributeOperation.Replace;
 				mod.AddRange(entry.Attributes[attributeName].GetValues(typeof(string)));
 				if (operation == DirectoryAttributeOperation.Add)
 					mod.Add(value);
 				else
-					mod.Remove(value);
+				{
+					for (int i = 0; i < mod.Count; i++)
+					{
+						if (mod[i].ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase))
+						{
+							mod.RemoveAt(i);
+							break;
+						}
+					}
+				}
 
 				ModifyRequest mr = new ModifyRequest(key, mod);
 				conn.SendRequest(mr);

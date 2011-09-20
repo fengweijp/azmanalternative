@@ -192,7 +192,7 @@ namespace AzAlternative.ActiveDirectory
 		{
 			var results = ((AdService)Locator.Service).Load(key, "(ObjectClass=" + CLASSNAME + ")");
 			var q = from i in results.Cast<SearchResultEntry>() select i;
-			return new Collections.ApplicationCollection(q.ToDictionary(x => x.Attributes[APPNAME][0].ToString(), x => x.DistinguishedName));
+			return new Collections.ApplicationCollection(q.ToDictionary(x => x.Attributes[APPNAME][0].ToString(), x => x.DistinguishedName, StringComparer.InvariantCultureIgnoreCase));
 		}
 	}
 }

@@ -102,8 +102,9 @@ namespace AzAlternative
 		public void Save()
 		{
 			Parent.RoleAssignments.CheckName(this);
-			Locator.Factory.UpdateRoleAssignments(Instance);
 			Parent.RoleAssignments.UpdateValue(this);
+			Locator.Factory.UpdateRoleAssignments(Instance);
+			Parent.RoleAssignments.UpdateKey(this);
 		}
 
 		/// <summary>

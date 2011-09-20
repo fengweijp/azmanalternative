@@ -37,8 +37,9 @@ namespace AzAlternative
 		public override void Save()
 		{
 			Parent.Roles.CheckName(this);
-			Locator.Factory.UpdateRole((Interfaces.IRoleDefinition)Instance);
 			Parent.Roles.UpdateValue(this);
+			Locator.Factory.UpdateRole((Interfaces.IRoleDefinition)Instance);
+			Parent.Roles.UpdateKey(this);
 		}
 
 		/// <summary>
