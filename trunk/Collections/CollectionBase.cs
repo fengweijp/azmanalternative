@@ -148,6 +148,14 @@ namespace AzAlternative.Collections
 			InternalCollection.Add(entry);
 		}
 
+		internal void UpdateKey(T entry)
+		{
+			if (!ContainsName(entry.Name))
+				return;
+
+			Guids[entry.Name] = entry.Key;
+		}
+
 		/// <summary>
 		/// Checks whether the collection contains the specified name
 		/// </summary>

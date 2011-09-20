@@ -89,9 +89,10 @@ namespace AzAlternative
 		{
 			Parent.Operations.CheckName(this);
 			Parent.Operations.CheckId(this);
+			Parent.Operations.UpdateValue(this);
 
 			Locator.Factory.UpdateOperation(Instance);
-			Parent.Operations.UpdateValue(this);
+			Parent.Operations.UpdateKey(this);
 		}
 	}
 }

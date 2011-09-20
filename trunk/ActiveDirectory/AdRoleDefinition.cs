@@ -53,7 +53,7 @@ namespace AzAlternative.ActiveDirectory
 
 			var results = ((AdService)Locator.Service).Load(searchbase, filter);
 			var q = from i in results.Cast<SearchResultEntry>() select i;
-			return new Collections.RoleDefinitionCollection(q.ToDictionary(x => x.Attributes["name"][0].ToString(), x => x.DistinguishedName), isChildList);
+			return new Collections.RoleDefinitionCollection(q.ToDictionary(x => x.Attributes["name"][0].ToString(), x => x.DistinguishedName, StringComparer.InvariantCultureIgnoreCase), isChildList);
 		}
 	}
 }

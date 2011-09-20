@@ -118,9 +118,10 @@ namespace AzAlternative
 		public virtual void Save()
 		{
 			Parent.Tasks.CheckName(this);
+			Parent.Tasks.UpdateValue(this);
 
 			Locator.Factory.UpdateTask(Instance);
-			Parent.Tasks.UpdateValue(this);
+			Parent.Tasks.UpdateKey(this);
 		}
 
 		/// <summary>
